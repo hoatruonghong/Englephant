@@ -32,5 +32,8 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "compilerOptions": {
+    "allowJs": true
   }
 }
