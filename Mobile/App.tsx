@@ -6,14 +6,23 @@
  */
 
 import React from 'react';
+import type {PropsWithChildren} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
 
-import Login from "./navigation/screen/login/Login";
-import MainContainer from "./navigation/MainContainer";
 
 function App(): JSX.Element {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
-    if (isLoggedIn) return <MainContainer />;
-    else return <Login setIsLoggedIn={setIsLoggedIn} />;
+  return (
+    <View><Text>Englephant</Text></View>
+  );
 }
+
 
 export default App;
