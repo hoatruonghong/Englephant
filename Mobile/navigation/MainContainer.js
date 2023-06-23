@@ -8,135 +8,135 @@ import {
   import colors from "../assets/colors/colors";
   
   
-//   const nameDiary = "Nhật ký";
-//   const nameNotification = "Thông Báo";
-//   const nameUser = "Tôi";
-//   const nameFood = "Food";
-//   const nameReport = "Báo cáo";
+  const nameDiary = "Nhật ký";
+  const nameNotification = "Thông Báo";
+  const nameUser = "Tôi";
+  const nameFood = "Food";
+  const nameReport = "Báo cáo";
   
-//   const nameAboutCat = "AboutCat";
-//   const nameExercise = "Exercise";
-//   const nameHome = "Home";
-//   const nameListCat = "ListCat";
-//   const nameAddCat = "AddCat";
-//   const nameUpdateCat = "UpdateCat";
+  const nameAboutCat = "AboutCat";
+  const nameExercise = "Exercise";
+  const nameHome = "Home";
+  const nameListCat = "ListCat";
+  const nameAddCat = "AddCat";
+  const nameUpdateCat = "UpdateCat";
   
-//   const Tab = createBottomTabNavigator();
-//   const Stack = createNativeStackNavigator();
-//   function DiaryStack() {
-//     return (
-//       <Stack.Navigator initialRouteName={nameDiary}>
-//         <Stack.Screen
-//           name={nameDiary}
-//           component={Diary}
-//           options={{ headerShown: false }}
-//         />
-//         <Stack.Screen
-//           name={nameFood}
-//           component={Food}
-//           options={{ headerShown: false }}
-//         />
-//         <Stack.Screen
-//           name={nameAboutCat}
-//           component={AboutCat}
-//           options={{ headerShown: false }}
-//         />
-//         <Stack.Screen
-//           name={nameExercise}
-//           component={Exercise}
-//           options={{ headerShown: false }}
-//         />
-//       </Stack.Navigator>
-//     );
-//   }
+  const Tab = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator();
+  function DiaryStack() {
+    return (
+      <Stack.Navigator initialRouteName={nameDiary}>
+        <Stack.Screen
+          name={nameDiary}
+          component={Diary}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={nameFood}
+          component={Food}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={nameAboutCat}
+          component={AboutCat}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={nameExercise}
+          component={Exercise}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    );
+  }
   
-//   function HomeStack() {
-//     return (
-//       <Stack.Navigator initialRouteName={nameHome}>
-//         <Stack.Screen
-//           name={nameHome}
-//           component={Home}
-//           options={{ headerShown: false }}
-//         />
-//         <Stack.Screen
-//           name={nameListCat}
-//           component={ListCat}
-//           options={{ headerShown: false }}
-//         />
-//         <Stack.Screen
-//           name={nameAddCat}
-//           component={AddCat}
-//           options={{ headerShown: false }}
-//         />
-//         <Stack.Screen
-//           name={nameUpdateCat}
-//           component={UpdateCat}
-//           options={{ headerShown: false }}
-//         />
-//       </Stack.Navigator>
-//     );
-//   }
+  function HomeStack() {
+    return (
+      <Stack.Navigator initialRouteName={nameHome}>
+        <Stack.Screen
+          name={nameHome}
+          component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={nameListCat}
+          component={ListCat}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={nameAddCat}
+          component={AddCat}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name={nameUpdateCat}
+          component={UpdateCat}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    );
+  }
   
-//   function MainContainer() {
-//     return (
-//       <NavigationContainer>
-//         <Tab.Navigator
-//           initialRouteName={nameHome}
-//           screenOptions={({ route }) => ({
-//             tabBarIcon: ({ focused, color, size }) => {
-//               let iconName;
-//               let rn = route.name;
+  function MainContainer() {
+    return (
+      <NavigationContainer>
+        <Tab.Navigator
+          initialRouteName={nameHome}
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+              let rn = route.name;
   
-//               if (rn === nameDiary) {
-//                 iconName = focused ? "calendar" : "calendar-outline";
-//               } else if (rn === nameNotification) {
-//                 iconName = focused ? "notifications" : "notifications-outline";
-//               } else if (rn === nameUser) {
-//                 iconName = focused ? "person" : "person-outline";
-//               } else if (rn === "Nhà") {
-//                 iconName = focused ? "home" : "home-outline";
-//               } else if (rn === nameReport) {
-//                 iconName = focused ? "bar-chart" : "bar-chart-outline";
-//               }
+              if (rn === nameDiary) {
+                iconName = focused ? "calendar" : "calendar-outline";
+              } else if (rn === nameNotification) {
+                iconName = focused ? "notifications" : "notifications-outline";
+              } else if (rn === nameUser) {
+                iconName = focused ? "person" : "person-outline";
+              } else if (rn === "Nhà") {
+                iconName = focused ? "home" : "home-outline";
+              } else if (rn === nameReport) {
+                iconName = focused ? "bar-chart" : "bar-chart-outline";
+              }
   
-//               return <Ionicons name={iconName} size={size} color={color} />;
-//             },
-//             tabBarActiveTintColor: colors.yellow,
-//             tabBarInactiveTintColor: colors.gray,
-//           })}
-//           // tabBarOptions={{
-//           //   lableStyle: { paddingBottom: 10, fontSize: 10, fontWeight: "bold" },
-//           //   style: { padding: 10, height: 70 },
-//           // }}
-//         >
-//           <Tab.Screen
-//             options={{ headerShown: false }}
-//             name="Nhà"
-//             component={HomeStack}
-//           />
-//           <Tab.Screen
-//             options={{ headerShown: false }}
-//             name={nameDiary}
-//             component={DiaryStack}
-//           />
-//           <Tab.Screen
-//             options={{ headerShown: false }}
-//             name={nameReport}
-//             component={Report}
-//           />
-//           <Tab.Screen
-//             options={{ headerShown: false }}
-//             name={nameNotification}
-//             component={Notification}
-//           />
-//           <Tab.Screen
-//             options={{ headerShown: false }}
-//             name={nameUser}
-//             component={User}
-//           />
-//         </Tab.Navigator>
-//       </NavigationContainer>
-//     );
-//   }
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: colors.yellow,
+            tabBarInactiveTintColor: colors.gray,
+          })}
+          // tabBarOptions={{
+          //   lableStyle: { paddingBottom: 10, fontSize: 10, fontWeight: "bold" },
+          //   style: { padding: 10, height: 70 },
+          // }}
+        >
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name="Nhà"
+            component={HomeStack}
+          />
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name={nameDiary}
+            component={DiaryStack}
+          />
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name={nameReport}
+            component={Report}
+          />
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name={nameNotification}
+            component={Notification}
+          />
+          <Tab.Screen
+            options={{ headerShown: false }}
+            name={nameUser}
+            component={User}
+          />
+        </Tab.Navigator>
+      </NavigationContainer>
+    );
+  }
   
   export default MainContainer;
