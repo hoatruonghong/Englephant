@@ -17,10 +17,12 @@ import {
   View,
 } from 'react-native';
 
+import PronunciationAssess from "./navigation/pronunciationAssessment/PronunciationAssess";
 
 function App(): JSX.Element {
   return (
-    <View><Text>Englephant</Text></View>
+    <PronunciationAssess/>
+    //<View><Text>Englephant</Text></View>
   );
 }
 
