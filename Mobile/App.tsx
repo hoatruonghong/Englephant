@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -16,11 +9,17 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
+import Login from './src/screens/Login/Login';
+import ForgetPassword from './src/screens/Login/ForgetPassword1';
+import ChangePassword from './src/screens/Login/ChangePassword';
+import Signin from './src/screens/Signin/Signin1';
 
 function App(): JSX.Element {
   return (
-    <View><Text>Englephant</Text></View>
+    <Login/>
+    //<ForgetPassword/>
+    //<ChangePassword/>
+    //<Signin/>
   );
 }
 
