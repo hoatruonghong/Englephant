@@ -15,14 +15,16 @@ import {
   Text,
   useColorScheme,
   View,
+  useWindowDimensions
 } from 'react-native';
 
 import PronunciationAssess from "./navigation/pronunciationAssessment/PronunciationAssess";
+import Warmup from './navigation/learning/Warmup';
 
 function App(): JSX.Element {
+  const {height, width, scale, fontScale} = useWindowDimensions();
   return (
-    <PronunciationAssess/>
-    //<View><Text>Englephant</Text></View>
+    <Warmup height = {height} width = {width} scale={scale} fontScale={fontScale}/>
   );
 }
 

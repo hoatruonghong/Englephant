@@ -25,9 +25,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 library.add(fas);
 
 import jsSHA from 'jssha';
-//import {SHA1, enc} from 'crypto';
 import fs from 'react-native-fs';
-//import FormData from 'form-data';
 
 const appKey = "168680959400017a";
 const secretKey = "961c8c2d962373638835274c64f1782b";
