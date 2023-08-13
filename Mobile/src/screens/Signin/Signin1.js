@@ -1,12 +1,13 @@
 import React, { useContext, useState }  from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TextInput } from "react-native";
+import { Text, View, StyleSheet, ImageBackground, Image, TextInput, useWindowDimensions } from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
+import content from './../../../declarations.d';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
 const Signin = () => {
-  return (
+    return (
     <View style={styles.container}>
         <View style = {styles.backgroundContainer}>
             <Image
@@ -52,8 +53,8 @@ const Signin = () => {
             <View style={styles.buttonArea}>
                 <Buttons.GreenButton title="Tiếp" />         
             </View>
+            <Text style={styles.info}>Đã có tài khoản? <Text style={styles.link}>Đăng nhập</Text> </Text>       
             
-
         </View>
         
     
@@ -101,13 +102,37 @@ const styles = StyleSheet.create({
     },
 
     formContainer: {
-        backgroundColor: colors.main_green,
-        top: 100
+        top: 120,
+        alignItems: 'center',
     },
-    
+    detailArea: {
+        paddingBottom: 10
+    },    
+    label:{
+
+    },
+    input: {
+        height: 40,
+        width: 296,
+        borderWidth: 1.5,
+        borderRadius: 16,
+        borderColor: colors.main_green,
+        marginTop: 5,
+        padding: 10,
+
+    },
     buttonArea: {
         alignItems: 'center',
-        backgroundColor: colors.dark_green
+        marginTop: '10%'
+    },
+    info: {
+        paddingTop: 50,
+        fontSize: 16,
+        bottom: 0,
+        alignSelf: 'center',
+    },
+    link:{
+        color: colors.blue,
     }
     
 });

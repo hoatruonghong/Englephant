@@ -17,6 +17,8 @@ import Signin from './src/screens/Signin/Signin1';
 
 import PronunciationAssess from "./navigation/pronunciationAssessment/PronunciationAssess";
 import Warmup from './navigation/learning/Warmup';
+import SetGoal from './src/screens/Signin/Signin3';
+import Signin2 from './src/screens/Signin/Signin2';
 
 function App(): JSX.Element {
   const {height, width, scale, fontScale} = useWindowDimensions();
@@ -25,7 +27,9 @@ function App(): JSX.Element {
     //<ForgetPassword/>
     //<ChangePassword/>
     //<Signin/>
-    <Warmup height = {height} width = {width} scale={scale} fontScale={fontScale}/>
+    <Signin2/>
+    //<SetGoal/>
+    //<Warmup height = {height} width = {width} scale={scale} fontScale={fontScale}/>
   );
 }
 
