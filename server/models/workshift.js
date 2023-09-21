@@ -3,15 +3,13 @@ const { Schema } = mongoose;
 
 const WorkshiftSchema = new Schema(
   {
-    date: {
-        type: Date,
+    tutorId: {
+      type: mongoose.Types.ObjectId, 
+      ref: 'tutor' ,
     },
-    startTime: {
-        type: Date,
-    }
-    endTime: {
-        type: Date,
-    }
+    date: String,
+    startTime: String,
+    endTime: String
   },
   { timestamps: true }
 );

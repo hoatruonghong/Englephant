@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, StyleSheet, TouchableOpacity} from "react-native";
-import colors from "../assets/colors";
+import colors from "../../assets/colors";
 
 export default function GoButton(props) {
   const { onPress, title } = props;

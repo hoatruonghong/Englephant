@@ -6,9 +6,6 @@ const TransactionSchema = new Schema(
     code: {
         type: String,
     },
-    timestamp: {
-        type: Date,
-    },
     amount: {
         type: Number,
     },

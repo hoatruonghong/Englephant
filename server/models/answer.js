@@ -14,9 +14,12 @@ const AnswerSchema = new Schema(
     },
     isCorrect: {
         type: Boolean,
+    },
+    quizId: {
+      type: mongoose.Types.ObjectId, 
+      ref: 'quiz' ,
     }
   },
-  { timestamps: true }
 );
 
 

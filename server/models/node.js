@@ -3,14 +3,13 @@ const { Schema } = mongoose;
 
 const NodeSchema = new Schema(
   {
-    position: {
-        type: Number,
+    mapId: {
+      type: mongoose.Types.ObjectId, 
+      ref: 'map' ,
     },
-    type: {
-        type: String,
-    }
+    position: Number,
+    type: String,
   },
-  { timestamps: true }
 );
 
 

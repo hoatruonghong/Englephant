@@ -6,9 +6,9 @@ import {
   TouchableOpacity
 } from 'react-native';
 import Svg from 'react-native-svg';
-import BG from '../../assets/svg/bg.svg';
-import MascotHappy from '../../assets/svg/mascot_happy.svg';
-import colors from '../../assets/colors';
+import BG from '../../../assets/svg/bg.svg';
+import MascotHappy from '../../../assets/svg/mascot_happy.svg';
+import colors from '../../../assets/colors';
 import styles from '../styles';
 import GoButton from '../../components/GoButton';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';

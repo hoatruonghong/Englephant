@@ -3,19 +3,39 @@ const { Schema } = mongoose;
 
 const TutorSchema = new Schema(
   {
+    username: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String, trim: true, index: {
+        unique: true,
+        partialFilterExpression: {email: {$type: "String"}}
+      }
+    },
+    phone: {
+      type: String, trim: true, index: {
+        unique: true,
+        partialFilterExpression: {phone: {$type: "String"}}
+      }
+    },
     fullname: {
       type: String,
       required: true,
     },
-    nationality: {
-        type: String,
+    bornyear: {
+      type: String,
+      required: true,
     },
-    introduction: {
-        type: String,
-    },
-    avatar: {
-        type: String,
-    }
+    nationality: String,
+    introduction: String,
+    avatar: String,
+    numofrating: Number,
+    rating: Number,
   },
   { timestamps: true }
 );

@@ -6,11 +6,12 @@ const SessionSchema = new Schema(
     startTime: {
         type: Date,
     },
-    endTime: {
-        type: Date,
+    duration: String,
+    tutorId: {
+      type: mongoose.Types.ObjectId, 
+      ref: 'tutor' ,
     }
   },
-  { timestamps: true }
 );
 
 
