@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
-import learner from "./learner.js";
-import admin from "./admin.js";
-import tutor from "./tutor.js";
-
+// import learner from "./learner.js";
+// import admin from "./admin.js";
+// import tutor from "./tutor.js";
+// model User for learner
 const UserSchema = new Schema(
   {
+    username: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
@@ -22,28 +26,49 @@ const UserSchema = new Schema(
         partialFilterExpression: {phone: {$type: "String"}}
       }
     },
-    role: {
-      type: Schema.Types.ObjectId,
-      ref: "tutor" || "learner" || "admin",
-    },
+    // role: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "tutor" || "learner" || "admin",
+    // },
     isActive: {
       type: Boolean,
       required: true,
-      default: false,
+      default: true,
+    },
+    bornYear: {
+      type: Number,
+    },
+    gender: {
+      type: String,
+    },
+    target: {
+      type: Number,
+    },
+    heart: {
+      type: Number,
+    },
+    bud: {
+      type: Number,
+    },    
+    peanut: {
+      type: Number,
+    },
+    defaultMode: {
+      type: Number,
     },
   },
   { timestamps: true }
 );
 
-UserSchema.pre("validate", function (next) {
-  let hasProvider = false;
-  if (
-    (this.email && this.email.length > 0) ||
-    (this.phone && this.phone.length > 0)
-  ) {
-    hasProvider = true;
-  }
-  return hasProvider ? next() : next(new Error("No Provider provided"));
-});
+// UserSchema.pre("validate", function (next) {
+//   let hasProvider = false;
+//   if (
+//     (this.email && this.email.length > 0) ||
+//     (this.phone && this.phone.length > 0)
+//   ) {
+//     hasProvider = true;
+//   }
+//   return hasProvider ? next() : next(new Error("No Provider provided"));
+// });
 
 export default mongoose.model("user", UserSchema);

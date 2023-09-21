@@ -1,13 +1,63 @@
 import React, { useContext, useState }  from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TextInput } from "react-native";
+import { Text, View, StyleSheet, ImageBackground, Image, TextInput, AsyncStorage} from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
+import { user_login } from './../../api/user_api';
+import axios from 'axios';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
-export default function Login() {
+export default function Login({navigation}) {
   const [username, onChangeUsername] = React.useState('');
   const [password, onChangePassword] = React.useState('');
+  
+  const postAPI = () => {
+    console.log("datt", username, password);
+    axios({
+      method: 'POST',
+      url: 'http://10.0.0.2:5000/api/auth/login',
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    }).then(res => {
+      console.log('in handle',result);
+      if (res.status == 200){
+        console.log("200 ",res);
+        navigation.replace("Warmup");
+      }
+      else if (res.status == 400) console.log("400", res);
+    }).catch(err => console.log('222',err))
+  };
+
+  const handleLogin = async () => {
+    try {
+      const result = await user_login({
+        username: username,
+        password: password
+      })    
+      console.log('in handle',result);
+      if (result.status == 200){
+        console.log("200 ",result);
+        navigation.replace("Warmup");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    // user_login({
+    //   username: username,
+    //   password: password
+    // }).then((result) => {
+    //   console.log("login result", result);
+    //   if(result && result.status == 200) {
+    //     // AsyncStorage.setItem("AccessToken", result.data)
+    //     console.log("200 ",result);
+    //     navigation.replace("Warmup");
+    //   }
+    // }).catch((err)=> {
+    //   console.error(err);
+    // })
+  };
 
   return (
     <View style={styles.container}>
@@ -27,7 +77,7 @@ export default function Login() {
                 style={styles.input}
                 onChangeText={onChangeUsername}
                 value={username}
-                placeholder="Email or Phonenum"
+                placeholder="Username"
             />            
           </View>
 
@@ -43,9 +93,9 @@ export default function Login() {
 
           <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
 
-          <Buttons.GreenButton title="Đăng nhập" />
+          <Buttons.GreenButton title="Đăng nhập"  onPress={postAPI}/>
           
-          <Text style={styles.info}>Chưa có tài khoản? <Text style={styles.link}>Đăng ký</Text> </Text>       
+          <Text style={styles.info}>Chưa có tài khoản? <Text style={styles.link} onPress={() => navigation.navigate('Signin')}>Đăng ký</Text> </Text>       
         </View>
       </ImageBackground>
     </View>

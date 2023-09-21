@@ -9,3 +9,7 @@ export const clearTokenList = (tokenlist) => {
         }
     }
 }
+
+export const renewPassword = () => {
+    return Math.random().toString(36).slice(-6)
+}

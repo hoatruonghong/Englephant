@@ -19,16 +19,32 @@ import PronunciationAssess from "./navigation/pronunciationAssessment/Pronunciat
 import Warmup from './navigation/learning/Warmup';
 import SetGoal from './src/screens/Signin/Signin3';
 import Signin2 from './src/screens/Signin/Signin2';
+import Account from './src/screens/Setting/Account';
+
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
+const Stack = createNativeStackNavigator();
 
 function App(): JSX.Element {
   const {height, width, scale, fontScale} = useWindowDimensions();
   return (
-    //<Login/>
+    <NavigationContainer>
+      <Stack.Navigator      
+        screenOptions={{
+          headerShown: false
+        }} >
+        <Stack.Screen name="Login" component={Login}    />
+        <Stack.Screen  name="Signin" component={Signin}  />
+        <Stack.Screen name="Account" component={Account}  />
+
+      </Stack.Navigator>
+
+    </NavigationContainer>
     //<ForgetPassword/>
     //<ChangePassword/>
-    //<Signin/>
-    <Signin2/>
-    //<SetGoal/>
+    // <SetGoal/>
+
     //<Warmup height = {height} width = {width} scale={scale} fontScale={fontScale}/>
   );
 }

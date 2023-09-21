@@ -6,7 +6,7 @@ import content from './../../../declarations.d';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
-const Signin = () => {
+const Signin = ({navigation}) => {
     return (
     <View style={styles.container}>
         <View style = {styles.backgroundContainer}>
@@ -53,7 +53,7 @@ const Signin = () => {
             <View style={styles.buttonArea}>
                 <Buttons.GreenButton title="Tiếp" />         
             </View>
-            <Text style={styles.info}>Đã có tài khoản? <Text style={styles.link}>Đăng nhập</Text> </Text>       
+            <Text style={styles.info}>Đã có tài khoản? <Text style={styles.link}  onPress={() => navigation.navigate('Login')}>Đăng nhập</Text> </Text>       
             
         </View>
         
