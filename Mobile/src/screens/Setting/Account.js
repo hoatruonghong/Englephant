@@ -1,7 +1,7 @@
 import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
-import MyCalendar from './../../components/Calendar';
+// import MyCalendar from './../../components/Calendar';
 import colors from './../../../assets/colors';
 import { useLogin } from './../../context/LoginProvider';
 
