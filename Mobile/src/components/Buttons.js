@@ -11,9 +11,27 @@ function GreenButton(props) {
   );
 }
 
+function RedButton(props) {
+  const { onPress, title } = props;
+  return (
+    <Pressable style={[styles.button, styles.redColor]} onPress={onPress}>
+      <Text style={styles.text}>{title}</Text>
+    </Pressable>
+  );
+}
+
+function BlueButton(props) {
+  const { onPress, title } = props;
+  return (
+    <Pressable style={[styles.button, styles.blueColor]} onPress={onPress}>
+      <Text style={styles.text}>{title}</Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
     button: {
-      width: 296,
+      width: '100%',
       height: 50,
       alignItems: "center",
       justifyContent: "center",
@@ -30,8 +48,14 @@ const styles = StyleSheet.create({
       letterSpacing: 0.25,
       color: colors.white,
     },
+    redColor: {
+      backgroundColor: colors.red,
+    },
+    blueColor: {
+      backgroundColor: colors.blue,
+    }
   });
 
 module.exports = {
-    GreenButton
+    GreenButton, RedButton, BlueButton
 }

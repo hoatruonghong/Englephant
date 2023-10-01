@@ -5,6 +5,8 @@ import argon2 from "argon2"
 import User from "../models/user.js"
 import { sendError, sendServerError, sendSuccess} from "../helper/client.js"
 import { learnerRegisterValidate, userLoginValidate } from "../validation/auth.js"
+import { verifyToken} from '../middleware/index.js'
+
 const authRouter = express.Router()
 
 /**
@@ -53,7 +55,6 @@ authRouter.post('/login', async (req, res) => {
     if (errors) return sendError(res, errors)
     let {username, password} = req.body 
     try {
-        console.log('55555');
         let user = await User.findOne({
             username
         })
@@ -66,37 +67,29 @@ authRouter.post('/login', async (req, res) => {
         if (!successLogin) return sendError(res, 'password is wrong')
         const userData = {
             id: user._id,
+            username: username,
             email: user.email,
             phone: user.phone 
         }
-        // const accessToken = jwt.sign(
-        //     {
-        //         user: userData
-        //     },
-        //     process.env.JWT_SECRET_KEY,
-        //     {
-        //         expiresIn: JWT_EXPIRED
-        //     }
-        // )
+        const accessToken = jwt.sign(
+            {user: userData},
+            process.env.JWT_SECRET_KEY,
+            {expiresIn: '30s'}
+        )
 
-        // const refreshToken = jwt.sign(
-        //     {
-        //         user: userData
-        //     },
-        //     process.env.JWT_REFRESH_SECRET_KEY,
-        //     {
-        //         expiresIn: JWT_REFRESH_EXPIRED
-        //     }
-        // )
+        const refreshToken = jwt.sign(
+            {user: userData},
+            process.env.JWT_REFRESH_SECRET_KEY,
+            {expiresIn: '1h'}
+        )
 
-        // const response = {
-        //     accessToken,
-        //     refreshToken
-        // }
+        const response = {
+            accessToken,
+            refreshToken
+        }
 
         return sendSuccess(res, 'Login successfully.', {
-            // accessToken,
-            // refreshToken,
+            response,
             user: userData
         })
 
@@ -108,16 +101,22 @@ authRouter.post('/login', async (req, res) => {
 
 /**
  * @route POST /api/auth/logout
- * @description learner login
- * @access public
+ * @description user log out
+ * @access private
  */
-// authRouter.post('/logout', async (req, res) => {
-//     try {
-        
-//     } catch (error) {
-//         console.log(error);
-//         return sendServerError(res);  
-//     }
-// })
+authRouter.post('/logout', verifyToken, async (req, res) => {
+    const { refreshToken } = req.body
+    if (refreshToken in TOKEN_LIST)
+        delete TOKEN_LIST[refreshToken]
+    else return sendError(res, 'refresh token is invalid.', 401)
+    try {
+        jwt.verify(req.verifyToken, process.env.JWT_SECRET_KEY, {
+            complete: true
+        })
+        TOKEN_BLACKLIST[req.verifyToken] = req.verifyToken
+        clearTokenList(TOKEN_BLACKLIST)
+    } catch (error) { }
+    return sendSuccess(res, 'log out successfully.')
+})
 
 export default authRouter

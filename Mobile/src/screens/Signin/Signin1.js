@@ -51,7 +51,7 @@ const Signin = ({navigation}) => {
                 />            
             </View>
             <View style={styles.buttonArea}>
-                <Buttons.GreenButton title="Tiếp" />         
+                <Buttons.GreenButton title="Tiếp" onPress={() => navigation.navigate('Signin2')}/>         
             </View>
             <Text style={styles.info}>Đã có tài khoản? <Text style={styles.link}  onPress={() => navigation.navigate('Login')}>Đăng nhập</Text> </Text>       
             
@@ -106,30 +106,34 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     detailArea: {
-        paddingBottom: 10
+        paddingBottom: 10,
+        width: '100%',
+        marginLeft: '20%',
     },    
     label:{
-
+        fontSize: 16,
+        color: colors.black_green,
     },
     input: {
         height: 40,
-        width: 296,
+        width: '80%',
         borderWidth: 1.5,
         borderRadius: 16,
         borderColor: colors.main_green,
         marginTop: 5,
         padding: 10,
-
     },
     buttonArea: {
         alignItems: 'center',
-        marginTop: '10%'
+        marginTop: '10%',
+        width: '80%',
     },
     info: {
         paddingTop: 50,
         fontSize: 16,
         bottom: 0,
         alignSelf: 'center',
+        color: colors.black_green,
     },
     link:{
         color: colors.blue,

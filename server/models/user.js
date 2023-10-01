@@ -26,10 +26,6 @@ const UserSchema = new Schema(
         partialFilterExpression: {phone: {$type: "String"}}
       }
     },
-    // role: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "tutor" || "learner" || "admin",
-    // },
     isActive: {
       type: Boolean,
       required: true,
@@ -41,7 +37,7 @@ const UserSchema = new Schema(
     gender: {
       type: String,
     },
-    target: {
+    targetTime: {
       type: Number,
     },
     heart: {

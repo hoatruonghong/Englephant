@@ -2,62 +2,49 @@ import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, AsyncStorage} from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
-import { user_login } from './../../api/user_api';
+import { isValidEmail, isValidObjField, updateError } from '../../utils/validForms';
+import { useLogin } from '../../context/LoginProvider';
+
 import axios from 'axios';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
 export default function Login({navigation}) {
+  const { setIsLoggedIn, profile, setProfile } = useLogin();
+
   const [username, onChangeUsername] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   
   const postAPI = () => {
-    console.log("datt", username, password);
-    axios({
-      method: 'POST',
-      url: 'http://10.0.0.2:5000/api/auth/login',
-      body: JSON.stringify({
-        username: username,
-        password: password
-      })
-    }).then(res => {
-      console.log('in handle',result);
-      if (res.status == 200){
-        console.log("200 ",res);
-        navigation.replace("Warmup");
-      }
-      else if (res.status == 400) console.log("400", res);
-    }).catch(err => console.log('222',err))
+    // console.log("data", username, password);
+    axios.post('http://10.0.2.2:5000/api/auth/login', {
+      username: username,
+      password: password
+    })
+    .then(function (res) {
+      if (res.data.success) {
+        setProfile(res.data.data.user);
+        setIsLoggedIn(true);
+      }      
+      console.log(res.data.data.user, 'profile', profile);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   };
 
-  const handleLogin = async () => {
-    try {
-      const result = await user_login({
-        username: username,
-        password: password
-      })    
-      console.log('in handle',result);
-      if (result.status == 200){
-        console.log("200 ",result);
-        navigation.replace("Warmup");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    // user_login({
-    //   username: username,
-    //   password: password
-    // }).then((result) => {
-    //   console.log("login result", result);
-    //   if(result && result.status == 200) {
-    //     // AsyncStorage.setItem("AccessToken", result.data)
-    //     console.log("200 ",result);
-    //     navigation.replace("Warmup");
-    //   }
-    // }).catch((err)=> {
-    //   console.error(err);
-    // })
+  const isValidForm = () => {
+    if (!isValidObjField({username, password}))
+      return updateError('Required all fields!', setError);
+
+    if (!isValidEmail(email)) return updateError('Invalid email!', setError);
+
+    if (!password.trim() || password.length < 8)
+      return updateError('Password is too short!', setError);
+
+    return true;
   };
+
 
   return (
     <View style={styles.container}>
@@ -88,12 +75,16 @@ export default function Login({navigation}) {
               onChangeText={onChangePassword}
               value={password}
               placeholder="Password"
+              // secureTextEntry
             />
           </View>
 
-          <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
+          <Text style={styles.forgotPassword} onPress={()=> navigation.navigate("ForgetPassword")}
+          >Quên mật khẩu?</Text>
 
-          <Buttons.GreenButton title="Đăng nhập"  onPress={postAPI}/>
+          <View style={styles.wrapButton}>
+            <Buttons.GreenButton title="Đăng nhập"  onPress={postAPI}/>
+          </View>
           
           <Text style={styles.info}>Chưa có tài khoản? <Text style={styles.link} onPress={() => navigation.navigate('Signin')}>Đăng ký</Text> </Text>       
         </View>
@@ -178,6 +169,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     bottom: 0
+  },
+  wrapButton: {
+    width: '75%',
   },
   link:{
     color: colors.blue,
