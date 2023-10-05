@@ -15,7 +15,7 @@ export default function Login({navigation}) {
   const [username, onChangeUsername] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   
-  const postAPI = () => {
+  const handleLogin = () => {
     // console.log("data", username, password);
     axios.post('http://10.0.2.2:5000/api/auth/login', {
       username: username,
@@ -83,7 +83,7 @@ export default function Login({navigation}) {
           >Quên mật khẩu?</Text>
 
           <View style={styles.wrapButton}>
-            <Buttons.GreenButton title="Đăng nhập"  onPress={postAPI}/>
+            <Buttons.GreenButton title="Đăng nhập"  onPress={handleLogin}/>
           </View>
           
           <Text style={styles.info}>Chưa có tài khoản? <Text style={styles.link} onPress={() => navigation.navigate('Signin')}>Đăng ký</Text> </Text>       

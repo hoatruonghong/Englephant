@@ -24,7 +24,6 @@ import ForgetPasswordOTP from './screens/Login/ForgetPassword2';
 import LoginProvider from './context/LoginProvider';
 import { useLogin } from './context/LoginProvider';
 import ExerciseMain from './screens/Exercise/ExerciseMain';
-import TalkRoom from './screens/Exercise/TalkRoom';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,7 +34,7 @@ function MyTabs() {
         screenOptions={{ headerShown: false }} >
       <Tab.Screen name="Exercise" component={ExerciseScreens} />
       <Tab.Screen name="Me" component={AccountScreens} />
-      {/* <Tab.Screen name="Warmup" component={Warmup} /> */}
+      <Tab.Screen name="Warmup" component={Warmup} />
     </Tab.Navigator>
   );
 }
@@ -45,7 +44,6 @@ function ExerciseScreens() {
     <Stack.Navigator      
       screenOptions={{ headerShown: false }} >
       <Stack.Screen name="ExerciseMain" component={ExerciseMain} />
-      <Stack.Screen name="TalkRoom" component={TalkRoom} />
 
     </Stack.Navigator>    
   )

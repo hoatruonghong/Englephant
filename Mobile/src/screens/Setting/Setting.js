@@ -52,13 +52,10 @@ const styles = StyleSheet.create({
         backgroundColor: colors.brightest_green,
     },
     header: {
-        flex: 1,
+        height: '7.%',
         backgroundColor: colors.dark_green,
-        borderWidth: 1.5,        
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        borderWidth: 1.5,
         borderColor: colors.bright_gray_brown,
-        // alignItems: 'flex-start',
         flexDirection: 'row',
     },
     headerIcon: {

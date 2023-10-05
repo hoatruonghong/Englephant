@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 // import learner from "./learner.js";
 // import admin from "./admin.js";
 // import tutor from "./tutor.js";
-// model User for learner
+// import default from './../../mobile/src/components/Map1';
 const UserSchema = new Schema(
   {
     username: {
@@ -49,8 +49,10 @@ const UserSchema = new Schema(
     peanut: {
       type: Number,
     },
-    defaultMode: {
-      type: Number,
+    mode: {
+      type: String,
+      enum: ['Trẻ em','Thanh thiếu niên','Người lớn'],
+      default: 'Trẻ em',
     },
   },
   { timestamps: true }
