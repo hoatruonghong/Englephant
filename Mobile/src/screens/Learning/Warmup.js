@@ -31,11 +31,14 @@ class Warmup extends Component {
             <TouchableOpacity style={styles.close} onPress={() => {}}>
               <FontAwesomeIcon icon="xmark"  color={colors.black} size={32}/>
             </TouchableOpacity>
-            <Text style={styles.heading}>Khởi động nào!!!</Text>
-            <Text style={styles.text}>Bài tập khởi động hàng ngày của Englephant đã đến rồi!</Text>
+            <Text style={[{top: this.props.height*0.6, width: this.props.width},styles.heading]}>Khởi động nào!!!</Text>
+            <Text style={[{top: this.props.height*0.66, left: this.props.width*0.1, width: this.props.width*0.8},styles.text]}>Bài tập khởi động hàng ngày của Englephant đã đến rồi!</Text>
             <GoButton 
-              title="GO"
-              onPress={() => {}}></GoButton>
+              onPress={() => {}}
+              height={this.props.height} 
+              width={this.props.width}
+              top={this.props.height*0.75}
+            />
           </Svg>
         </View>
       );

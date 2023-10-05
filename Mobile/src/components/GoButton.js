@@ -3,23 +3,29 @@ import { Text, StyleSheet, TouchableOpacity} from "react-native";
 import colors from "../../assets/colors";
 
 export default function GoButton(props) {
-  const { onPress, title } = props;
+  const { onPress, height, width, top } = props;
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+    <TouchableOpacity 
+      style={[{
+        width: width*0.34, 
+        height: height*0.08, 
+        left: width*0.33,
+        top: top
+        },
+        styles.button
+      ]} 
+      onPress={onPress}
+    >
+      <Text style={styles.text}>GO</Text>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    width: "34%",
-    height: "4%",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
-    top: "39%",
-    left: "33%",
     backgroundColor: colors.red,
     position: "absolute"
   },
@@ -28,5 +34,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: "white",
+    textAlign:"center"
   },
 });
