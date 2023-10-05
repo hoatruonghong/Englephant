@@ -9,7 +9,7 @@ const FlashCardSchema = new Schema(
     partofspeech: String,
     audio: String,
     pronunciation: String,
-    star: String,
+    star: Number,
     synonym: [Object],
     antonym: [Object],
     prefix: String,

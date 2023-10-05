@@ -3,7 +3,12 @@ const { Schema } = mongoose;
 
 const HistorySchema = new Schema(
   {
-    learningTime: Number
+    learningTime: Number,
+    learnerId: {
+      type: mongoose.Types.ObjectId, 
+      ref: 'learner' ,
+    },
+    flcNum: Number,
   },
   { timestamps: true }
 );

@@ -1,0 +1,41 @@
+const DATA = [
+  {
+    id: '0',
+    mode: 'None',
+  },
+  {
+    id: '1',
+    title: 'Fruit',
+    bg: require("./assets/images/fruit.png"),
+    mode: 'Unlocked',
+    star: 3
+  },
+  {
+    id: '2',
+    title: 'Family',
+    bg: require("./assets/images/family.png"),
+    mode: 'Unlocked',
+    star: 1
+  },
+  {
+    id: '3',
+    title: 'School',
+    bg: require("./assets/images/Locked.png"),
+    mode: 'Locked',
+    star: 0
+  },
+  {
+    id: '4',
+    title: 'S',
+    bg: require("./assets/images/Locked.png"),
+    mode: 'Locked',
+    star: 0
+  },
+  {
+    id: '5',
+    title: 'S',
+    bg: require("./assets/images/Locked.png"),
+    mode: 'Locked',
+    star: 0
+  },
+];

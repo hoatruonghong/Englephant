@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, StyleSheet, TouchableOpacity, ImageBackground, useWindowDimensions} from "react-native";
+import { Text, StyleSheet, TouchableOpacity, ImageBackground} from "react-native";
 import colors from "../../assets/colors";
 import MapTitleContainer from "../../assets/svg/map_title_container.svg";
 import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -11,14 +11,18 @@ library.add(faStar);
 
 
 export default function Map(props) {
-  const {height, width, scale, fontScale} = useWindowDimensions();
-  const { title, bg, mode, star } = props;
+  const { title, bg, mode, star, height, width } = props;
   const onPressLockedMap = ()=>{};
   const onPressUnlockedMap = ()=>{};
+  if (mode == "None"){
+    return(
+      <TouchableOpacity style={[{width: width*0.22, height: height*0.5}]}/>
+    )
+  }
   if (mode == "Locked"){
     return (
       <TouchableOpacity style={[{width: width*0.22, height: height*0.5},styles.map]} onPress={onPressLockedMap}>
-        <ImageBackground source={bg} resizeMode="stretch" style = {styles.bg}/>
+        <ImageBackground source={require("./../../assets/images/Locked.png")} resizeMode="stretch" style = {styles.bg}/>
       </TouchableOpacity>
     );
   } else {
@@ -50,12 +54,11 @@ export default function Map(props) {
 
 const styles = StyleSheet.create({
   map: {
-    marginRight: "5%",
-    borderRadius:20,
+    borderRadius: 20,
     borderColor: colors.bright_gray_brown,
     borderWidth: 3,
     overflow: 'hidden',
-    backgroundColor: "#FFFFFF"
+    backgroundColor: colors.bright_gray_brown
   },
   bg:{
     width: "100%",
