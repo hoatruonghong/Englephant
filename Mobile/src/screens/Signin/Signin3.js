@@ -7,8 +7,8 @@ import SelectDropdown from 'react-native-select-dropdown'
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
-const SetGoal = () => {
-    const countries = ["10", "15", "20", "30"]
+const SetGoal = ({navigation}) => {
+    const minutes = ["10", "15", "20", "30"]
 
     return (
     <SafeAreaView style={styles.container}>
@@ -28,7 +28,7 @@ const SetGoal = () => {
         <View style = {styles.formContainer}>
             <View style={styles.detailArea}>
             <SelectDropdown
-                data={countries}
+                data={minutes}
                 onSelect={(selectedItem, index) => {
                     console.log(selectedItem, index)
                 }}
@@ -72,12 +72,12 @@ const styles = StyleSheet.create({
     },
     nameContainer:{
         width: "80%",
-        paddingLeft: 30,
+        paddingLeft: '10%',
         paddingTop: 50,
     },
     appName: {
         fontSize: 40,
-        fontWeight: '900',
+        fontWeight: '800',
         color: colors.white,
         letterSpacing: 1.5,
     },
@@ -111,22 +111,10 @@ const styles = StyleSheet.create({
     detailArea: {
         paddingBottom: 10
     },    
-    label:{
-
-    },
-    input: {
-        height: 40,
-        width: 296,
-        borderWidth: 1.5,
-        borderRadius: 16,
-        borderColor: colors.main_green,
-        marginTop: 5,
-        padding: 10,
-
-    },
     buttonArea: {
+        width: '90%',
         alignItems: 'center',
-        marginTop: '10%'
+        marginTop: '10%',
     },
     info: {
         paddingTop: 30,

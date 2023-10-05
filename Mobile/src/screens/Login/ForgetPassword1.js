@@ -1,11 +1,11 @@
 import React, { useContext, useState }  from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TextInput } from "react-native";
+import { Text, View, StyleSheet, ImageBackground, Image, TextInput, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
-export default function ForgetPassword() {
+export default function ForgetPassword({navigation}) {
   const [phonenum, onChangePhonenum] = React.useState('');
 
   return (
@@ -13,12 +13,13 @@ export default function ForgetPassword() {
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
         
         <View style={styles.header}>
-            <Image
-                style={styles.arrow}
-                source={require('./../../../assets/images/back.png')}
+          <TouchableOpacity onPress={()=> navigation.goBack()}>
+            <Image style={styles.arrow}
+              source={require('./../../../assets/images/back.png')}
             />
-            <Text style={styles.title}>Quên mật khẩu</Text>
-            <Text style={styles.info}>Vui lòng nhập số điện thoại đăng ký app để nhận mã xác thực</Text>
+          </TouchableOpacity>
+          <Text style={styles.title}>Quên mật khẩu</Text>
+          <Text style={styles.info}>Vui lòng nhập số điện thoại đăng ký app để nhận mã xác thực</Text>
           
         </View>
 
@@ -34,8 +35,10 @@ export default function ForgetPassword() {
             />            
           </View>
 
-          <Buttons.GreenButton title="Nhập" />
-          
+          <View style={styles.wrapButton}>
+            <Buttons.GreenButton title="Nhập"  onPress={()=> navigation.navigate("ForgetPasswordOTP")}/>
+          </View>
+
         </View>
       </ImageBackground>
     </View>
@@ -84,21 +87,27 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   detailArea: {
+    width: '100%',
     paddingTop: 10,
     paddingBottom: 20
   },
   label: {
     fontSize: 16,
     color: colors.black_green,
-    paddingLeft: 20
+    paddingLeft: '10%'
   },
   input: {
     height: 40,
-    width: 296,
-    margin: 12,
+    width: '80%',
+    marginTop: 12,
+    marginBottom: 12,
     borderWidth: 1.5,
     borderRadius: 16,
     borderColor: colors.main_green,
     padding: 10,
+    alignSelf: 'center',
+  },
+  wrapButton: {
+    width: '80%'
   },
 });
