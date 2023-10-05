@@ -45,7 +45,7 @@ export default function ExerciseMain({navigation}) {
                 <View style={styles.idiomsContent}>
                     <View style={styles.idiomsSentences}>
                         <Text style={styles.smallText}>Cut someone some slack</Text>
-                        <Text style={[styles.smallText, styles.brownColor]}>Đừng quá khắc khe</Text>
+                        <Text style={[styles.smallText, styles.brownColor]}>Đừng quá khắt khe</Text>
                     </View>
                     <View style={styles.idiomsImage}>
                         <Image source={require("./../../../assets/images/elephant-happy.png")} />

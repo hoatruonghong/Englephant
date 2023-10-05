@@ -1,6 +1,7 @@
 import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
+import { VocabularyChart, PronunciationChart, PercentChart} from './../../components/Charts';
 // import MyCalendar from './../../components/Calendar';
 import colors from './../../../assets/colors';
 import { useLogin } from './../../context/LoginProvider';
@@ -79,9 +80,24 @@ export default function Account({navigation}) {
           </View>
           {/* Learning Detail */}
           <View style={styles.wrapLearningDetail}>
-          <Text>detail</Text>
+            <View style={styles.wrapVocalDetail}>
+              <Text>Từ vựng</Text>
+              <VocabularyChart />
+            </View>
+
+            <View style={styles.wrapPronunDetail}>
+              <View style={styles.wrapPronunHeaderDetail}>
+                <Text>Phát âm</Text>
+                <PercentChart />
+              </View>
+              
+              <Text>Các âm tốt</Text>
+              <Text>Các âm cần cải thiện</Text>
+              
+            </View>
 
           </View>
+
           {/* Learning History */}
           <View style={styles.wrapLearningHistory}>
           <Text>History</Text>
@@ -191,11 +207,40 @@ const styles = StyleSheet.create({
   },
   
   wrapLearningDetail: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  wrapVocalDetail: {
+    flex: 1,
+    backgroundColor: colors.white,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.bright_gray_brown,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  wrapPronunDetail: {
+    flex: 1,
+    backgroundColor: colors.white,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.bright_gray_brown,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  wrapPronunHeaderDetail: {
+    flexDirection: 'row',
 
   },
+
   
   wrapLearningHistory: {
-
+    backgroundColor: colors.white,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.bright_gray_brown,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   
   wrapGame: {

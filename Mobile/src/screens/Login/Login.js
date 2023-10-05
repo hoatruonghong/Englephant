@@ -96,7 +96,8 @@ export default function Login({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    flex:1
+    flex:1,
+    backgroundColor: colors.white,
   },
   image: {
     flex: 1,
@@ -122,8 +123,10 @@ const styles = StyleSheet.create({
   formArea:{
     backgroundColor: colors.white,
     flex: 5,    
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    borderWidth: 3,
+    borderColor: colors.main_green,
     alignItems: 'center',
     paddingTop: 20,
     paddingBottom: 20
