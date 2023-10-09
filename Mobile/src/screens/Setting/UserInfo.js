@@ -3,18 +3,15 @@ import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 
-const userData = {
-  id: "1",
-  name: "Hong Hoa",
-  phone: "0123456789",
-  email: ""
-};
+import { useLogin } from './../../context/LoginProvider';
 
 export default function UserInfo({navigation}) {
-  const [dataUser, setDataUser] = React.useState(userData);
-  const [name, setName] = useState(dataUser.name);
-  const [phone, setPhone] = useState(dataUser.phone);
-  const [email, setEmail] = useState(dataUser.email);
+  const { setIsLoggedIn, profile } = useLogin();
+  const [dataUser, setDataUser] = React.useState(profile);
+  const [name, setName] = useState(profile.username);
+  const [phone, setPhone] = useState(profile.phone);
+  const [email, setEmail] = useState(profile.email);
+
   return (
     <View style={styles.container}>
         <View style={styles.header}>
@@ -31,7 +28,7 @@ export default function UserInfo({navigation}) {
               <Image source={require("./../../../assets/images/user-icon.png")} />
             </View>
             <TextInput style={styles.inputText}
-                placeholder={userData.name}
+                placeholder={profile.username}
                 value={name}
                 onChangeText={text=>setName(text)}
             />
@@ -44,7 +41,7 @@ export default function UserInfo({navigation}) {
               <Image source={require("./../../../assets/images/phone-icon.png")} />
             </View>
             <TextInput style={styles.inputText}
-                placeholder={userData.phone}
+                placeholder={profile.phone}
                 value={phone}
                 onChangeText={text=>setPhone(text)}
             />
@@ -57,7 +54,7 @@ export default function UserInfo({navigation}) {
               <Image source={require("./../../../assets/images/a-email-icon.png")} />
             </View>
             <TextInput style={styles.inputText}
-                placeholder={userData.email}
+                placeholder={profile.email}
                 value={email}
                 onChangeText={text=>setEmail(text)}
             />

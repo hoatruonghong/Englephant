@@ -2,7 +2,7 @@ import express from "express"
 import jwt from "jsonwebtoken"
 import argon2 from "argon2"
 
-import User from "../models/user.js"
+import Learner from "../models/learner.js"
 import { sendError, sendServerError, sendSuccess} from "../helper/client.js"
 import { learnerRegisterValidate, userLoginValidate } from "../validation/auth.js"
 import { verifyToken} from '../middleware/index.js'
@@ -20,23 +20,20 @@ authRouter.post('/register', async (req, res) => {
     let {username, email, phone, password} = req.body 
 
     try {
-        const isExistUser = await User.exists({
+        const isExistLearner = await Learner.exists({
             $or: [
                 { email, phone},
                 { email, phone: null },
                 { phone, email: null }
             ]
         })
-        if (isExistUser) return sendError(res, "User already exists!")
+        if (isExistLearner) return sendError(res, "Learner already exists!")
 
         // const otp = generateOTP()
 
         password = await argon2.hash(password)
 
-        // req.session.register = JSON.stringify({
-        //     username, email, password, phone
-        // })
-        const user = await User.create({username, email, phone, password})
+        const leaner = await Learner.create({username, email, phone, password})
         return sendSuccess(res, "Register successfully")
 
     } catch (error) {
@@ -55,30 +52,30 @@ authRouter.post('/login', async (req, res) => {
     if (errors) return sendError(res, errors)
     let {username, password} = req.body 
     try {
-        let user = await User.findOne({
+        let learner = await Learner.findOne({
             username
         })
         let successLogin = true 
-        if (user) {
-            const passwordValid = await argon2.verify(user.password, password)
+        if (learner) {
+            const passwordValid = await argon2.verify(learner.password, password)
             if (!passwordValid) successLogin = false
         }
-        else return sendError(res, 'user not exists')
+        else return sendError(res, 'learner not exists')
         if (!successLogin) return sendError(res, 'password is wrong')
-        const userData = {
-            id: user._id,
+        const learnerData = {
+            id: learner._id,
             username: username,
-            email: user.email,
-            phone: user.phone 
+            email: learner.email,
+            phone: learner.phone 
         }
         const accessToken = jwt.sign(
-            {user: userData},
+            {user: learnerData},
             process.env.JWT_SECRET_KEY,
             {expiresIn: '30s'}
         )
 
         const refreshToken = jwt.sign(
-            {user: userData},
+            {user: learnerData},
             process.env.JWT_REFRESH_SECRET_KEY,
             {expiresIn: '1h'}
         )
@@ -90,7 +87,7 @@ authRouter.post('/login', async (req, res) => {
 
         return sendSuccess(res, 'Login successfully.', {
             response,
-            user: userData
+            user: learnerData
         })
 
     } catch (error) {
@@ -101,7 +98,7 @@ authRouter.post('/login', async (req, res) => {
 
 /**
  * @route POST /api/auth/logout
- * @description user log out
+ * @description learner log out
  * @access private
  */
 authRouter.post('/logout', verifyToken, async (req, res) => {

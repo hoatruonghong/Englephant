@@ -47,10 +47,10 @@ export default function ExerciseMain({navigation}) {
 
                 </View>
                 <View style={styles.practicesContent}>
-                    <TouchableOpacity style={styles.practicesItem}>
+                    <TouchableOpacity style={styles.practicesItem} onPress={()=>navigation.navigate("Pronunciation")}>
                         <Image style={styles.practicesItemImage} source={require("./../../../assets/images/pronunciation.png")} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.practicesItem}>
+                    <TouchableOpacity style={styles.practicesItem} onPress={()=>navigation.navigate("ListenRead")}>
                         <Image style={styles.practicesItemImage} source={require("./../../../assets/images/listening-reading.png")} />
                     </TouchableOpacity>
 

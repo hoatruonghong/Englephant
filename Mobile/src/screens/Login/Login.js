@@ -4,8 +4,7 @@ import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 import { isValidEmail, isValidObjField, updateError } from '../../utils/validForms';
 import { useLogin } from '../../context/LoginProvider';
-
-import axios from 'axios';
+import Auth from './../../api/Auth';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
@@ -15,22 +14,10 @@ export default function Login({navigation}) {
   const [username, onChangeUsername] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   
-  const handleLogin = () => {
-    // console.log("data", username, password);
-    axios.post('http://10.0.2.2:5000/api/auth/login', {
-      username: username,
-      password: password
-    })
-    .then(function (res) {
-      if (res.data.success) {
-        setProfile(res.data.data.user);
-        setIsLoggedIn(true);
-      }      
-      console.log(res.data.data.user, 'profile', profile);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+  const handleLogin = async () => {
+    const res = await Auth.login({username, password});
+    setProfile(res.data.data.user);
+    setIsLoggedIn(true);
   };
 
   const isValidForm = () => {

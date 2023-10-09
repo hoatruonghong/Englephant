@@ -62,6 +62,7 @@ const SetGoal = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: colors.white,
     },
     backgroundContainer: {
         position: 'absolute',

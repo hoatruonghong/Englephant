@@ -24,6 +24,9 @@ import ForgetPasswordOTP from './screens/Login/ForgetPassword2';
 import LoginProvider from './context/LoginProvider';
 import { useLogin } from './context/LoginProvider';
 import ExerciseMain from './screens/Exercise/ExerciseMain';
+import TalkRoom from './screens/Exercise/TalkRoom';
+import ListenRead from './screens/Exercise/ListenRead';
+import Pronunciation from './screens/Exercise/Pronunciation';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,7 +47,9 @@ function ExerciseScreens() {
     <Stack.Navigator      
       screenOptions={{ headerShown: false }} >
       <Stack.Screen name="ExerciseMain" component={ExerciseMain} />
-
+      <Stack.Screen name="Pronunciation" component={Pronunciation} />
+      <Stack.Screen name="ListenRead" component={ListenRead} />
+      <Stack.Screen name="TalkRoom" component={TalkRoom} />
     </Stack.Navigator>    
   )
 }

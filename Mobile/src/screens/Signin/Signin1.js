@@ -33,7 +33,7 @@ const Signin = ({navigation}) => {
                 <Text style={styles.label}>Tên đăng nhập</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email or Phonenum"
+                    placeholder="username"
                 />            
             </View>
             <View style={styles.detailArea}>
@@ -65,6 +65,7 @@ const Signin = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: colors.white,
     },
     backgroundContainer: {
         position: 'absolute',

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const LearnerSchema = new Schema(
-  {
+{
     username: {
         type: String,
         required: true,
@@ -23,9 +23,8 @@ const LearnerSchema = new Schema(
             partialFilterExpression: {phone: {$type: "String"}}
         }
     },
-    bornyear: {
+    bornYear: {
         type: String,
-        required: true,
     },
     gender: {
         type: String,
@@ -46,8 +45,9 @@ const LearnerSchema = new Schema(
     defaultmode: {
         type: String,
         enum: ["Trẻ em", "Thanh thiếu niên", "Người lớn"],
+        default: 'Trẻ em',
     },
-    targettime: {
+    targetTime: {
         type: Number,
         require: true,
     },
@@ -55,18 +55,8 @@ const LearnerSchema = new Schema(
         type: mongoose.Types.ObjectId, 
         ref: 'clothes' ,
     }
-  },
+},
+{ timestamps: true}
 );
-
-LearnerSchema.pre("validate", function (next) {
-  let hasProvider = false;
-  if (
-    (this.email && this.email.length > 0) ||
-    (this.phone && this.phone.length > 0)
-  ) {
-    hasProvider = true;
-  }
-  return hasProvider ? next() : next(new Error("No Provider provided"));
-});
 
 export default mongoose.model("learner", LearnerSchema);

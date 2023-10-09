@@ -4,7 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from "dotenv";
 import authRouter from './routers/auth.js';
-import userRouter from './routers/user.js';
+import learnerRouter from './routers/learner.js';
 
 
 const app = express();
@@ -36,8 +36,7 @@ mongoose
 //Routes
 app
 .use('/api/auth', authRouter)
-.use('/api/user', userRouter)
-
+.use('/api/learner', learnerRouter)
 
 app.listen(PORT, () => {
   console.log("Server started at PORT ", PORT);
