@@ -38,7 +38,7 @@ const Signin2 = ({navigation}) => {
                 <Text style={styles.label}>Tên người dùng</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="username"
+                    placeholder="name"
                 />            
             </View>
             
@@ -110,6 +110,7 @@ const Signin2 = ({navigation}) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: colors.white,
     },
     backgroundContainer: {
         position: 'absolute',
@@ -123,7 +124,6 @@ const styles = StyleSheet.create({
         top: 130,
         right: 30,
         alignItems: 'flex-end',
-        
     },
     logo:{
         

@@ -43,6 +43,9 @@ import MapSelecting from './screens/Learning/MapSelecting';
 import FamilyMap from './screens/Learning/Maps/FamilyMap';
 import FruitMap from './screens/Learning/Maps/FruitMap';
 import SchoolMap from './screens/Learning/Maps/SchoolMap';
+import TalkRoom from './screens/Exercise/TalkRoom';
+import ListenRead from './screens/Exercise/ListenRead';
+import Pronunciation from './screens/Exercise/Pronunciation';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -112,7 +115,9 @@ function ExerciseScreens() {
     <Stack.Navigator      
       screenOptions={{ headerShown: false }} >
       <Stack.Screen name="ExerciseMain" component={ExerciseMain} />
-
+      <Stack.Screen name="Pronunciation" component={Pronunciation} />
+      <Stack.Screen name="ListenRead" component={ListenRead} />
+      <Stack.Screen name="TalkRoom" component={TalkRoom} />
     </Stack.Navigator>    
   )
 }

@@ -90,13 +90,10 @@ const styles = StyleSheet.create({
         backgroundColor: colors.brightest_green,
     },
     header: {
-        height: '10%',
+        height: '7.%',
         backgroundColor: colors.dark_green,
-        borderWidth: 1.5,        
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        borderWidth: 1.5,
         borderColor: colors.bright_gray_brown,
-        // alignItems: 'flex-start',
         flexDirection: 'row',
     },
     headerIcon: {
@@ -114,10 +111,9 @@ const styles = StyleSheet.create({
         flex: 8,
     },
     wrapNotification: {
-        marginTop: '5%',
+        marginTop: '3%',
         marginLeft: '3%',
         marginRight: '3%',
-        marginBottom: '20%',
+        marginBottom: '13%',
     }
-
   });

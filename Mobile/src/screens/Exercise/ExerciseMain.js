@@ -1,7 +1,8 @@
 import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, FlatList, TouchableOpacity } from "react-native";
 import colors from './../../../assets/colors';
-
+import { HeaderBarWithItems, HeaderBarPlain } from './../../components/HeaderBar';
+import { HeartWrap, PeanutWrap, CardWrap, BudWrap } from "./../../components/IconWrap";
 var dataUser = {
     hearts: 1,
     peanuts: 10,
@@ -13,26 +14,7 @@ export default function ExerciseMain({navigation}) {
   return (
     <ScrollView>
     <View style={styles.container}>
-        <View style={styles.wrapHeader}>
-            <View style={styles.iconHeart}>
-                <Image
-                    style={styles.smallIcon}
-                    source={require("./../../../assets/images/heart-icon.png")}
-                />
-                <Text style={styles.smallText}>{dataUser.hearts}</Text>
-            </View>
-            <View style={styles.iconPeanut}>
-                <Image
-                    style={styles.smallIcon}
-                    source={require("./../../../assets/images/peanut-icon.png")}
-                />
-                <Text style={styles.smallText}>{dataUser.peanuts}</Text>
-                <Image
-                    style={styles.smallIcon}
-                    source={require("./../../../assets/images/add-icon.png")}
-                />
-            </View>
-        </View>
+        <HeaderBarWithItems items={[ {itemName: 'heart', num: 2}, {itemName: 'peanut', num: 15}]} />
         <View style={styles.wrapFeatures}>
             {/* Idioms */}
             <View style={styles.wrapIdioms}>
@@ -45,7 +27,7 @@ export default function ExerciseMain({navigation}) {
                 <View style={styles.idiomsContent}>
                     <View style={styles.idiomsSentences}>
                         <Text style={styles.smallText}>Cut someone some slack</Text>
-                        <Text style={[styles.smallText, styles.brownColor]}>Đừng quá khắc khe</Text>
+                        <Text style={[styles.smallText, styles.brownColor]}>Đừng quá khắt khe</Text>
                     </View>
                     <View style={styles.idiomsImage}>
                         <Image source={require("./../../../assets/images/elephant-happy.png")} />
@@ -65,10 +47,10 @@ export default function ExerciseMain({navigation}) {
 
                 </View>
                 <View style={styles.practicesContent}>
-                    <TouchableOpacity style={styles.practicesItem}>
+                    <TouchableOpacity style={styles.practicesItem} onPress={()=>navigation.navigate("Pronunciation")}>
                         <Image style={styles.practicesItemImage} source={require("./../../../assets/images/pronunciation.png")} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.practicesItem}>
+                    <TouchableOpacity style={styles.practicesItem} onPress={()=>navigation.navigate("ListenRead")}>
                         <Image style={styles.practicesItemImage} source={require("./../../../assets/images/listening-reading.png")} />
                     </TouchableOpacity>
 
@@ -77,7 +59,7 @@ export default function ExerciseMain({navigation}) {
             </View>
 
             {/* Skills */}
-            <View style={styles.wrapSkills}>
+            <TouchableOpacity style={styles.wrapSkills} onPress={()=>navigation.navigate("TalkRoom")}>
                 <View style={styles.skillsHeader}>
                     <Image source={require("./../../../assets/images/ellipse-pot.png")} />
                     <Text style={styles.titleText}>Phòng giao tiếp</Text>
@@ -92,7 +74,7 @@ export default function ExerciseMain({navigation}) {
                         <Image source={require("./../../../assets/images/chitchat.png")} />
                     </View>
                 </View>
-            </View>
+            </TouchableOpacity>
         </View>
     </View>
     </ScrollView>
