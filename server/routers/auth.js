@@ -69,7 +69,8 @@ authRouter.post('/login', async (req, res) => {
             id: user._id,
             username: username,
             email: user.email,
-            phone: user.phone 
+            phone: user.phone,
+            mode: user.defaultMode
         }
         const accessToken = jwt.sign(
             {user: userData},

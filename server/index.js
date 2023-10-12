@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import dotenv from "dotenv";
 import authRouter from './routers/auth.js';
 import userRouter from './routers/user.js';
+import mapRouter from './routers/map.js';
 
 
 const app = express();
@@ -23,9 +24,7 @@ app.get('/', (req, res) => {
 //Connect to mongoose
 mongoose
   .connect(process.env.MONGO_URL, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  })
+    dbName: 'Englephant'})
   .then(() => {
     console.log("Connected to mongodb");
   })
@@ -37,6 +36,7 @@ mongoose
 app
 .use('/api/auth', authRouter)
 .use('/api/user', userRouter)
+.use('/api/map', mapRouter)
 
 
 app.listen(PORT, () => {

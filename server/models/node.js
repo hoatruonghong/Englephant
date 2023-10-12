@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const NodeSchema = new Schema(
   {
     mapId: {
-      type: mongoose.Types.ObjectId, 
+      type: Number, 
       ref: 'map' ,
     },
     position: Number,

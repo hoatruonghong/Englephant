@@ -8,7 +8,7 @@ const LearnerMapSchema = new Schema(
         ref: 'learner' ,
     },
     mapId: {
-        type: mongoose.Types.ObjectId, 
+        type: Number, 
         ref: 'map' ,
     },
     status: Number

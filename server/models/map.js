@@ -3,10 +3,19 @@ const { Schema } = mongoose;
 
 const MapSchema = new Schema(
   {
+    _id: Number,
     name: String,
-    mode: Number,
+    mode: String,
     price: Number,
-    image: String
+    image: String,
+    previousmap: {
+      type: Number, 
+      ref: 'map' ,
+    },
+    nextmap: {
+      type: Number, 
+      ref: 'map' ,
+    },
   },
 );
 

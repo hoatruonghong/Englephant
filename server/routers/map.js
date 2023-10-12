@@ -1,23 +1,54 @@
 import express from "express";
-const router = express.Router();
-const map = require('../models/map');
-const learnermap = require('../models/learnermap');
-const node = require('../models/node');
-const flashcard = require('../models/flashcard');
+//import models
+import map from '../models/map.js';
+import learnermap from '../models/learnermap.js';
+import node from '../models/node.js';
+import flashcard from '../models/flashcard.js';
 
-//require("dotenv").config();
+const router = express.Router();
+
+router.get('/', async (req, res) => {
+  try {
+    const maps = await map.find();  
+    return res.status(200).json({ data: maps });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Learner: Show all maps
+router.post('/add/', async (req, res) => {
+  try {
+      const { _id, name, mode, price, image } = req.body;
+  
+      const dbMap = new map({
+        _id: _id, 
+        name: name, 
+        mode: mode, 
+        price: price, 
+        image:image
+      })
+  
+      await dbMap.save();
+      res.status(200).json({ message: "Create add successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
 
 //Learner: Show Map Selecting screen
-router.get('map/learner/:learnerid/:mode', async (req, res) => {
+router.get('/learner/:learnerid/:mode', async (req, res) => {
   try {
     const { learnerid, mode } = req.params;
     const maps = await map.find({mode: mode});    
     const data = await Promise.all(maps.map(async map => {
-      const activemap = await learnermap.find({learnerId: learnerid, mapId: map._id});
+      const activemap = await learnermap.findOne({learnerId: learnerid, mapId: map._id});
       if (activemap){
         map._doc.active = true;
+        map._doc.status = activemap.status;
       } else {
         map._doc.active = false;
+        map._doc.status = 0;
       }
       return map;
     }));
@@ -28,15 +59,22 @@ router.get('map/learner/:learnerid/:mode', async (req, res) => {
 });
 
 //Learner: Show chosen Map
-router.get('map/learner/:mapId', async (req, res) => {
+router.get('/learn/:learnerid/:mapId', async (req, res) => {
   try {
     const { mapId } = req.params;
-    const nodes = await node.find({mapId: mapId});
-    if (nodes) {
-      return res.status(200).json({ data: nodes });
-    } else {
-      return res.status(500).json({ message: "Cannot find map with given id" })
-    }
+    const nodes = await node.findById({mapId: mapId});
+    const data = await Promise.all(nodes.map(async node => {
+      const activenode = await learnernode.findOne({learnerId: learnerid, nodeId: node._id});
+      if (activenode){
+        node._doc.active = true;
+        node._doc.point = activenode.point;
+      } else {
+        node._doc.active = false;
+        node._doc.status = 0;
+      }
+      return node;
+    }));
+    return res.status(200).json({ data: data });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
   }
@@ -44,7 +82,7 @@ router.get('map/learner/:mapId', async (req, res) => {
 
 
 //Admin: Show Map information
-router.get('/map/:mode/topic/:name', async (req, res) => {
+router.get('/:mode/topic/:name', async (req, res) => {
   try {
     const { mode, name } = req.params;
     const map0 = await map.findOne({ mode: mode, name: name });
@@ -126,4 +164,4 @@ router.delete('/delete-map/:mode/topic/:name', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
