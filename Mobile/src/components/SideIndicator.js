@@ -2,7 +2,7 @@ import React from "react";
 import { TouchableOpacity, Image} from "react-native";
 
 export default function SideIndicator(props) {
-  const { isLeft, onPress, width } = props;
+  const { isLeft, onPress, width, height } = props;
   let sideIndicator;
   if (isLeft){
     sideIndicator=require("./../../assets/images/LeftIndicator.png");
@@ -13,7 +13,7 @@ export default function SideIndicator(props) {
     <TouchableOpacity onPress={onPress} style={{width: width}}>
       <Image
         style={{
-          height: 50,
+          height: height,
           resizeMode: 'stretch',
           alignSelf: 'center'
         }}

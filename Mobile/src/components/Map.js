@@ -13,36 +13,7 @@ library.add(faStar);
 
 export default function Map(props) {
   const [data, setData] = React.useState([]);
-  const { name, image, lock, star, height, width, index, navigation, learnerId } = props;
-  const getMap = () => {
-    axios.get('http://10.0.2.2:5000/api/map/login', {
-      username: username,
-      password: password
-    })
-    .then(function (res) {
-      if (res.data.success) {
-        setProfile(res.data.data.user);
-        setIsLoggedIn(true);
-      }      
-      console.log(res.data.data.user, 'profile', profile);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
-
-  const onPressLockedMap = ()=>{};
-  const onPressUnlockedMap = ()=>{
-    uri = 'http://10.0.2.2:5000/api/map/learn/'+learnerId+'/'+index;
-    axios.get(uri)
-    .then(function (res) {
-      setData(res.data.data);
-      navigation.navigate(index.toString());
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  };
+  const { name, image, lock, star, height, width, index, navigation, learnerId, onPressLockedMap, onPressUnlockedMap } = props;
 
   if (name == "None"){
     return(
@@ -51,7 +22,7 @@ export default function Map(props) {
   }
   if (lock){
     return (
-      <TouchableOpacity style={[{width: width*0.22, height: height*0.5},styles.map]} onPress={onPressLockedMap}>
+      <TouchableOpacity style={[{width: width*0.22, height: height*0.5},styles.map]} onPress={()=>onPressLockedMap()}>
         <ImageBackground source={require("./../../assets/images/Locked.png")} resizeMode="stretch" style = {styles.image}/>
       </TouchableOpacity>
     );
@@ -68,7 +39,7 @@ export default function Map(props) {
       star2 = faStar;    
     } else if (star == 1) star1 = faStar;
     return (
-      <TouchableOpacity style={[{width: width*0.22, height: height*0.5},styles.map]} onPress={onPressUnlockedMap}>
+      <TouchableOpacity style={[{width: width*0.22, height: height*0.5},styles.map]} onPress={()=>onPressUnlockedMap()}>
         <ImageBackground source={{uri: image}} resizeMode="cover" style = {styles.image}/>
         <MapTitleContainer width="100%"
                   height="100%"

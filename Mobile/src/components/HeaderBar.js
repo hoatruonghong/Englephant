@@ -46,9 +46,9 @@ function HeaderBarPlain(props) {
 
 const styles = StyleSheet.create({
     container: {
-      height: '7.7%',
+      height: '8%',
       backgroundColor: colors.dark_green,
-      borderWidth: 1.5,        
+      borderBottomWidth: 1.5,        
       borderColor: colors.bright_gray_brown,
       flexDirection: 'row',
       alignItems: 'center',

@@ -46,6 +46,7 @@ import SchoolMap from './screens/Learning/Maps/SchoolMap';
 import TalkRoom from './screens/Exercise/TalkRoom';
 import ListenRead from './screens/Exercise/ListenRead';
 import Pronunciation from './screens/Exercise/Pronunciation';
+import Quiz from './screens/Quiz/Quiz';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -53,6 +54,7 @@ const Stack = createNativeStackNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator
+      detachInactiveScreens={false}
       screenOptions={
         { 
           headerShown: false, 
@@ -100,11 +102,11 @@ function MyTabs() {
 
 function LearningScreens() {
   return (
-    <Stack.Navigator      
+    <Stack.Navigator 
       screenOptions={{ headerShown: false }} >
       <Stack.Screen name="MapSelecting" component={MapSelecting} />
-      <Stack.Screen name="1" component={FruitMap}/>
       <Stack.Screen name="2" component={FamilyMap}/>
+      <Stack.Screen name="1" component={FruitMap}/>
       <Stack.Screen name="3" component={SchoolMap}/>
     </Stack.Navigator>    
   )
@@ -137,9 +139,6 @@ function AccountScreens() {
     <Stack.Navigator      
       screenOptions={{ headerShown: false }} >
       <Stack.Screen name="Account" component={Account} />
-      <Stack.Screen name="UserInfo" component={UserInfo} />
-      <Stack.Screen name="Notification" component={Notification} />
-      <Stack.Screen name="Setting" component={Setting} />
     </Stack.Navigator>    
   )
 }
@@ -156,14 +155,31 @@ function AuthScreens() {
       <Stack.Screen name="Signin2" component={Signin2} />
       <Stack.Screen name="SetGoal" component={SetGoal} />
       <Stack.Screen name="Warmup" component={Warmup} />
-
     </Stack.Navigator>    
   );
 }
 
+function StackNavigator(){
+  return(
+    <Stack.Navigator      
+      screenOptions={{ headerShown: false }} >
+      <Stack.Screen name="MyTabs" component={MyTabs} />
+      <Stack.Screen name="Quiz" component={Quiz} />
+      <Stack.Screen name="Warmup" component={Warmup} />
+      <Stack.Screen name="ListeningReading" component={Warmup} />
+      <Stack.Screen name="TalkRoom" component={Warmup} />
+      <Stack.Screen name="Card" component={Warmup} />
+      <Stack.Screen name="Game" component={Warmup} />
+      <Stack.Screen name="Fashion" component={Warmup} />
+      <Stack.Screen name="Setting" component={Setting} />
+      <Stack.Screen name="UserInfo" component={UserInfo} />
+      <Stack.Screen name="Notification" component={Notification} />
+    </Stack.Navigator>)
+}
+
 const MainNavigator = () => {
     const { isLoggedIn } = useLogin();
-    return isLoggedIn ? <MyTabs /> : <AuthScreens />;
+    return isLoggedIn ? <StackNavigator /> : <AuthScreens />;
 }
 
 export default MainNavigator;

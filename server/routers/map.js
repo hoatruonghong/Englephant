@@ -1,7 +1,9 @@
 import express from "express";
+import { sendError, sendServerError, sendSuccess} from "../helper/client.js";
 //import models
 import map from '../models/map.js';
 import learnermap from '../models/learnermap.js';
+import learnernode from '../models/learnernode.js'
 import node from '../models/node.js';
 import flashcard from '../models/flashcard.js';
 
@@ -61,8 +63,8 @@ router.get('/learner/:learnerid/:mode', async (req, res) => {
 //Learner: Show chosen Map
 router.get('/learn/:learnerid/:mapId', async (req, res) => {
   try {
-    const { mapId } = req.params;
-    const nodes = await node.findById({mapId: mapId});
+    const { learnerid, mapId } = req.params;
+    const nodes = await node.find({mapId: mapId});
     const data = await Promise.all(nodes.map(async node => {
       const activenode = await learnernode.findOne({learnerId: learnerid, nodeId: node._id});
       if (activenode){
@@ -80,6 +82,46 @@ router.get('/learn/:learnerid/:mapId', async (req, res) => {
   }
 });
 
+//Learner: Unlock Map
+router.post('/unlock/:learnerid/:mapId', async (req, res) => {
+  const {learnerid, mapId} = req.params;
+  try {
+      const isUnlocked = await map.exists({learnerid, mapId});
+      if (isUnlocked) 
+        return sendError(res, "Already unlocked!");
+      const unlockedmap = await learnermap.create({learnerId: learnerid, mapId: mapId, status: 0});
+      const node1st = await node.find({mapId: mapId, position: 1});
+      const unlockednode = await learnernode.create({learnerId: learnerid, nodeId: node1st._id, point: 0});
+      console.log(unlockedmap);
+      console.log(unlockednode);
+      return sendSuccess(res, "Unlock successfully");
+  } catch (error) {
+      console.log(error);
+      return sendServerError(res);   
+  }
+});
+
+//Learner: Get unlock Map conditions
+router.get('/lock/:learnerid/:mapId', async (req, res) => {
+  const {mapId} = req.params;
+  try {
+      const lockedmap = await map.findById(mapId);
+      const previousmap = await learnermap.find({learnerId: learnerid, mapId: lockedmap.previousmap});
+      const isFree = true;
+      if (previousmap.status<1)
+        condition = 'Hoàn thành map '+previousmap.name+' để mở khoá';
+      else {
+        if (lockedmap.price>0){
+          isFree = lockedmap.price;
+          condition = 'Dùng '+lockedmap.price+' đậu để mở khoá';
+        }
+        else return res.status(200).json({ action: "Mở map" });
+      }
+      return res.status(200).json({ isFree: isFree, condition: condition });
+  } catch (error) {
+      return res.status(500).json({ message: JSON.stringify(error) });
+  }
+});
 
 //Admin: Show Map information
 router.get('/:mode/topic/:name', async (req, res) => {
