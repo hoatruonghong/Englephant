@@ -8,12 +8,6 @@ export default function Setting({navigation}) {
     const { setIsLoggedIn } = useLogin();
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-                    <Image source={require("./../../../assets/images/back-icon-white.png")} />
-                </TouchableOpacity>
-                <Text style={styles.headerText}>Cài đặt tài khoản</Text>
-            </View>
             <View style={styles.wrapFeature}>
                 <TouchableOpacity style={styles.feature}  onPress={() => navigation.navigate('UserInfo')}>
                     <Image style={styles.featureIcon} source={require("./../../../assets/images/user-icon.png")} />
@@ -50,27 +44,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: colors.brightest_green,
-    },
-    header: {
-        height: '7.%',
-        backgroundColor: colors.dark_green,
-        borderWidth: 1.5,
-        borderColor: colors.bright_gray_brown,
-        flexDirection: 'row',
-    },
-    headerIcon: {
-        alignSelf: 'center',
-        flex: 1,
-        marginLeft: '3%', 
-    },
-    headerText: {
-        alignSelf: 'center',
-        color: colors.white,
-        fontSize: 24,
-        fontWeight: "600",
-        // textAlign: 'center',
-        marginLeft: '13%',
-        flex: 8,
     },
     wrapFeature: {
         flex: 8,

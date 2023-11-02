@@ -3,8 +3,25 @@ const learnerRouter = express.Router();
 
 import { sendError, sendServerError, sendSuccess } from "../helper/client.js"
 import { verifyToken} from '../middleware/index.js'
-
 import Learner from "../models/learner.js";
+
+/**
+ * @route GET /api/learner
+ * @description get learner information
+ * @access public
+ */
+learnerRouter.get('/', verifyToken, async (req, res) => {
+    try {
+        const learners = await Learner.find();
+
+        if (learners) return sendSuccess(res, "Get learners successfully.", learners);
+        return sendError(res, "Information not found.");
+        
+    } catch (error) {
+        console.log(error);
+        return sendServerError(res);  
+    }
+});
 
 /**
  * @route GET /api/learner/:id
@@ -59,7 +76,7 @@ learnerRouter.delete('/:id', async (req, res) => {
         if (!learner) return sendError(res, "Information not found.");
 
         await Learner.deleteOne({_id: id});
-        return sendSuccess(res, "Update account information successfully.", learner);        
+        return sendSuccess(res, "Delete account information successfully.", learner);        
     } catch (error) {
         console.log(error);
         return sendServerError(res);  

@@ -14,12 +14,6 @@ export default function UserInfo({navigation}) {
 
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-                <Image source={require("./../../../assets/images/back-icon-white.png")} />
-            </TouchableOpacity>
-            <Text style={styles.headerText}>Cập nhật thông tin</Text>
-        </View>
         <View style={styles.wrapForm}>
           {/* Update detail */}
           <Text style={styles.titleText}>Tên người dùng</Text>
@@ -72,27 +66,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: colors.brightest_green,
-    },
-    header: {
-      height: '7.%',
-      backgroundColor: colors.dark_green,
-      borderWidth: 1.5,
-      borderColor: colors.bright_gray_brown,
-      flexDirection: 'row',
-    },
-    headerIcon: {
-        alignSelf: 'center',
-        flex: 1,
-        marginLeft: '3%', 
-    },
-    headerText: {
-        alignSelf: 'center',
-        color: colors.white,
-        fontSize: 24,
-        fontWeight: "600",
-        // textAlign: 'center',
-        marginLeft: '15%',
-        flex: 8,
     },
     wrapForm: {
       margin: '6%',      

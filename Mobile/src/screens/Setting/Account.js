@@ -2,9 +2,10 @@ import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
 import { VocabularyChart, PronunciationChart, PercentChart} from './../../components/Charts';
-// import MyCalendar from './../../components/Calendar';
 import colors from './../../../assets/colors';
 import { useLogin } from './../../context/LoginProvider';
+import IconWrap from './../../components/IconWrap';
+import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
@@ -42,22 +43,10 @@ export default function Account({navigation}) {
                   <Text style={styles.infoUserName}>{profile.username}</Text>
                   <View style={styles.iconWrap}>
                     <View style={styles.iconHeart}>
-                      <Image
-                      style={styles.smallIcon}
-                      source={require("./../../../assets/images/heart-icon.png")}
-                      />
-                      <Text style={styles.smallText}>{dataUser.hearts}</Text>
+                      <IconWrap name="heart" num={10}/>
                     </View>
                     <View style={styles.iconPeanut}>
-                      <Image
-                        style={styles.smallIcon}
-                        source={require("./../../../assets/images/peanut-icon.png")}
-                      />
-                      <Text style={styles.smallText}>{dataUser.peanuts}</Text>
-                      <Image
-                        style={styles.smallIcon}
-                        source={require("./../../../assets/images/add-icon.png")}
-                      />
+                      <IconWrap name="peanut" num={100} hasPlus={true}/>
                     </View>
                   </View>
                 </View>
@@ -65,17 +54,25 @@ export default function Account({navigation}) {
 
               <View style={styles.moreWrap}>
                 <TouchableOpacity style={styles.iconLink} onPress={() => navigation.navigate('Notification')}>
-                  <Image source={require("./../../../assets/images/notification-icon.png")} />
+                  <FontAwesomeIcon icon="fa-solid fa-bell" color={colors.shadow_gray_brown} size={24}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconLink} onPress={() => navigation.navigate('Setting')}>
-                  <Image source={require("./../../../assets/images/setting-icon.png")} />
+                  <FontAwesomeIcon icon="fa-solid fa-gear" color={colors.shadow_gray_brown} size={24}/>
                 </TouchableOpacity>
               </View>
             </View>
           <View>
           {/* Weekly tracking */}
           <View style={styles.wrapWeeklyTracking}>
-            <Text>Weekly tracking</Text>
+            <View style={styles.trackingHeader}>
+              <Text style={styles.trackingTitle}>Theo dõi hàng tuần</Text>
+              <View style={styles.iconFire}>
+                <IconWrap name="fire" num={3}/>
+              </View>
+            </View>
+            <View style={styles.trackingCalendar}>
+              <Text>Calendar</Text>
+            </View>
             {/* <MyCalendar /> */}
           </View>
           {/* Learning Detail */}
@@ -97,17 +94,15 @@ export default function Account({navigation}) {
             </View>
 
           </View>
-
           {/* Learning History */}
           <View style={styles.wrapLearningHistory}>
-          <Text>History</Text>
+            <Text>History</Text>
 
           </View>
           {/* Game */}
-          <View style={styles.wrapGame}>
-          <Text>Game</Text>
-
-          </View>
+          <TouchableOpacity style={styles.wrapGame}>
+            <Image style={styles.bannerImage} source={require("./../../../assets/images/game-banner-collect.png")} />
+          </TouchableOpacity>
         </View>
         </SafeAreaView>
       </ScrollView>
@@ -124,30 +119,26 @@ const styles = StyleSheet.create({
   },
   container:{
     position: 'relative',
-    backgroundColor: colors.yellow,
-    margin: '8%',
-    marginTop: '4%',
-
+    margin: '8.33%',
+    marginTop: '4.17%',
   },
   wrapUserInfo: {
     flexDirection: 'row',
   },
   infoWrap: {
-    flex: 6,
     backgroundColor: colors.white,
     flexDirection: "row",
+    justifyContent: 'space-between',
     borderWidth: 2,
     borderRadius: 20,
     borderColor: colors.bright_gray_brown,
     marginRight: 10,
     padding: 10,
+    width: '81.17%',
   },
   avatar: {
     flex: 1,
   },
-  // avatarImage: {
-  //   width:
-  // },
   info: {
     flex: 2,
   },
@@ -162,33 +153,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   iconHeart:{
-    flex: 2,
-    borderWidth: 2,
-    borderRadius: 16,
-    borderColor: colors.bright_gray_brown,
-    marginRight: 5,
-    flexDirection: "row",
-    padding: 5,
+    width: '40%',
   },
   iconPeanut: {
-    flex: 3,
-    borderWidth: 2,
-    borderRadius: 16,
-    borderColor: colors.bright_gray_brown,
-    flexDirection: "row",
-    padding:5,
+    width: '60%',
+    paddingLeft: '5%',
   },  
-  smallIcon: {
-    flex: 1,
-    width: 8,
-  },
-  smallText: {
-    textAlign: "right",
-    marginRight: 5,
-    flex: 2,
-  },
   moreWrap: {
-    flex: 1,
+    width: '14%',
     justifyContent: 'space-between',
   },
   iconLink: {
@@ -198,17 +170,42 @@ const styles = StyleSheet.create({
     borderColor: colors.bright_gray_brown,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 42,
+    height: 45,
   },
   
   wrapWeeklyTracking: {
-    backgroundColor: colors.blue,
-
+    backgroundColor: colors.bright_gray_brown,
+    borderWidth: 2,
+    borderRadius: 16,
+    borderColor: colors.bright_gray_brown,
+    marginTop: '2.08%',
+  },
+  trackingHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: '4.5%',
+    paddingTop: '2%',
+    paddingBottom: '2%',
+  },
+  trackingTitle: {
+    color: colors.white,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  iconFire: {
+    width: '22.7%',
+  },
+  trackingCalendar: {
+    backgroundColor: colors.white,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    padding: 5,
   },
   
   wrapLearningDetail: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: '2.08%',
   },
   wrapVocalDetail: {
     flex: 1,
@@ -233,7 +230,6 @@ const styles = StyleSheet.create({
 
   },
 
-  
   wrapLearningHistory: {
     backgroundColor: colors.white,
     borderWidth: 2,
@@ -241,9 +237,18 @@ const styles = StyleSheet.create({
     borderColor: colors.bright_gray_brown,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: '2.08%',
   },
   
   wrapGame: {
-
+    backgroundColor: colors.white,
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: colors.bright_gray_brown,
+    marginTop: '2.08%',
+  },
+  bannerImage: {
+    resizeMode: 'contain',
+    width: '100%',
   },
 });

@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken"
 import { sendError, sendServerError, sendSuccess } from "../helper/client.js"
+import { TOKEN_LIST,TOKEN_BLACKLIST } from './../index.js';
 
 /**
  * header contain
@@ -10,7 +11,7 @@ export const verifyToken = async (req, res, next) => {
         const data = req.headers['authorization']
         const token = data?.split(" ")[1];
         if(!token) return sendError(res, 'jwt must be provided.', 401)
-
+        console.log(TOKEN_LIST);
         if(token in TOKEN_LIST || token in TOKEN_BLACKLIST)
             return sendError(res, "Unauthorized.", 401)
         
@@ -25,6 +26,7 @@ export const verifyToken = async (req, res, next) => {
         next()
 
     } catch (error) {
+        console.log(error);
         return sendError(res, 'jwt expired.', 401)
     }
 }

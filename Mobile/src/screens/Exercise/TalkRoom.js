@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 import TalkRoomItem from './../../components/TalkRoom';
+import IconWrap from './../../components/IconWrap';
+
 const talkRoomData = [
     {
         id: "1",
@@ -59,14 +61,6 @@ const talkRoomData = [
 export default function TalkRoom({navigation}) {
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-                <Image source={require("./../../../assets/images/back-icon-white.png")} />
-            </TouchableOpacity>
-            <Text style={styles.headerText}>Phòng giao tiếp</Text>
-        </View>
-        {/* <ScrollView> */}
-
         <View style={styles.wrapInfo}>
             <View style={styles.infoHeader}>
                 <View style={{flexDirection: 'row'}}>
@@ -80,26 +74,10 @@ export default function TalkRoom({navigation}) {
                 <View style={styles.infoLeftContent}>                    
                     <Text style={styles.smallText}>Hiện bạn đang có</Text>
                     <View style={styles.wrapIcon}>
-                        <Image
-                            style={styles.smallIcon}
-                            source={require("./../../../assets/images/peanut-icon.png")}
-                        />
-                        <Text style={styles.smallText}>1</Text>
-                        <Image
-                            style={styles.smallIcon}
-                            source={require("./../../../assets/images/add-icon.png")}
-                        />
+                        <IconWrap name="peanut" num={10} hasPlus={true}/>
                     </View>
                     <View style={styles.wrapIcon}>
-                        <Image
-                            style={styles.smallIcon}
-                            source={require("./../../../assets/images/clock-icon.png")}
-                        />
-                        <Text style={styles.smallText}>60:00</Text>
-                        <Image
-                            style={styles.smallIcon}
-                            source={require("./../../../assets/images/add-icon.png")}
-                        />
+                        <IconWrap name="time" num={60} hasPlus={true}/>
                     </View>
                 </View>
                 <View style={styles.infoRightContent}>
@@ -116,7 +94,6 @@ export default function TalkRoom({navigation}) {
                 keyExtractor={(item) => item.id}
             />
         </View>
-        {/* </ScrollView> */}
 
     </View>
 
@@ -147,7 +124,6 @@ const styles = StyleSheet.create({
         color: colors.white,
         fontSize: 24,
         fontWeight: "600",
-        // textAlign: 'center',
         marginLeft: '18%',
         flex: 8,
     },
@@ -174,20 +150,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     wrapIcon: {
-        backgroundColor: colors.white,
         flex: 1,
-        height: '60%',  
-        borderWidth: 2,        
-        borderRadius: 20,
-        borderColor: colors.bright_gray_brown,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
         marginRight: '8%',
-        marginLeft: '4%',
         marginTop: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
     },  
     smallText: {
         color: colors.black_green,

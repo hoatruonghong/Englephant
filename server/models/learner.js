@@ -6,6 +6,10 @@ const LearnerSchema = new Schema(
     username: {
         type: String,
         required: true,
+        unique: true,
+    },
+    fullname: {
+        type: String,
     },
     password: {
         type: String,
@@ -24,7 +28,7 @@ const LearnerSchema = new Schema(
         }
     },
     bornYear: {
-        type: String,
+        type: Number,
     },
     gender: {
         type: String,

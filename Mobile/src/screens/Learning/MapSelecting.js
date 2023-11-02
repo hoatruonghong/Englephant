@@ -17,7 +17,6 @@ import axios from 'axios';
 import Map from '../../components/Map';
 import SideIndicator from '../../components/SideIndicator';
 import GoButton from '../../components/GoButton';
-import { HeaderBarWithItems} from './../../components/HeaderBar';
 import SmallButton from '../../components/SmallButton';
 
 //import API
@@ -132,9 +131,6 @@ export default function MapSelecting({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={bg} style={styles.bg}>
-       <HeaderBarWithItems 
-        items={[ {itemName: 'heart', num: 2}, {itemName: 'peanut', num: 15}]} 
-        style={{flex: 0.09, height: height, position: "absolute"}}/>
         <View style = {styles.top}>
           <View style = {styles.subtop}>
             <View style={styles.avatar}>
