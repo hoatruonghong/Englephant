@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-//Learner: Show all maps
+
 router.post('/add/', async (req, res) => {
   try {
       const { _id, name, mode, price, image } = req.body;
@@ -32,7 +32,7 @@ router.post('/add/', async (req, res) => {
       })
   
       await dbMap.save();
-      res.status(200).json({ message: "Create add successfully!" })
+      res.status(200).json({ message: "Create map successfully!" })
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
   }
@@ -91,7 +91,7 @@ router.post('/unlock/:learnerid/:mapId', async (req, res) => {
         return sendError(res, "Already unlocked!");
       const unlockedmap = await learnermap.create({learnerId: learnerid, mapId: mapId, status: 0});
       const node1st = await node.find({mapId: mapId, position: 1});
-      const unlockednode = await learnernode.create({learnerId: learnerid, nodeId: node1st._id, point: 0});
+      const unlockednode = await learnernode.create({learnerId: learnerid, nodeId: node1st._id});
       console.log(unlockedmap);
       console.log(unlockednode);
       return sendSuccess(res, "Unlock successfully");
@@ -103,13 +103,18 @@ router.post('/unlock/:learnerid/:mapId', async (req, res) => {
 
 //Learner: Get unlock Map conditions
 router.get('/lock/:learnerid/:mapId', async (req, res) => {
-  const {mapId} = req.params;
+  const {learnerid, mapId} = req.params;
   try {
       const lockedmap = await map.findById(mapId);
+      console.log(learnerid);
       const previousmap = await learnermap.find({learnerId: learnerid, mapId: lockedmap.previousmap});
-      const isFree = true;
-      if (previousmap.status<1)
-        condition = 'Hoàn thành map '+previousmap.name+' để mở khoá';
+      console.log(previousmap);
+      console.log(previousmap[0].mapId);
+      console.log(previousmap[0].status);
+      let isFree = true;
+      let condition = "";
+      if (previousmap[0].status<=1)
+        condition = 'Hoàn thành map '+previousmap[0].name+' từ 2* trở lên để mở khoá';
       else {
         if (lockedmap.price>0){
           isFree = lockedmap.price;
@@ -205,5 +210,82 @@ router.delete('/delete-map/:mode/topic/:name', async (req, res) => {
     res.status(500).json({ message: JSON.stringify(err) });
   }
 });
+
+//Learner: Update Node Point
+router.put('/node-result/:nodeId', async (req, res) => {
+  try {
+    const { nodeId } = req.params;
+    const { learnerId, point, totalnumofquiz } = req.body;
+    const node_result = learnernode.findOne({nodeId: nodeId, learnerId: learnerId});
+    if (point> node_result.point)
+      await learnernode.findByIdAndUpdate( node_result._id, { point: point, totalnumofquiz: totalnumofquiz });
+
+    res.status(200).json({ message: "Update Node result successfully!" })
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Learner: Unlock new Node
+router.post('/node/:nodeId', async (req, res) => {
+  try {
+    const { nodeId } = req.params;
+    const {learnerId} = req.body;
+    const cur_node = await node.findById(nodeId);
+    if(cur_node.next){
+      const next_node = learnernode.findOne({nodeId : cur_node.next})
+      if (!next_node){
+        const dbLearnerNode = new learnernode({
+          learnerId: learnerId,
+          nodeId: cur_node.next
+        })
+        await dbLearnerNode.save();
+      }
+      return res.status(200).json({ message: "Unlock new Node successfully!" });
+    } else {
+      return res.status(500).json({ message: "Cannot find node with given id" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Learner: Check Node State
+router.get('/check-node/:mapId/:learnerId', async (req, res) => {
+  try {
+    const {mapId, learnerId} = req.params;
+    const nodes = await node.find({mapId: mapId});
+    let ret = [];
+    for (let i in nodes){
+      let nodestate = await learnernode.findOne({learnerId: learnerId, nodeId: nodes[i]._id});
+      ret.push(nodestate? "Unlock" : "Lock");
+      if (i>=1 && ret[i-1] == "Unlock" && ret[i] == "Lock") ret[i]="Next";
+    }
+    return res.status(200).json({ data: ret });
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
+  }
+})
+
+//Learner: Get Summary of Map
+router.get('/sum/:mapId/:learnerId', async (req,res) => {
+  try {
+    const {mapId, learnerId} = req.params;
+    const nodes = await node.find({mapId: mapId});
+    let learnernoderesults = [];
+    let sumpoint = 0;
+    let sumtotalnumofquiz = 0;
+    for (let i in nodes){
+      let newLearnerNode = await learnernode.findOne({nodeId: nodes[i].nodeId, learnerId: learnerId});
+      learnernoderesults.push({point: newLearnerNode.point, totalnumofquiz: newLearnerNode.totalnumofquiz});
+      sumpoint = sumpoint + newLearnerNode.point;
+      sumtotalnumofquiz = sumtotalnumofquiz + newLearnerNode.totalnumofquiz;
+    }
+    learnernoderesults.push({point: sumpoint, totalnumofquiz: sumtotalnumofquiz});
+    return res.status(200).json({ data: learnernoderesults });
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
+  }
+})
 
 export default router;

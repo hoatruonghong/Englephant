@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
@@ -8,7 +9,15 @@ const NodeSchema = new Schema(
       ref: 'map' ,
     },
     position: Number,
-    type: String,
+    type: {
+      type: String,
+      enum: ["Học", "Luyện tập", "Tổng kết"],
+      default: "Học"
+    },
+    next: {
+      type: mongoose.Types.ObjectId,
+      ref: 'node'
+    }
   },
 );
 

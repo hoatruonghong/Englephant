@@ -46,7 +46,12 @@ import SchoolMap from './screens/Learning/Maps/SchoolMap';
 import TalkRoom from './screens/Exercise/TalkRoom';
 import ListenRead from './screens/Exercise/ListenRead';
 import Pronunciation from './screens/Exercise/Pronunciation';
-import Quiz from './screens/Quiz/Quiz';
+import LearningQuiz from './screens/Quiz/LearningQuiz';
+import PracticeQuiz from './screens/Quiz/PracticeQuiz';
+import Flashcard from './screens/Learning/Flashcard';
+import FlashcardDetails from './screens/Learning/FlashcardDetails';
+import Relax from './screens/Learning/Relax';
+import Sum from './screens/Learning/Sum';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -104,8 +109,8 @@ function LearningScreens() {
   return (
     <Stack.Navigator 
       screenOptions={{ headerShown: false }} >
-      <Stack.Screen name="MapSelecting" component={MapSelecting} />
       <Stack.Screen name="2" component={FamilyMap}/>
+      <Stack.Screen name="MapSelecting" component={MapSelecting} />
       <Stack.Screen name="1" component={FruitMap}/>
       <Stack.Screen name="3" component={SchoolMap}/>
     </Stack.Navigator>    
@@ -164,8 +169,13 @@ function StackNavigator(){
     <Stack.Navigator      
       screenOptions={{ headerShown: false }} >
       <Stack.Screen name="MyTabs" component={MyTabs} />
-      <Stack.Screen name="Quiz" component={Quiz} />
+      <Stack.Screen name="Sum" component={Sum} />
+      <Stack.Screen name="Relax" component={Relax} />
+      <Stack.Screen name="Flashcard" component={Flashcard} />
+      <Stack.Screen name="FlashcardDetails" component={FlashcardDetails} />
       <Stack.Screen name="Warmup" component={Warmup} />
+      <Stack.Screen name="LearningQuiz" component={LearningQuiz} />
+      <Stack.Screen name="PracticeQuiz" component={PracticeQuiz} />
       <Stack.Screen name="ListeningReading" component={Warmup} />
       <Stack.Screen name="TalkRoom" component={Warmup} />
       <Stack.Screen name="Card" component={Warmup} />

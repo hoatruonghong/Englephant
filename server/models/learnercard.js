@@ -11,9 +11,15 @@ const LearnerCardSchema = new Schema(
         type: mongoose.Types.ObjectId, 
         ref: 'card' ,
     },
-    status: Number,
-    correctNum: Number,
-    incorrectNum: Number
+    nodeId: {
+      type: mongoose.Types.ObjectId, 
+      ref: 'node' ,
+  },
+    status: {
+      type: String,
+      enum: ["Mới học", "Gần nhớ", "Đã nhớ"],
+      default: "Mới học"
+    }
   }
 );
 

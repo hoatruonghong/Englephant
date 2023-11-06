@@ -11,7 +11,14 @@ const LearnerNodeSchema = new Schema(
         type: mongoose.Types.ObjectId, 
         ref: 'node' ,
     },
-    point: Number
+    point: {
+      type: Number,
+      default: 0
+    },
+    totalnumofquiz: {
+      type: Number,
+      default: 0
+    },
   }
 );
 

@@ -6,7 +6,7 @@ const FlashCardSchema = new Schema(
     _id: String,
     word: String,
     viemeaning: String,
-    partofspeech: String,
+    pos: String,
     audio: String,
     pronunciation: String,
     star: Number,

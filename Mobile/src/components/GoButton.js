@@ -10,7 +10,8 @@ export default function GoButton(props) {
         width: width*0.34, 
         height: height*0.08, 
         left: width*0.33,
-        top: top
+        top: top,
+        backgroundColor: colors.red,
         },
         styles.button
       ]} 
@@ -26,7 +27,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
-    backgroundColor: colors.red,
     position: "absolute"
   },
   text: {

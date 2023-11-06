@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -16,15 +16,15 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 
 library.add(fas);
 
-export default function Warmup() {
+export default function Warmup({navigation}) {
   const {height, width} = useWindowDimensions();
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={require('./../../../assets/images/bg.png')} style={styles.bg}>
           <MascotHappy width={width}
               height={height}
-              viewBox='-30 -132 390 780'/>
-          <TouchableOpacity style={styles.close} onPress={() => {}}>
+              viewBox='-50 -132 390 780'/>
+          <TouchableOpacity style={styles.close} onPress={() => navigation.navigate("MyTabs")}>
             <FontAwesomeIcon icon="xmark"  color={colors.black} size={32}/>
           </TouchableOpacity>
           <Text style={[{top: "60%", width: "100%"},styles.heading]}>Khởi động nào!!!</Text>

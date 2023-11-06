@@ -20,8 +20,8 @@ text: {
 close: {
     alignItems: 'center',
     position: "absolute",
-    left: "90%",
-    top: "1%",
+    right: "10%",
+    top: "4%",
     width: "3%"
 },
 container: {

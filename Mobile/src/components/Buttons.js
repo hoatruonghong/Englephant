@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: 40,
       borderRadius: 16,
       elevation: 3,
+      zIndex: 3,
       backgroundColor: colors.main_green,
     },
     text: {

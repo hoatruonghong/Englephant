@@ -6,6 +6,9 @@ import dotenv from "dotenv";
 import authRouter from './routers/auth.js';
 import mapRouter from './routers/map.js';
 import learnerRouter from './routers/learner.js';
+import quizRouter from './routers/quiz.js';
+import flashcardRouter from './routers/flashcard.js';
+import idiomRouter from './routers/idiom.js';
 
 
 const app = express();
@@ -37,6 +40,9 @@ app
 .use('/api/auth', authRouter)
 .use('/api/map', mapRouter)
 .use('/api/learner', learnerRouter)
+.use('/api/quiz', quizRouter)
+.use('/api/card', flashcardRouter)
+.use('/api/idiom', idiomRouter)
 
 app.listen(PORT, () => {
   console.log("Server started at PORT ", PORT);

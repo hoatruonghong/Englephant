@@ -17,7 +17,7 @@ import AudioRecord from 'react-native-audio-record';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import * as Progress from 'react-native-progress';
 
-import colors from '../../assets/colors';
+import colors from '../../../assets/colors';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
@@ -35,7 +35,6 @@ const baseHOST = "https://api.speechsuper.com";
 
 const coreType = "word.eval"; // Change the coreType according to your needs.
 const refText = "supermarket"; // Change the reference text according to your needs.
-//const audioPath = "supermarket.wav"; // Change the audio path corresponding to the reference text.
 const audioType = "wav"; // Change the audio type corresponding to the audio file.
 const audioSampleRate = "16000";
 
@@ -148,7 +147,6 @@ class PronunciationAssess extends Component {
     loaded: false,
     paused: true
   };
-
   async componentDidMount() {
     await this.checkPermission();
     const options = {
@@ -265,26 +263,11 @@ class PronunciationAssess extends Component {
 
   render(){
     return (
-      <SafeAreaView style = {{flex:1, backgroundColor: 'white'}}>
-        <View style={styles.view}>
-        <TouchableOpacity style={styles.touchOpContainer} onPress={this.changePlayEvent}>
-            <Progress.Bar progress={0.7} width={200} />
-            <FontAwesomeIcon icon="xmark"  color={colors.main_green} size={90}/>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.touchOpContainer} onPress={this.changePlayEvent}>
-            <FontAwesomeIcon icon="volume-up"  color={colors.main_green} size={90}/>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.view}>
-          <Text style={styles.word}> supermarket
-          </Text>
-        </View>
         <View style={styles.view}>
           <TouchableOpacity style={styles.touchOpContainer} onPress={this.changeRecordEvent}>
-            <FontAwesomeIcon icon="microphone"  color={colors.main_green} size={48}/>
+            <FontAwesomeIcon icon="microphone"  color={colors.main_green} size={50}/>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
     );
   }
 }
@@ -292,7 +275,7 @@ class PronunciationAssess extends Component {
 
 const styles = StyleSheet.create({
   view: {
-    flex:0.3,
+    height: "40%",
     backgroundColor: 'white',
     justifyContent: 'center'
   },
