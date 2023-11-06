@@ -6,6 +6,7 @@ import Learner from "../models/learner.js"
 import { sendError, sendServerError, sendSuccess} from "../helper/client.js"
 import { learnerRegisterValidate, userLoginValidate } from "../validation/auth.js"
 import { verifyToken} from '../middleware/index.js'
+import { TOKEN_LIST, TOKEN_BLACKLIST } from './../index.js';
 
 const authRouter = express.Router()
 
@@ -67,12 +68,12 @@ authRouter.post('/login', async (req, res) => {
             username: username,
             email: learner.email,
             phone: learner.phone,
-            mode: user.defaultMode
+            mode: learner.defaultMode
         }
         const accessToken = jwt.sign(
             {user: learnerData},
             process.env.JWT_SECRET_KEY,
-            {expiresIn: '30s'}
+            {expiresIn: '5m'}
         )
 
         const refreshToken = jwt.sign(
@@ -85,6 +86,8 @@ authRouter.post('/login', async (req, res) => {
             accessToken,
             refreshToken
         }
+
+        TOKEN_LIST['refreshToken'] = response
 
         return sendSuccess(res, 'Login successfully.', {
             response,

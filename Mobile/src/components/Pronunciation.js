@@ -34,15 +34,6 @@ export default function PronunciationItem({ item }) {
         <Image source={require("./../../assets/images/ellipse-white-pot.png")} />
       </View>
       <View style={styles.contentItem}>
-        {/* <View style={styles.lessonItem}>
-            <Text>Hướng dẫn</Text>
-        </View>
-        <View style={styles.lessonItem}>
-            <Text>Phân biệt</Text>
-        </View>
-        <View style={styles.lessonItem}>
-            <Text>Luyện tập</Text>
-        </View> */}
         <LessonItem title={"Hướng dẫn"} type={1}/>
         <LessonItem title={"Phân biệt"} type={2}/>
         <LessonItem title={"Luyện tập"} type={3}/>
@@ -71,8 +62,11 @@ const styles = StyleSheet.create({
   lessonItem: {
     backgroundColor: colors.white,
     width: '30%',
-    padding: '3%',
+    padding: '2%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 2,
     borderRadius: 20,
     borderColor: colors.bright_gray_brown,
@@ -82,15 +76,15 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shawdowColor: colors.shadow_gray_brown, 
   },
-
   titleText: {
     fontSize: 24,
-    fontWeight: "500",
+    fontWeight: "400",
     color: colors.white,
   },
   contentText: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 15,
+    fontWeight: "600",
     color: colors.black_green,
+    marginTop: 5,
   },
 });

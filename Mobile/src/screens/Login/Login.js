@@ -18,6 +18,7 @@ export default function Login({navigation}) {
     const res = await Auth.login({username, password});
     setProfile(res.data.data.user);
     setIsLoggedIn(true);
+    console.log(res.data.data.user);
   };
 
   const isValidForm = () => {

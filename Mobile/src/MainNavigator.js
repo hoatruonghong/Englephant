@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import type {PropsWithChildren} from 'react';
-import {useWindowDimensions} from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Text } from 'react-native';
 import axios from 'axios';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -52,6 +52,8 @@ import Flashcard from './screens/Learning/Flashcard';
 import FlashcardDetails from './screens/Learning/FlashcardDetails';
 import Relax from './screens/Learning/Relax';
 import Sum from './screens/Learning/Sum';
+import Quiz from './screens/Quiz/Quiz';
+import {HeaderBar} from './components/HeaderBar';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -107,24 +109,57 @@ function MyTabs() {
 
 function LearningScreens() {
   return (
-    <Stack.Navigator 
-      screenOptions={{ headerShown: false }} >
-      <Stack.Screen name="2" component={FamilyMap}/>
-      <Stack.Screen name="MapSelecting" component={MapSelecting} />
-      <Stack.Screen name="1" component={FruitMap}/>
-      <Stack.Screen name="3" component={SchoolMap}/>
+    <Stack.Navigator screenOptions={styles.headerWrap}>
+      <Stack.Screen name="MapSelecting" component={MapSelecting}
+        options={{
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+        }}
+      />
+      <Stack.Screen name="2" component={FamilyMap}
+        options={{
+          headerBackVisible: false,
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+        }}
+      />
+      <Stack.Screen name="1" component={FruitMap}
+        options={{
+          headerBackVisible: false,
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+        }}
+      />
+      <Stack.Screen name="3" component={SchoolMap}
+        options={{
+          headerBackVisible: false,
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+        }}      
+      />
     </Stack.Navigator>    
   )
 }
 
 function ExerciseScreens() {
   return (
-    <Stack.Navigator      
-      screenOptions={{ headerShown: false }} >
-      <Stack.Screen name="ExerciseMain" component={ExerciseMain} />
-      <Stack.Screen name="Pronunciation" component={Pronunciation} />
-      <Stack.Screen name="ListenRead" component={ListenRead} />
-      <Stack.Screen name="TalkRoom" component={TalkRoom} />
+    <Stack.Navigator screenOptions={styles.headerWrap}>
+      <Stack.Screen name="ExerciseMain" component={ExerciseMain}
+        options={{
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+        }}
+      />
+      <Stack.Screen name="Pronunciation" component={Pronunciation} 
+        options={{
+          headerTitle: 'Phát âm',
+        }}
+      />
+      <Stack.Screen name="ListenRead" component={ListenRead} 
+        options={{
+          headerTitle: 'Nghe đọc',
+        }}
+      />
+      <Stack.Screen name="TalkRoom" component={TalkRoom}
+        options={{
+          headerTitle: 'Phòng giao tiếp',
+        }}
+      />
     </Stack.Navigator>    
   )
 }
@@ -167,7 +202,9 @@ function AuthScreens() {
 function StackNavigator(){
   return(
     <Stack.Navigator      
-      screenOptions={{ headerShown: false }} >
+      screenOptions={styles.headerWrap}
+    >
+      <Stack.Group screenOptions={{headerShown: false}}>
       <Stack.Screen name="MyTabs" component={MyTabs} />
       <Stack.Screen name="Sum" component={Sum} />
       <Stack.Screen name="Relax" component={Relax} />
@@ -176,14 +213,21 @@ function StackNavigator(){
       <Stack.Screen name="Warmup" component={Warmup} />
       <Stack.Screen name="LearningQuiz" component={LearningQuiz} />
       <Stack.Screen name="PracticeQuiz" component={PracticeQuiz} />
+      <Stack.Screen name="Quiz" component={Quiz} />
+      <Stack.Screen name="Warmup" component={Warmup}/>
       <Stack.Screen name="ListeningReading" component={Warmup} />
       <Stack.Screen name="TalkRoom" component={Warmup} />
       <Stack.Screen name="Card" component={Warmup} />
       <Stack.Screen name="Game" component={Warmup} />
       <Stack.Screen name="Fashion" component={Warmup} />
-      <Stack.Screen name="Setting" component={Setting} />
-      <Stack.Screen name="UserInfo" component={UserInfo} />
-      <Stack.Screen name="Notification" component={Notification} />
+      </Stack.Group>
+
+      <Stack.Screen name="Setting" component={Setting} 
+        options={{ headerTitle: 'Cài đặt tài khoản'}} />
+      <Stack.Screen name="UserInfo" component={UserInfo} 
+        options={{ headerTitle: 'Cập nhật thông tin' }} />
+      <Stack.Screen name="Notification" component={Notification} 
+         options={{ headerTitle: 'Thông báo' }} />
     </Stack.Navigator>)
 }
 
@@ -191,5 +235,25 @@ const MainNavigator = () => {
     const { isLoggedIn } = useLogin();
     return isLoggedIn ? <StackNavigator /> : <AuthScreens />;
 }
+
+const styles = StyleSheet.create({
+  headerWrap : {
+    headerStyle: {
+      height: '8%',
+      backgroundColor: colors.dark_green,
+      borderBottomWidth: 2, 
+      borderColor: colors.bright_gray_brown,
+      justifyContent: "center",
+    },
+    headerTitleStyle: {
+      color: colors.white,
+      fontSize: 24,
+      fontWeight: 'semibold',
+    },
+    headerTintColor: colors.white,
+    headerTitleAlign: 'center',
+  },
+
+})
 
 export default MainNavigator;

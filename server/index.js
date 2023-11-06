@@ -14,6 +14,8 @@ import idiomRouter from './routers/idiom.js';
 const app = express();
 dotenv.config()
 const PORT = process.env.PORT || 5000 ;
+export const TOKEN_LIST = {}
+export const TOKEN_BLACKLIST = {}
 
 //Middleware
 app.use(bodyParser.json({limit: '30mb'}));

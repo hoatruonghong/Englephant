@@ -64,12 +64,6 @@ const notificationData = [
 export default function Notification({navigation}) {
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
-            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-                <Image source={require("./../../../assets/images/back-icon-white.png")} />
-            </TouchableOpacity>
-            <Text style={styles.headerText}>Thông báo</Text>
-        </View>
         <View style={styles.wrapNotification}>
             <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -89,31 +83,11 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: colors.brightest_green,
     },
-    header: {
-        height: '7.%',
-        backgroundColor: colors.dark_green,
-        borderWidth: 1.5,
-        borderColor: colors.bright_gray_brown,
-        flexDirection: 'row',
-    },
-    headerIcon: {
-        alignSelf: 'center',
-        flex: 1,
-        marginLeft: '3%', 
-    },
-    headerText: {
-        alignSelf: 'center',
-        color: colors.white,
-        fontSize: 24,
-        fontWeight: "600",
-        // textAlign: 'center',
-        marginLeft: '20%',
-        flex: 8,
-    },
     wrapNotification: {
         marginTop: '3%',
         marginLeft: '3%',
         marginRight: '3%',
-        marginBottom: '13%',
+        marginBottom: 0,
+        flex: 1,
     }
   });

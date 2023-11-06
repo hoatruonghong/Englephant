@@ -1,20 +1,28 @@
 import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, FlatList, TouchableOpacity } from "react-native";
 import colors from './../../../assets/colors';
-import { HeaderBarWithItems, HeaderBarPlain } from './../../components/HeaderBar';
-import { HeartWrap, PeanutWrap, CardWrap, BudWrap } from "./../../components/IconWrap";
+import MascotExcited from '../../../assets/svg/mascot_more_excited.svg';
+import Idiom from './../../api/Idiom';
+
+
 var dataUser = {
     hearts: 1,
     peanuts: 10,
 };
-pronunciateImage = require("./../../../assets/images/pronunciate.png");
-listen_readImage = require("./../../../assets/images/listen-read.png");
 
 export default function ExerciseMain({navigation}) {
-  return (
-    <ScrollView>
+    const [sentence, setSentence] = React.useState('Cut somebody some slack');
+    const [meaning, setMeaning] = React.useState('Đừng quá khắt khe');
+
+    const loadIdiom = async () => {
+        const res = await Idiom.loadRandom();
+        setSentence(res.data.data.sentence);
+        setMeaning(res.data.data.meaning);
+        console.log(res.data.data);
+    };
+
+    return (
     <View style={styles.container}>
-        <HeaderBarWithItems items={[ {itemName: 'heart', num: 2}, {itemName: 'peanut', num: 15}]} />
         <View style={styles.wrapFeatures}>
             {/* Idioms */}
             <View style={styles.wrapIdioms}>
@@ -26,14 +34,14 @@ export default function ExerciseMain({navigation}) {
                 </View>
                 <View style={styles.idiomsContent}>
                     <View style={styles.idiomsSentences}>
-                        <Text style={styles.smallText}>Cut someone some slack</Text>
-                        <Text style={[styles.smallText, styles.brownColor]}>Đừng quá khắt khe</Text>
+                        <Text style={styles.smallText}>{sentence}</Text>
+                        <Text style={[styles.smallText, styles.brownColor]}>{meaning}</Text>
                     </View>
                     <View style={styles.idiomsImage}>
-                        <Image source={require("./../../../assets/images/elephant-happy.png")} />
+                        <MascotExcited style={styles.imgIdiom}/>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.idiomsRandom}>
+                <TouchableOpacity style={styles.idiomsRandom} onPress={loadIdiom}>
                     <Image source={require("./../../../assets/images/random-icon.png")} />
                 </TouchableOpacity>
             </View>
@@ -44,16 +52,18 @@ export default function ExerciseMain({navigation}) {
                     <Image source={require("./../../../assets/images/ellipse-white-pot.png")} />
                         <Text style={[styles.titleText, styles.whiteColor]}>Học nền tảng</Text>
                     <Image source={require("./../../../assets/images/ellipse-white-pot.png")} />
-
                 </View>
                 <View style={styles.practicesContent}>
-                    <TouchableOpacity style={styles.practicesItem} onPress={()=>navigation.navigate("Pronunciation")}>
-                        <Image style={styles.practicesItemImage} source={require("./../../../assets/images/pronunciation.png")} />
+                    <TouchableOpacity style={styles.practicesWrap} onPress={()=>navigation.navigate("Pronunciation")}>
+                        <View style={styles.practicesItem}>
+                            <Image style={styles.imgPractice} source={require("./../../../assets/images/pronunciate.jpg")} />
+                        </View>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.practicesItem} onPress={()=>navigation.navigate("ListenRead")}>
-                        <Image style={styles.practicesItemImage} source={require("./../../../assets/images/listening-reading.png")} />
+                    <TouchableOpacity style={styles.practicesWrap} onPress={()=>navigation.navigate("ListenRead")}>
+                        <View style={styles.practicesItem}>
+                            <Image style={styles.imgPractice} source={require("./../../../assets/images/listen_read.jpg")} />
+                        </View>
                     </TouchableOpacity>
-
                 </View>
 
             </View>
@@ -62,7 +72,7 @@ export default function ExerciseMain({navigation}) {
             <TouchableOpacity style={styles.wrapSkills} onPress={()=>navigation.navigate("TalkRoom")}>
                 <View style={styles.skillsHeader}>
                     <Image source={require("./../../../assets/images/ellipse-pot.png")} />
-                    <Text style={styles.titleText}>Phòng giao tiếp</Text>
+                    <Text style={styles.titleText}>Luyện kĩ năng</Text>
                     <Image source={require("./../../../assets/images/ellipse-pot.png")} />
 
                 </View>
@@ -77,7 +87,6 @@ export default function ExerciseMain({navigation}) {
             </TouchableOpacity>
         </View>
     </View>
-    </ScrollView>
   )
 };
 
@@ -87,49 +96,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         backgroundColor: colors.brightest_green,
     },
-    wrapHeader: {
-        height: '10%',
-        backgroundColor: colors.dark_green,
-        borderWidth: 1.5,        
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        borderColor: colors.bright_gray_brown,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    iconHeart:{
-        backgroundColor: colors.white,
-        flex: 1,
-        height: '60%',  
-        borderWidth: 1.5,        
-        borderRadius: 20,
-        borderColor: colors.bright_gray_brown,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginRight: '4%',
-        marginLeft: '8%',
-        paddingLeft: 10,
-        paddingRight: 10,
-
-    },
-    iconPeanut: {
-        backgroundColor: colors.white,
-        flex: 1,
-        height: '60%',  
-        borderWidth: 1.5,        
-        borderRadius: 20,
-        borderColor: colors.bright_gray_brown,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginRight: '8%',
-        marginLeft: '4%',
-        paddingLeft: 10,
-        paddingRight: 10,
-    },  
-    smallIcon: {
-    },
     smallText: {
         color: colors.black_green,
         fontSize: 18,
@@ -137,13 +103,14 @@ const styles = StyleSheet.create({
     },
     titleText: {
         color: colors.black_green,
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: "500",
     },
     wrapFeatures: {
-        margin: '10%',
-        marginTop: '5%',
-        marginBottom: '15%',
+        margin: '9%',
+        marginTop: '3%',
+        marginBottom: '3%',
+        flex: 1,
     },
     wrapIdioms: {
         backgroundColor: colors.white,
@@ -151,6 +118,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         borderColor: colors.bright_gray_brown,
         padding: '3%',
+        flex: 5,
     },
     idiomsHeader: {
         flexDirection: 'row',
@@ -166,6 +134,8 @@ const styles = StyleSheet.create({
     idiomsImage: {
         flex: 2,
     },
+    imgIdiom: {
+    },
     idiomsRandom: {
         alignSelf: 'center',
     },
@@ -174,36 +144,51 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: '3%',
         marginTop: 15,
+        flex: 4,
     },
     practicesHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        flex: 1,
     },
     practicesContent: {
         flexDirection: 'row',
+        justifyContent: 'space-around',
         marginTop: 6,
+        flex: 4,
+    },
+    practicesWrap: {
+        flex: 1,
     },
     practicesItem: {
-        flex: 1,
-        // backgroundColor: colors.white,
-        // height: 130,
-        // borderWidth: 2,        
-        // borderRadius: 16,
-        // borderColor: colors.bright_gray_brown,
-        // margin: 2,
-        // marginBottom: 0,
-        // elevation: 10,
-        // shadowOffset: { width: 1, height: 1 },
-        // shadowOpacity:  0.25,
-        // shadowRadius: 4,
-        // shawdowColor: colors.shadow_gray_brown,        
-    },
-    practicesItemImage: {
-        flex: 1,
-    },
-    practicesImage: {
-        height: '100%',        
+        margin: '1%',
+        flex: 1,  
+        elevation: 10,
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity:  0.25,
+        shadowRadius: 4,
+        shawdowColor: colors.shadow_gray_brown,
         borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    imgPractice: {
+        height: '100%',
+        resizeMode: 'contain',  
+        borderRadius: 16,
+        borderWidth: 2, 
+        borderColor: colors.bright_gray_brown,
+    },
+    practicesItemText: {
+        alignSelf: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: colors.black_green,
+    },
+    pronuciationText: {
+        position: 'absolute',
+        // alignSelf: 'flex-end',
+        bottom: 50,
     },
     wrapSkills: {
         backgroundColor: colors.white,
@@ -211,11 +196,15 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         borderColor: colors.bright_gray_brown,
         padding: '3%',
+        paddingTop: '1%',
         marginTop: 15,
+        flex: 4,
     },
     skillsHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
+        flex: 1,
     },
     skillsContent: {
         flexDirection: 'row',
@@ -230,6 +219,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         paddingLeft: '5%',
         paddingTop: 5,
+        flex: 4,
     },
     skillsTitle: {
         flex: 1,
@@ -240,6 +230,8 @@ const styles = StyleSheet.create({
     },
     skillsImage: {
         flex: 2,
+        width: '80%',
+        resizeMode: 'contain',
     },
 
     // colorText

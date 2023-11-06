@@ -75,12 +75,12 @@ const data = [
 export default function ListenRead({navigation}) {
   return (
     <View style={styles.container}>
-        <View style={styles.header}>
+        {/* <View style={styles.header}>
             <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
                 <Image source={require("./../../../assets/images/back-icon-white.png")} />
             </TouchableOpacity>
             <Text style={styles.headerText}>Nghe đọc</Text>
-        </View>
+        </View> */}
         <View style={styles.wrapContent}>
             <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
         paddingTop: '5%',
         paddingLeft: '8%',
         paddingRight: '8%',
-        paddingBottom: '15%',
+        paddingBottom: '5%',
+        flex: 1,
     }
 });

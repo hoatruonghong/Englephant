@@ -9,9 +9,7 @@ const IdiomSchema = new Schema(
     meaning: {
         type: String,
     }
-  },
-  { timestamps: true }
+  }
 );
-
 
 export default mongoose.model("idiom", IdiomSchema);

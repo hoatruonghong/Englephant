@@ -97,13 +97,21 @@ export default function Quiz() {
                             style={[styles.wrapOption,
                             {
                                 backgroundColor: option==correctOption 
-                                ? colors.main_green 
+                                ? colors.bright_gray_brown 
                                 : option==currentOptionSelected
                                 ? colors.red
                                 : colors.white,
                             }]}
                         >
-                            <Text style={styles.optionText}>{option}</Text>
+                            <Text style={[styles.optionText,
+                            {
+                                color: option==correctOption 
+                                ? colors.white 
+                                : option==currentOptionSelected
+                                ? colors.white
+                                : colors.black_green,
+                            }
+                            ]}>{option}</Text>
                         </TouchableOpacity>
                     ))
                 }
