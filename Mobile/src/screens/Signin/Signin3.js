@@ -1,15 +1,36 @@
 import React, { useContext, useState }  from 'react';
-import { Text, SafeAreaView, View, StyleSheet, ImageBackground, Image, TextInput, Picker } from "react-native";
+import { Text, SafeAreaView, View, StyleSheet, ImageBackground, Image, TextInput, Picker, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 import content from './../../../declarations.d';
 import SelectDropdown from 'react-native-select-dropdown'
+import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { useLogin } from '../../context/LoginProvider';
+import axios from 'axios';
+
+import Auth from './../../api/Auth';
 
 const image = require("./../../../assets/images/forest-landscape.png");
+const minutes = ["10", "15", "20", "30"];
 
-const SetGoal = ({navigation}) => {
-    const minutes = ["10", "15", "20", "30"]
+const SetGoal = ({route, navigation}) => {
+    const [targetTime, setTargetTime] = useState('');
+    const { setIsLoggedIn, learnerId, setLearnerId } = useLogin();
 
+    const handleRegister = async () => {
+        route.params.targetTime = targetTime;
+        // console.log('full_info', route.params);
+        try {
+            console.log(route.params);
+            const res = await axios.post('http://10.0.2.2:5000/api/auth/register', route.params);
+            console.log(res.data);
+            // setLearnerId(res.data.data.learner_id);
+
+            // setIsLoggedIn(true);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     return (
     <SafeAreaView style={styles.container}>
         <View style = {styles.backgroundContainer}>
@@ -19,18 +40,20 @@ const SetGoal = ({navigation}) => {
                 resizeMode = 'cover' style = {styles.backdrop}
             />
         </View>
-
-        <View style = {styles.nameContainer}>        
+        <View style = {styles.nameContainer}>
+            <TouchableOpacity onPress={()=> navigation.goBack()}>
+                <FontAwesomeIcon icon="fa-solid fa-arrow-left" size={24} color={colors.white}/>
+            </TouchableOpacity>
             <Text style={styles.appName}>Đặt mục tiêu</Text>
             <Text style={styles.title}>Mỗi ngày bạn có thể dành bao nhiêu thời gian với Englephant ?</Text>    
         </View>
-
         <View style = {styles.formContainer}>
             <View style={styles.detailArea}>
             <SelectDropdown
                 data={minutes}
                 onSelect={(selectedItem, index) => {
-                    console.log(selectedItem, index)
+                    setTargetTime(selectedItem);
+                    // console.log(selectedItem, index)
                 }}
                 defaultButtonText={'-- phút'}
                 buttonTextAfterSelection={(selectedItem, index) => {
@@ -51,10 +74,9 @@ const SetGoal = ({navigation}) => {
             <Text style={styles.info}><Text style={styles.mark}>Chúc bạn thành công !</Text> </Text>   
 
             <View style={styles.buttonArea}>
-                <Buttons.GreenButton title="Đăng ký" />         
+                <Buttons.GreenButton title="Đăng ký" onPress={handleRegister}/>         
             </View>            
         </View>       
-    
     </SafeAreaView>
   )
 }
@@ -73,8 +95,8 @@ const styles = StyleSheet.create({
     },
     nameContainer:{
         width: "80%",
-        paddingLeft: '10%',
-        paddingTop: 50,
+        paddingLeft: '8.9%',
+        paddingTop: 30,
     },
     appName: {
         fontSize: 40,
@@ -90,7 +112,7 @@ const styles = StyleSheet.create({
         letterSpacing: 0.25,
     },
     dropdownBtn: {
-        width: '90%',
+        width: '100%',
         height: 40,
         backgroundColor: '#FFF',
         borderRadius: 16,
@@ -102,24 +124,22 @@ const styles = StyleSheet.create({
     dropdownRowStyle: {backgroundColor: '#EFEFEF', borderBottomColor: colors.main_green},
     dropdownRowTxtStyle: {color: colors.main_green, textAlign: 'left'},
     
-
     formContainer: {
         top: 120,
         alignItems: 'center',
         alignSelf: 'center',
-        width: '80%'
+        width: '82.2%'
     },
     detailArea: {
         paddingBottom: 10
     },    
     buttonArea: {
-        width: '90%',
+        width: '100%',
         alignItems: 'center',
         marginTop: '10%',
     },
     info: {
-        paddingTop: 30,
-        
+        paddingTop: 30,        
         fontSize: 16,
         fontWeight: '500',
         bottom: 0,
@@ -127,8 +147,7 @@ const styles = StyleSheet.create({
     },
     mark:{
         color: colors.main_green,
-    }
-    
+    }    
 });
 
 export default SetGoal

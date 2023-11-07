@@ -15,7 +15,7 @@ const authRouter = express.Router()
  * @description learner registers
  * @access public
  */
-authRouter.post('/register', async (req, res) => {
+authRouter.post('/register-old', async (req, res) => {
     const errors = learnerRegisterValidate(req.body)
     if (errors) return sendError(res, errors)
     let {username, email, phone, password} = req.body 
@@ -43,6 +43,24 @@ authRouter.post('/register', async (req, res) => {
     }
 })
 
+authRouter.post('/register', async (req, res) => {
+    const errors = learnerRegisterValidate(req.body)
+    if (errors) return sendError(res, errors)
+    let {username, phone, password, fullname, mode, gender, targetTime} = req.body 
+
+    try {
+        const isExistLearner = await Learner.exists({phone})
+        if (isExistLearner) return sendError(res, "Learner already exists!")
+
+        password = await argon2.hash(password)
+
+        const learner = await Learner.create({username, phone, password, fullname, defaultmode: mode, gender, targetTime})
+        return sendSuccess(res, "Register successfully", {learner_id: learner._id});
+    } catch (error) {
+        console.log(error);
+        return sendServerError(res);   
+    }
+})
 /**
  * @route POST /api/auth/login
  * @description learner login

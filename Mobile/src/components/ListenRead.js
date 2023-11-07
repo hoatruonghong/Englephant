@@ -1,11 +1,11 @@
 import * as React from "react";
-import { Text, View, Image, StyleSheet } from "react-native";
+import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import colors from './../../assets/colors';
 
 export default function ListenReadItem({ item }) {
   return (
-    <View style={styles.ListenReadIteamWrapper}>
+    <TouchableOpacity style={styles.ListenReadIteamWrapper}>
       <View style={styles.topItem}>
         <View style={styles.leftSide}>
           <Image source={require("./../../assets/images/ellipse-pot.png")} />
@@ -15,7 +15,9 @@ export default function ListenReadItem({ item }) {
       </View>
       <View style={styles.contentItem}>
         <View style={styles.imageItem}>
-          <Image source={require("./../../assets/images/learning.png")} />
+          <Image source={require("./../../assets/images/learning.png")} 
+           style={styles.image}
+          />
         </View>
         <View style={styles.progressItem}>
           <Text style={styles.contentText}>{item.quizDone}/{item.quizTotal}</Text>
@@ -25,7 +27,7 @@ export default function ListenReadItem({ item }) {
           <Image source={require("./../../assets/images/check-icon.png")} />
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -54,16 +56,23 @@ const styles = StyleSheet.create({
   contentItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 5,
   },
   imageItem: {
-    flex: 3,
+    width: '33%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    height: 50,
+    resizeMode: 'contain',
   },
   progressItem: {
-    flex: 3,
+    width: '53.7%',
   },
   iconItem: {
-    flex: 4,
+    width: '13.3%',
   },
 
   titleText: {

@@ -214,7 +214,6 @@ function StackNavigator(){
       <Stack.Screen name="LearningQuiz" component={LearningQuiz} />
       <Stack.Screen name="PracticeQuiz" component={PracticeQuiz} />
       <Stack.Screen name="Quiz" component={Quiz} />
-      <Stack.Screen name="Warmup" component={Warmup}/>
       <Stack.Screen name="ListeningReading" component={Warmup} />
       <Stack.Screen name="TalkRoom" component={Warmup} />
       <Stack.Screen name="Card" component={Warmup} />

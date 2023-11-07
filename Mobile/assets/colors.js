@@ -11,7 +11,8 @@ const colors = {
     red: "#EE6037",
     black: "#1A1A1A",
     white: "#FFFFFF",
-    shadow_gray_brown: "#875826"
+    shadow_gray_brown: "#875826",
+    orange: "#EE6037",
   };
   
   export default colors;
