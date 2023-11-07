@@ -2,6 +2,7 @@ import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, AsyncStorage} from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
+import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { isValidEmail, isValidObjField, updateError } from '../../utils/validForms';
 import { useLogin } from '../../context/LoginProvider';
 import Auth from './../../api/Auth';
@@ -32,8 +33,7 @@ export default function Login({navigation}) {
 
     return true;
   };
-
-
+  
   return (
     <View style={styles.container}>
       <ImageBackground source={image} resizeMode="cover" style={styles.image}>
@@ -48,23 +48,28 @@ export default function Login({navigation}) {
         <View style={styles.formArea}>
           <View style={styles.detailArea}>
             <Text style={styles.label}>Tên đăng nhập</Text>
-            <TextInput
-                style={styles.input}
-                onChangeText={onChangeUsername}
-                value={username}
-                placeholder="Username"
-            />            
+            <View style={styles.inputWrap}>
+              <FontAwesomeIcon icon="fa-solid fa-user" size={20} color={colors.main_green} style={styles.inputIcon}/>
+              <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeUsername}
+                  value={username}
+                  placeholder="Username"
+              />     
+            </View>       
           </View>
-
           <View style={styles.detailArea}>
             <Text style={styles.label}>Mật khẩu</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={onChangePassword}
-              value={password}
-              placeholder="Password"
-              // secureTextEntry
-            />
+            <View style={styles.inputWrap}>
+              <FontAwesomeIcon icon="fa-solid fa-lock" size={20} color={colors.main_green} style={styles.inputIcon}/>
+              <TextInput
+                style={styles.input}
+                onChangeText={onChangePassword}
+                value={password}
+                placeholder="Password"
+                secureTextEntry
+              />
+            </View>
           </View>
 
           <Text style={styles.forgotPassword} onPress={()=> navigation.navigate("ForgetPassword")}
@@ -84,7 +89,7 @@ export default function Login({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    flex:1,
+    flex: 1,
     backgroundColor: colors.white,
   },
   image: {
@@ -106,7 +111,6 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   logo: {
-
   },
   formArea:{
     backgroundColor: colors.white,
@@ -120,36 +124,38 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   detailArea: {
-    paddingTop: 10,
+    width: '100%',
+    paddingBottom: 10,
+    paddingLeft: '8.9%',
+    paddingRight: '8.9%',
   },
   label: {
     fontSize: 16,
+    fontWeight: '400',
     color: colors.black_green,
-    paddingLeft: 20
+    marginBottom: 5,
   },
-  inputContainer:{
-    height: 40,
-    width: 296,
-    margin: 12,
+  inputWrap:{
+    width: '100%',
     borderWidth: 1.5,
     borderRadius: 16,
     borderColor: colors.main_green,
-    padding: 10,
+    flexDirection: 'row', 
+    alignItems: 'center',
+    padding: 3,
+  },
+  inputIcon: {
+    marginLeft: 5,
+    marginRight: 5,
   },
   input: {
-    height: 40,
-    width: 296,
-    margin: 12,
-    borderWidth: 1.5,
-    borderRadius: 16,
-    borderColor: colors.main_green,
-    padding: 10,
+    width: '90%',
+    padding: 3,
   },
-
   forgotPassword: {
     alignSelf: 'stretch',
     paddingTop: 10,
-    paddingLeft: 50,
+    paddingLeft: '8.9%',
     paddingBottom: 10,
     textAlign: 'left',
     color: colors.dark_green,
@@ -158,11 +164,12 @@ const styles = StyleSheet.create({
   info: {
     paddingTop: 50,
     fontSize: 16,
-    fontWeight: '600',
-    bottom: 0
+    fontWeight: '500',
+    bottom: 0,
+    color: colors.black_green,
   },
   wrapButton: {
-    width: '75%',
+    width: '82.2%',
   },
   link:{
     color: colors.blue,

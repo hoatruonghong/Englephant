@@ -75,12 +75,6 @@ const data = [
 export default function ListenRead({navigation}) {
   return (
     <View style={styles.container}>
-        {/* <View style={styles.header}>
-            <TouchableOpacity style={styles.headerIcon} onPress={() => navigation.goBack()}>
-                <Image source={require("./../../../assets/images/back-icon-white.png")} />
-            </TouchableOpacity>
-            <Text style={styles.headerText}>Nghe đọc</Text>
-        </View> */}
         <View style={styles.wrapContent}>
             <FlatList
                 showsHorizontalScrollIndicator={false}
@@ -89,9 +83,7 @@ export default function ListenRead({navigation}) {
                 keyExtractor={(item) => item.id}
             />    
         </View>
-
     </View>
-
   )
 };
 

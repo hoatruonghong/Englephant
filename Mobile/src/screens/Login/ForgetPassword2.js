@@ -2,6 +2,7 @@ import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
+import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
@@ -14,9 +15,7 @@ export default function ForgetPasswordOTP({navigation}) {
         
         <View style={styles.header}>
           <TouchableOpacity onPress={()=> navigation.goBack()}>
-            <Image style={styles.arrow}
-              source={require('./../../../assets/images/back.png')}
-            />
+            <FontAwesomeIcon icon="fa-solid fa-arrow-left" size={24} color={colors.black_green}/>
           </TouchableOpacity>
           <Text style={styles.title}>Quên mật khẩu</Text>
           <Text style={styles.info}>Vui lòng nhập mã xác thực chúng tôi đã gửi đến bạn</Text>
@@ -26,13 +25,16 @@ export default function ForgetPasswordOTP({navigation}) {
         <View style={styles.formArea}>
           <View style={styles.detailArea}>
             <Text style={styles.label}>Mã xác thực</Text>
-            <TextInput
-                style={styles.input}
-                onChangeText={onChangeOTP}
-                value={OTP}
-                placeholder="xxxxxx"
-                keyboardType="numeric"
-            />            
+            <View style={styles.inputWrap}>
+              <FontAwesomeIcon icon="fa-solid fa-lock" size={20} color={colors.main_green} style={styles.inputIcon}/>
+              <TextInput
+                  style={styles.input}
+                  onChangeText={onChangeOTP}
+                  value={OTP}
+                  placeholder="xxxxxx"
+                  keyboardType="numeric"
+              />
+            </View>
           </View>
 
           <View style={styles.wrapButton}>
@@ -74,39 +76,48 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     bottom: 0,
     color: colors.black_green
-  },
-  
+  },  
   formArea:{
     backgroundColor: colors.white,
-    flex: 3,    
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    flex: 5,    
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    borderWidth: 3,
+    borderColor: colors.main_green,
     alignItems: 'center',
     paddingTop: 20,
     paddingBottom: 20
   },
   detailArea: {
     width: '100%',
-    paddingTop: 10,
-    paddingBottom: 20
+    paddingBottom: 20,
+    paddingLeft: '8.9%',
+    paddingRight: '8.9%',
   },
   label: {
     fontSize: 16,
     color: colors.black_green,
-    paddingLeft: '10%'
+    marginBottom: 5,
   },
-  input: {
-    height: 40,
-    width: '80%',
-    marginTop: 12,
-    marginBottom: 12,
+  inputWrap: {
+    width: '100%',
     borderWidth: 1.5,
     borderRadius: 16,
     borderColor: colors.main_green,
-    padding: 10,
-    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 3,
+  },  
+  inputIcon: {
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  input: {
+    width: '90%',
+    padding: 3,
   },
   wrapButton: {
-    width: '80%'
+    marginTop: '4.5%',
+    width: '82.2%',
   },
 });

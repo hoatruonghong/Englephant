@@ -1,7 +1,8 @@
 import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
-import { VocabularyChart, PronunciationChart, PercentChart} from './../../components/Charts';
+import Assesses from "./../../components/ItemAssess";
+import { VocabularyChart, PronunciationChart, PercentChart, DonutChart} from './../../components/Charts';
 import colors from './../../../assets/colors';
 import { useLogin } from './../../context/LoginProvider';
 import IconWrap from './../../components/IconWrap';
@@ -14,13 +15,55 @@ var dataUser = {
   name: "Hong Hoa",
   hearts: 1,
   peanuts: 10,
-}
+};
+var bestPronunciation = [
+  {
+    sound: '/dʒ/',
+    percentage: 100,
+  },
+  {
+    sound: '/ʃ/',
+    percentage: 98,
+  },
+  {
+    sound: '/ŋ/',
+    percentage: 88,
+  },
+];
+var worstPronunciation = [
+  {
+    sound: '/æ/',
+    percentage: 33,
+  },
+  {
+    sound: '/θ/',
+    percentage: 35,
+  },
+  {
+    sound: '/ð/',
+    percentage: 55,
+  },
+];
+var VocalAssess = [
+  {
+    color: colors.red, percent: 25
+  },
+  {
+    color: colors.blue, percent: 50
+  },
+];
 
 export default function Account({navigation}) {
   const { setIsLoggedIn, profile } = useLogin();
+  const renderPronunAssess = (items) => {
+    return (
+      items.forEach(element => {
+        return <Assesses.PronunDetail item={element} color={colors.blue}/>
+      })
+    );
+  }
 
-  return (
-    
+  return (    
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
@@ -78,19 +121,31 @@ export default function Account({navigation}) {
           {/* Learning Detail */}
           <View style={styles.wrapLearningDetail}>
             <View style={styles.wrapVocalDetail}>
-              <Text>Từ vựng</Text>
+              <Text style={styles.trackingTitleText}>Từ vựng</Text>
               <VocabularyChart />
             </View>
 
             <View style={styles.wrapPronunDetail}>
               <View style={styles.wrapPronunHeaderDetail}>
-                <Text>Phát âm</Text>
-                <PercentChart />
+                <Text style={styles.trackingTitleText}>Phát âm</Text>
+                <DonutChart percentage={60} radius={35} strokeWidth={15}/>
               </View>
-              
-              <Text>Các âm tốt</Text>
-              <Text>Các âm cần cải thiện</Text>
-              
+              <View style={styles.wrapPronunContentDetail}>
+                <Text style={styles.trackingText}>Các âm tốt</Text>
+                <View style={styles.trackingPronunWrap}>                  
+                  <Assesses.PronunDetail item={bestPronunciation[0]} color={colors.blue}/>
+                  <Assesses.PronunDetail item={bestPronunciation[1]} color={colors.main_green}/>
+                  <Assesses.PronunDetail item={bestPronunciation[2]} color={colors.brightest_green}/>
+                </View>
+              </View>
+              <View style={styles.wrapPronunContentDetail}>
+                <Text style={styles.trackingText}>Các âm cần cải thiện</Text>
+                <View style={styles.trackingPronunWrap}>                  
+                  <Assesses.PronunDetail item={worstPronunciation[0]} color={colors.red}/>
+                  <Assesses.PronunDetail item={worstPronunciation[1]} color={colors.orange}/>
+                  <Assesses.PronunDetail item={worstPronunciation[2]} color={colors.yellow}/>
+                </View>
+              </View>              
             </View>
 
           </View>
@@ -226,10 +281,27 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   wrapPronunHeaderDetail: {
+    width: '100%',
     flexDirection: 'row',
-
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingLeft: '8%',
   },
-
+  trackingTitleText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.black_green,
+  },
+  trackingText: {
+    fontSize: 13,
+    fontWeight: 'regular',
+    color: colors.black_green,
+  },
+  wrapPronunContentDetail: {
+    width: '100%',
+    marginLeft: '5%',
+    marginBottom: '4%',
+  },
   wrapLearningHistory: {
     backgroundColor: colors.white,
     borderWidth: 2,

@@ -18,13 +18,18 @@ const register = async (params) => {
             username: params.username,
             password: params.password,
             phone: params.phone,
+            fullname: params.fullname,
+            mode: params.mode,
+            gender:params.gender,
+            targetTime: params.targetTime
         });
         return result;
     } catch (error) {
+        console.log(error.response);
         return error.response;        
     }
 }
 
 module.exports = {
-    login
+    login, register
 }

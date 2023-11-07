@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: 'space-between',
     marginBottom: 10,
-
   },
   topItem: {
     alignItems: "center",
@@ -59,23 +58,25 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   leftItem: {
-    flex: 3,
+    width: "27.5%",
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: colors.yellow
+    margin: 5,
   },
   rightItem: {
-    flex: 7,
+    width: "72.5%",
     flexDirection: "column",
   },
   row: {
     flexDirection: "row",
   },
   profileImage: {
-    width: 60,
-    height: 60,
-    // borderRadius: 25,
-    // resizeMode: 'cover',
+    width: 70,
+    height: 70,
+    resizeMode: 'contain',
+    overflow: "hidden",
+    borderRadius: 50,
+    borderWidth: 2,
   },
   title: {
     fontSize: 16,
