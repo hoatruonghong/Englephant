@@ -19,13 +19,7 @@ const FlashCardSchema = new Schema(
     nodeId: {
       type: mongoose.Types.ObjectId, 
       ref: 'node' ,
-    },
-    quizzes: [{
-      quizId: {
-        type: mongoose.Types.ObjectId, 
-        ref: 'quiz' ,
-      }
-    }]
+    }
   }
 );
 

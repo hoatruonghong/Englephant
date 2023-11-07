@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
-import { Text, StyleSheet, TouchableOpacity, ImageBackground, SafeAreaView, View } from "react-native";
+import { Text, StyleSheet, TouchableOpacity, ImageBackground, SafeAreaView, View, Image } from "react-native";
 import colors from '../../../../assets/colors';
 import { useLogin } from '../../../context/LoginProvider';
 
@@ -48,7 +48,7 @@ export default function FamilyMap({navigation}){
       axios.get(uri)
       .then(function (res) {
         console.log(res.data.data);
-        navigation.navigate("Sum", {result: res.data.data});
+        navigation.navigate("Sum", {result: res.data.result, flashcard: res.data.flashcard});
       })
       .catch(function (error) {
         console.log(error);
@@ -56,33 +56,128 @@ export default function FamilyMap({navigation}){
     }
     return (
         <SafeAreaView style={{flex:1}}>
-            <ImageBackground source={require("./../../../../assets/images/FamilyMap.png")} resizeMode="cover" style={{flex:1}}/>
-            <TouchableOpacity style={[styles.node1, {opacity: getNodeOpacity(nodeState[0])}]} onPress={()=>onPressQuiz({navigation: navigation, position:1})}/>
-            <TouchableOpacity style={[styles.node2, {opacity: getNodeOpacity(nodeState[1])}]} onPress={()=>onPressQuiz({navigation: navigation, position:2})}/>
-            <TouchableOpacity style={[styles.node3, {opacity: getNodeOpacity(nodeState[2])}]} onPress={()=>onPressQuiz({navigation: navigation, position:3})}/>
-            <TouchableOpacity style={[styles.node4, {opacity: getNodeOpacity(nodeState[3])}]} onPress={()=>onPressQuiz({navigation: navigation, position:4})}/>
-            <TouchableOpacity style={[styles.node5, {opacity: getNodeOpacity(nodeState[4])}]} onPress={()=>onPressSum({})}/>
+            <ImageBackground source={require("./../../../../assets/images/learningbg.png")} resizeMode="cover" style={{flex:1}}/>
+            <View style={[styles.nodewrapper, styles.node5position]}>
+              <View style={styles.pin}>
+                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[4])}]}></View>
+              </View>
+              <Image 
+                style={[styles.node,{resizeMode: "cover"}]} 
+                source={{uri: "https://i.imgur.com/KJqTdar.png"}}/>
+              <TouchableOpacity 
+                style={[styles.node, {
+                  backgroundColor: colors.bright_gray_brown,
+                  opacity: getNodeOpacity(nodeState[4])
+                }]} 
+                onPress={()=>{if (nodeState[4] == "Unlock") onPressSum({navigation: navigation})}}/>
+            </View>
+            <View style={[styles.nodewrapper, styles.node4position]}>
+              <View style={styles.pin}>
+                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[3])}]}></View>
+              </View>
+              <Image 
+                style={[styles.node,{resizeMode: "cover"}]} 
+                source={{uri: "https://i.imgur.com/UdFrJKc.png"}}/>
+              <TouchableOpacity 
+                style={[styles.node, {
+                  backgroundColor: colors.bright_gray_brown,
+                  opacity: getNodeOpacity(nodeState[3])
+                }]} 
+                onPress={()=>onPressQuiz({navigation: navigation, position:4})}/>
+            </View>
+            <View style={[styles.nodewrapper, styles.node3position]}>
+              <View style={styles.pin}>
+                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[2])}]}></View>
+              </View>
+              <Image 
+                style={[styles.node,{resizeMode: "cover"}]} 
+                source={{uri: "https://i.imgur.com/msAdpeg.png"}}/>
+              <TouchableOpacity 
+                style={[styles.node, {
+                  backgroundColor: colors.bright_gray_brown,
+                  opacity: getNodeOpacity(nodeState[2])
+                }]} 
+                onPress={()=>onPressQuiz({navigation: navigation, position:3})}/>
+            </View>
+            <View style={[styles.nodewrapper, styles.node2position]}>
+              <View style={styles.pin}>
+                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[1])}]}></View>
+              </View>
+              <Image 
+                style={[styles.node,{resizeMode: "cover"}]} 
+                source={{uri: "https://i.imgur.com/tvdEUra.png"}}/>
+              <TouchableOpacity 
+                style={[styles.node, {
+                  backgroundColor: colors.bright_gray_brown,
+                  opacity: getNodeOpacity(nodeState[1])
+                }]} 
+                onPress={()=>onPressQuiz({navigation: navigation, position:2})}/>
+            </View>
+            <View style={[styles.nodewrapper, styles.node1position]}>
+              <View style={styles.pin}></View>
+              <Image 
+                style={[styles.node,{resizeMode: "cover"}]} 
+                source={{uri: "https://i.imgur.com/pNJmCXo.png"}}/>
+              <TouchableOpacity 
+                style={styles.node} 
+                onPress={()=>onPressQuiz({navigation: navigation, position:1})}/>
+            </View>
         </SafeAreaView>
     ) 
 }
 const styles = StyleSheet.create({
-    node1wrapper: {
-      top: "65%",
-      left: "18%",
+    nodewrapper: {
       width: "50%",
-      height: "22%",
+      height: "26%",
       position: "absolute",
-      backgroundColor: colors.white,
+      backgroundColor: "white",
+    },
+    node1position: {
+      top: "70%",
+      left: "15%",
       transform: [{ rotate: '5deg'}]
     },
-    node1: {
-      top: "73%",
-      left: "19%",
-      width: "45%",
-      height: "19%",
+    node2position: {
+      top: "56%",
+      left: "43%",
+      transform: [{ rotate: '-5deg'}]
+    },
+    node3position: {
+      top: "38%",
+      left: "5%",
+    },
+    node4position: {
+      top: "21%",
+      left: "40%",
+      transform: [{ rotate: '15deg'}]
+    },
+    node5position: {
+      top: "5%",
+      left: "14%",
+      transform: [{ rotate: '-10deg'}]
+    },
+    pin: {
+      width: "10%",
+      borderRadius: 100,
+      aspectRatio: 1,
+      left: "45%",
+      top: "5%",
       position: "absolute",
-      backgroundColor: colors.bright_gray_brown,
-      transform: [{ rotate: '5deg'}]
+      backgroundColor: colors.red
+    },
+    pinwrapper: {
+      width: "100%",
+      aspectRatio: 1,
+      borderRadius: 100,
+      position: "absolute",
+      backgroundColor: colors.bright_gray_brown
+    },
+    node: {
+      top: "20%",
+      left: "5%",
+      width: "90%",
+      height: "75%",
+      position: "absolute",
     },
     node2: {
       top: "59.25%",
@@ -127,7 +222,7 @@ const styles = StyleSheet.create({
       bottom: 35,
       fontWeight: "700",
       letterSpacing: 0.25,
-      color: colors.black,
+      color: colors.black_green,
       position: "absolute",
       transform: [{ rotate: '-52deg'}]
     },

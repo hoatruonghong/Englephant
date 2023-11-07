@@ -165,6 +165,7 @@ export default function MapSelecting({navigation}) {
           </View>
           <Image
             style={{
+              top: "10%",
               height: height*0.05,
               width: width*0.14,
               resizeMode: 'stretch',
@@ -185,7 +186,7 @@ export default function MapSelecting({navigation}) {
         <View style={styles.modalView}>
           <View style={{flexDirection:'row', width: "100%"}}>
           <TouchableOpacity style={[style.close, {right: "4%"}]} onPress={()=>setNotiModalVisible(false)}>
-                <FontAwesomeIcon icon="xmark"  color={colors.black} size={30}/>
+                <FontAwesomeIcon icon="xmark"  color={colors.black_green} size={30}/>
             </TouchableOpacity>
             <Text style={styles.titleStyle}>Map chưa mở</Text>
           </View>
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     zIndex: 5,
   },
   titleStyle: {
-    color: colors.black,
+    color: colors.black_green,
     fontSize: 24,
     fontWeight: "bold",
     left: "10%"
@@ -307,6 +308,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   subtop: {
+    top: '4%',
     flexDirection: 'row',
     alignSelf: "center"
   },
@@ -347,7 +349,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   text: {
-    color: colors.black,
+    color: colors.black_green,
     fontSize: 16,
   },
 });

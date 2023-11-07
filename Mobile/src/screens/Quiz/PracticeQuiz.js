@@ -1,4 +1,4 @@
-import React, { useState, createRef }  from 'react';
+import React, { useState, createRef, useEffect }  from 'react';
 import { Text, View, StyleSheet, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
 import Sound from 'react-native-sound';
@@ -48,6 +48,8 @@ export default function PracticeQuiz({route, navigation}) {
         });
     }
 
+    useEffect(()=> {if (answers.length==0) getAnswers(0)})
+
     const chooseAnswer = (selectedOption) => {
         setCurrentOptionSelected(selectedOption);
     }
@@ -79,13 +81,13 @@ export default function PracticeQuiz({route, navigation}) {
         }        
     };
 
-    const unlockNewNode = () => {
+    const unlockNewNode = (nodeId) => {
         uri = 'http://10.0.2.2:5000/api/map/node/'+nodeId;
         axios.post(uri,{
             learnerId: learnerId
         })
         .then(function (res) {
-            console.log(res.data.message)
+            console.log(res.data.message);
         })
         .catch(function (error) {
             console.log(error);
@@ -100,6 +102,7 @@ export default function PracticeQuiz({route, navigation}) {
     //Send Node result to backend
     const sendResult = () => {
         uri = 'http://10.0.2.2:5000/api/map/node-result/'+nodeId;
+        console.log(uri)
         axios.put(uri,{
             learnerId: learnerId,
             point: score,
@@ -113,15 +116,13 @@ export default function PracticeQuiz({route, navigation}) {
         });
     }
     //Handle showing result
-    const handleResult = () => {
+    const handleResult = async () => {
         console.log(score);
         if (score>=numofquiz*0.6){
             setPass(true);
-            unlockNewNode();
-            unlockNewNode();
-            unlockNewNode();
-            setShowResultModal(true);
+            unlockNewNode(nodeId);
         }
+        setShowResultModal(true);
         sendResult();
     }
 
@@ -162,7 +163,7 @@ export default function PracticeQuiz({route, navigation}) {
                 </Animated.View>
             </View>
             <TouchableOpacity style={[style.close, {right: "2%"}]} onPress={()=>navigation.goBack(null)}>
-                <FontAwesomeIcon icon={faXmark} color={colors.black} size={30}/>
+                <FontAwesomeIcon icon={faXmark} color={colors.black_green} size={30}/>
             </TouchableOpacity>
             </View>
             
@@ -236,6 +237,7 @@ export default function PracticeQuiz({route, navigation}) {
             case "image":
                 return (<Image style={{
                     width: "80%",
+                    alignSelf: "center",
                     aspectRatio: 1.25,
                     resizeMode: "cover",
                     borderColor: colors.bright_gray_brown,
@@ -247,7 +249,6 @@ export default function PracticeQuiz({route, navigation}) {
     const renderOptions = () => {
         let type = "word";
         if (answers && answers.length>0){
-            console.log(answers)
             if (answers[0].image){
                 type = "image";
             }
@@ -340,9 +341,9 @@ export default function PracticeQuiz({route, navigation}) {
                 <View style={{flexDirection:'row', width: "100%"}}>
                 <TouchableOpacity style={[style.close, {right: "4%"}]} onPress={()=>{
                     setShowResultModal(false);
-                    navigation.navigate("Relax");
+                    navigation.goBack(null);
                 }}>
-                        <FontAwesomeIcon icon={faXmark}  color={colors.black} size={30}/>
+                        <FontAwesomeIcon icon={faXmark}  color={colors.black_green} size={30}/>
                     </TouchableOpacity>
                     <Text style={styles.titleStyle}>{modalTitle}</Text>
                 </View>
@@ -440,5 +441,14 @@ const styles = StyleSheet.create({
         },
         elevation: 5,
         zIndex: 5,
+    },
+    titleStyle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: colors.black_green,
+    },
+    textStyle: {
+      color: colors.black_green,
+      fontSize: 16,
     },
 });

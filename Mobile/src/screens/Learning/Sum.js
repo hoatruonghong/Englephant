@@ -17,15 +17,17 @@ import { faHeart, fas, faStar } from '@fortawesome/free-solid-svg-icons';
 
 library.add(fas);
 
-const result = [{key: 1, point: 8, totalnumofquiz: 12},{key: 2, point: 8, totalnumofquiz: 12},{key: 3, point: 8, totalnumofquiz: 12},{key: 4, point: 8, totalnumofquiz: 12},{key: 5, point: 32, totalnumofquiz: 48}]
-const resultlength = result.length;
-const numofstars = 3;
-const numofhearts = 15;
 const time = "40:32";
-const numofflashcard = 7;
-const totalnumofflashcard = 9;
 
-export default function Sum({navigation}) {
+
+export default function Sum({route, navigation}) {
+  const {result, flashcard} = route.params;
+  const resultlength = result.length;
+  const numofhearts = result[resultlength-1].point;
+  const totalnumofquiz = result[resultlength-1].totalnumofquiz;
+  const numofflashcard = flashcard.got;
+  const totalnumofflashcard = flashcard.total;
+  const numofstars = (numofhearts/totalnumofquiz >= 0.8)? ((numofflashcard == totalnumofflashcard)? 3: 2) :1;
   const {height, width} = useWindowDimensions();
 
   const renderHeart = () => {
@@ -89,11 +91,11 @@ export default function Sum({navigation}) {
   }
 
   const renderNodeResult = () => {
-    let temp = result.slice(0,resultlength-1);
+    let temp = result.slice(0,resultlength-2);
     return temp.map((node, index) =>(
         <View style={{flex: 1, flexDirection: "row", width: "80%", height: "5%", top: "2%"}}>
             <View style={{flex: 1}}>
-                <Text style={style.textleft}>{'   '+node.key}</Text> 
+                <Text style={style.textleft}>{'   Node '+(index+1)}</Text> 
             </View>
             <View style={{flex: 1}}>
                 <Text style={style.textright}>{node.point+'/'+node.totalnumofquiz}</Text>
@@ -110,7 +112,7 @@ export default function Sum({navigation}) {
               height={height*0.6}
               viewBox='-50 -132 390 780'/>
         </View>
-          <TouchableOpacity style={styles.close} onPress={() => navigation.navigate("MyTabs")}>
+          <TouchableOpacity style={styles.close} onPress={() => navigation.navigate("MapSelecting")}>
             <FontAwesomeIcon icon="xmark"  color={colors.black} size={32}/>
           </TouchableOpacity>
           <View style={style.container}>
@@ -121,7 +123,7 @@ export default function Sum({navigation}) {
                         <Text style={style.textleft}>Số câu đúng</Text> 
                     </View>
                     <View style={{flex: 1}}>
-                        <Text style={style.textright}>{result[resultlength-1].point+'/'+result[resultlength-1].totalnumofquiz}</Text>
+                        <Text style={style.textright}>{numofhearts+'/'+totalnumofquiz}</Text>
                     </View>
                 </View>
                 {renderNodeResult()}

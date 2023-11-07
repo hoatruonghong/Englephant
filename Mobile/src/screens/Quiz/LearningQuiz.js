@@ -104,9 +104,9 @@ export default function LearningQuiz({route, navigation}) {
                     }
                 }
             }
-            if (havingFlashcards.length >= (numofcard -1 ) || cards_id.length >= (numofcard - 1)){
+            if (havingFlashcards.length >= (numofcard -2) || cards_id.length >= (numofcard - 2)){
                 setPass(true);
-                unlockNewNode();
+                unlockNewNode(nodeId);
             }
             uri = 'http://10.0.2.2:5000/api/card/learner/'+learnerId;
             axios.post(uri,{
@@ -127,7 +127,7 @@ export default function LearningQuiz({route, navigation}) {
         });
     }
 
-    const unlockNewNode = () => {
+    const unlockNewNode = (nodeId) => {
         uri = 'http://10.0.2.2:5000/api/map/node/'+nodeId;
         axios.post(uri,{
             learnerId: learnerId
@@ -212,7 +212,7 @@ export default function LearningQuiz({route, navigation}) {
                 </Animated.View>
             </View>
             <TouchableOpacity style={[style.close, {right: "2%"}]} onPress={()=>navigation.goBack(null)}>
-                <FontAwesomeIcon icon={faXmark} color={colors.black} size={30}/>
+                <FontAwesomeIcon icon={faXmark} color={colors.black_green} size={30}/>
             </TouchableOpacity>
             </View>
             
@@ -220,46 +220,38 @@ export default function LearningQuiz({route, navigation}) {
     };
     const renderLesson = () => {
         let content_type = "none";
-        let content;
         let lesson = lessons[currentLessonIndex];
         if (lesson.image){
             content_type = "image";
-            content = lesson.image;
         }
         if (lesson.audio){
             content_type = "audio";
-            content = lesson.audio;
         }
         if (lesson.video){
             content_type = "video";
-            content = lesson.video;
         }
         return (
             <View style={styles.wrapQuestions}>
-                {renderContent(content_type, {content: content})}
+                {renderContent(content_type, lesson)}
                 <Text style={styles.questionText}>{lessons[currentLessonIndex].content}</Text>
             </View>
         )
     };
     const renderQuestion = () => {
         let content_type = "none";
-        let content;
         let question = quizzes[currentQuestionIndex];
         if (question.image){
             content_type = "image";
-            content = question.image;
         }
         if (question.audio){
             content_type = "audio";
-            content = question.audio;
         }
         if (question.video){
             content_type = "video";
-            content = question.video;
         }
         return (
             <View style={styles.wrapQuestions}>
-                {renderContent(content_type, {content: content})}
+                {renderContent(content_type, question)}
                 <Text style={styles.questionText}>{quizzes[currentQuestionIndex].question}</Text>
             </View>
         )
@@ -282,7 +274,7 @@ export default function LearningQuiz({route, navigation}) {
                      }]}>{item.content}</Text>
                 )
             case "audio":
-                const sound = new Sound(item.content, error => {
+                const sound = new Sound(item.audio, error => {
                     if (error) {
                       console.log('error', error.message);
                     }
@@ -311,17 +303,29 @@ export default function LearningQuiz({route, navigation}) {
                 )
             case "image":
                 return (<Image style={{
-                    width: "100%",
+                    width: "80%",
                     aspectRatio: 1.25,
+                    alignSelf: "center",
                     resizeMode: "cover",
                     borderColor: colors.bright_gray_brown,
                     borderWidth: 2,
                     borderRadius: 16
-                  }} source={{uri: item.content}}/>)
+                  }} source={{uri: item.image}}/>)
         }
     }
     const renderOptions = () => {
         let type = "word";
+        if (answers && answers.length>0){
+            if (answers[0].image){
+                type = "image";
+            }
+            if (answers[0].audio){
+                type = "audio";
+            }
+            if (answers[0].video){
+                type = "video";
+            }
+        }
         if (answers && answers!=[])
             switch (quizzes[currentQuestionIndex].type){
                 case "Từ - Nghe":
@@ -407,7 +411,7 @@ export default function LearningQuiz({route, navigation}) {
                     setShowResultModal(false);
                     navigation.navigate("Relax");
                 }}>
-                        <FontAwesomeIcon icon={faXmark}  color={colors.black} size={30}/>
+                        <FontAwesomeIcon icon={faXmark}  color={colors.black_green} size={30}/>
                     </TouchableOpacity>
                     <Text style={styles.titleStyle}>{modalTitle}</Text>
                 </View>
@@ -507,4 +511,9 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 5,
     },
+    titleStyle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: colors.black_green,
+    }
 });

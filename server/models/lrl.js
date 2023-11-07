@@ -7,13 +7,7 @@ const ListeningReadingLessonSchema = new Schema(
     image: String,
     description: String,
     audio: String,
-    price: Number,
-    quizzes: [{
-      quizId: {
-        type: mongoose.Types.ObjectId, 
-        ref: 'quiz' ,
-      }
-    }]
+    price: Number
   }
 );
 
