@@ -58,13 +58,6 @@ var VocalAssess = [
 
 export default function Account({navigation}) {
   const { setIsLoggedIn, profile } = useLogin();
-  const renderPronunAssess = (items) => {
-    return (
-      items.forEach(element => {
-        return <Assesses.PronunDetail item={element} color={colors.main_green}/>
-      })
-    );
-  }
 
   return (    
     <ImageBackground source={image} style={styles.imageBgContainer}>
@@ -130,9 +123,9 @@ export default function Account({navigation}) {
                 strokeWidth={15} size={100} totalNum={100} 
                 textColor={colors.black_green} textSize={18}/>
               <View style={styles.trackingDescChart}>
-              {VocalAssess.map((item) => {
+              {VocalAssess.map((item, id) => {
                 return (
-                  <Charts.DescriptItem data={item} />
+                  <Charts.DescriptItem key={id} data={item} />
                 );
               })}
               </View>

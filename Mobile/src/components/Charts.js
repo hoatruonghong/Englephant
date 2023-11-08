@@ -166,7 +166,7 @@ function VocabularyChart({
   let angle = -90;
   let angles = [];
   let strokeDashoffsets = [];
-  data.forEach(item => {
+  data.forEach((item, id) => {
     strokeDashoffsets.push(circleCircumference*(100-item.percentage)/100);
     angles.push(angle);
     angle += item.percentage/100*360;
@@ -182,6 +182,7 @@ function VocabularyChart({
         {data.map((item, id) => {
           return (
             <Circle
+              key={id}
               cx={center}
               cy={center}
               r={radius}

@@ -4,6 +4,7 @@ import learnerpl from '../models/learnerpl.js';
 import pl from '../models/pl.js';
 import pquiz from '../models/pquiz.js';
 import panswer from '../models/panswer.js';
+import sound from '../models/sound.js';
 
 const router = express.Router();
 
@@ -17,6 +18,36 @@ router.get('/quiz/:lessonId', async (req, res) => {
       return res.status(500).json({ message: JSON.stringify(err) });
     }
 });  
+
+router.post('/create/quiz', async (req, res) => {
+  const { question, word, audio, type, soundId } = req.body;
+  try {
+    const existedSound = await sound.findById(soundId);
+    if (!existedSound)
+      return res.status(400).json({ message: "Sound doesn't exist!" });
+
+    const quiz = await pquiz.create({ question, word, audio, type, sound: existedSound });
+    return res.status(200).json({ message: "Create successfully", data: quiz });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });  
+  }
+});
+
+//Admin: Post answer for pquiz
+router.post('/create/answer/:quizId', async (req, res) => {
+  const { quizId } = req.params;
+  const { content, isCorrect } = req.body;
+  try {
+    const existedQuiz = await pquiz.findById(quizId);
+    if (!existedQuiz)
+      return res.status(400).json({ message: "Quiz doesn't exist!" });
+
+    const answer = await panswer.create({ content, isCorrect, quizId: existedQuiz });
+    return res.status(200).json({ message: "Create successfully", data: answer });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });  
+  }
+});
 
 //Learner: Get answers
 router.get('/answer/:quizId', async (req, res) => {
