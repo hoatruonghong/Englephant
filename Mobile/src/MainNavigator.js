@@ -54,6 +54,7 @@ import Relax from './screens/Learning/Relax';
 import Sum from './screens/Learning/Sum';
 import LRQuiz from './screens/Quiz/LRQuiz';
 import {HeaderBar} from './components/HeaderBar';
+import LRLesson from './screens/Exercise/LRLesson';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -215,11 +216,6 @@ function StackNavigator(){
       <Stack.Screen name="LearningQuiz" component={LearningQuiz} />
       <Stack.Screen name="PracticeQuiz" component={PracticeQuiz} />
       <Stack.Screen name="LRQuiz" component={LRQuiz} />
-      <Stack.Screen name="ListeningReading" component={Warmup} />
-      <Stack.Screen name="TalkRoom" component={Warmup} />
-      <Stack.Screen name="Card" component={Warmup} />
-      <Stack.Screen name="Game" component={Warmup} />
-      <Stack.Screen name="Fashion" component={Warmup} />
       </Stack.Group>
 
       <Stack.Screen name="Setting" component={Setting} 
@@ -228,6 +224,11 @@ function StackNavigator(){
         options={{ headerTitle: 'Cập nhật thông tin' }} />
       <Stack.Screen name="Notification" component={Notification} 
          options={{ headerTitle: 'Thông báo' }} />
+
+      
+      <Stack.Screen name="LRLesson" component={LRLesson}
+        options={({ route }) => ({ title: route.params.name })}
+      />
     </Stack.Navigator>)
 }
 
