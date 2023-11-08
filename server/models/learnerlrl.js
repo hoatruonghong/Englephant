@@ -11,7 +11,8 @@ const LearnerLRLSchema = new Schema(
         type: mongoose.Types.ObjectId, 
         ref: 'lrl' ,
     },
-    status: Number
+    point: Number,
+    total: Number
   }
 );
 

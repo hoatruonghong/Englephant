@@ -1,31 +1,82 @@
 import * as React from "react";
 import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import axios from "axios";
+//import icons
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheckCircle, faLock } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCheckCircle, faLock);
 
 import colors from './../../assets/colors';
 
-export default function ListenReadItem({ item }) {
-  return (
-    <TouchableOpacity style={styles.ListenReadIteamWrapper}>
+export default function ListenReadItem({ item, navigation }) {
+  if (!item.active){
+    return(
+      <TouchableOpacity style={[styles.ListenReadIteamWrapper,{backgroundColor: colors.bright_gray_brown}]}>
       <View style={styles.topItem}>
         <View style={styles.leftSide}>
-          <Image source={require("./../../assets/images/ellipse-pot.png")} />
-          <Text style={styles.titleText}>{item.name}</Text>
+          <View style={[styles.dot, {backgroundColor: "white"}]} />
+          <Text style={styles.titleText}>{"  "+item.name}</Text>
         </View>
-        <Image style={styles.rightSide} source={require("./../../assets/images/ellipse-pot.png")} />
+        <View style={[styles.dot, {backgroundColor: "white"}]} />
+      </View>
+      <View style={styles.iconItem2}>
+        <FontAwesomeIcon icon={faLock}  color={"white"} size={30}/>
+      </View>
+    </TouchableOpacity>
+    )
+    
+  }
+  const renderIcon = (isDone) => {
+    if(isDone)
+      return (
+        <View style={styles.iconItem}>
+          <FontAwesomeIcon icon={faCheckCircle}  color={colors.main_green} size={30}/>
+        </View>
+        )
+  }
+
+  const renderProgress = (item) => {
+    if (item.point)
+      return (
+        <View style={styles.progressItem}>
+            <Text style={styles.contentText}>{item.point}/{item.total}</Text>
+            <Text style={styles.contentText}>{Math.round(item.point/item.total*100)+'%'}</Text>
+        </View>
+      )
+  }
+
+  const onPress = () => {
+    uri = 'http://10.0.2.2:5000/api/lr/quiz/'+item._id;
+    axios.get(uri)
+    .then(function (res) {
+      navigation.navigate("LRQuiz",{lessonId: item._id, quizzes: res.data.quiz, image: item.image});
+    })
+    .catch(function (error) {
+    console.log(error);
+    });
+  }
+  return (
+    <TouchableOpacity 
+      style={[styles.ListenReadIteamWrapper,{backgroundColor: "white"}]}
+      onPress={()=>onPress()}
+    >
+      <View style={styles.topItem}>
+        <View style={styles.leftSide}>
+          <View style={[styles.dot, {backgroundColor: colors.bright_gray_brown}]} />
+          <Text style={styles.titleText}>{"  "+item.name}</Text>
+        </View>
+        <View style={[styles.dot, {backgroundColor: colors.bright_gray_brown}]} />
       </View>
       <View style={styles.contentItem}>
         <View style={styles.imageItem}>
-          <Image source={require("./../../assets/images/learning.png")} 
+          <Image source={{uri: item.image}} 
            style={styles.image}
           />
         </View>
-        <View style={styles.progressItem}>
-          <Text style={styles.contentText}>{item.quizDone}/{item.quizTotal}</Text>
-          <Text style={styles.contentText}>{item.progress}</Text>
-        </View>
-        <View style={styles.iconItem}>
-          <Image source={require("./../../assets/images/check-icon.png")} />
-        </View>
+        {renderProgress(item)}
+        {renderIcon(item.isDone)}
       </View>
     </TouchableOpacity>
   );
@@ -33,7 +84,6 @@ export default function ListenReadItem({ item }) {
 
 const styles = StyleSheet.create({
   ListenReadIteamWrapper: {
-    backgroundColor: colors.white,
     borderWidth: 2,
     borderRadius: 20,
     borderColor: colors.bright_gray_brown,
@@ -53,7 +103,15 @@ const styles = StyleSheet.create({
   },
   rightSide: {
   },
+  dot:{
+    width: 10,
+    aspectRatio: 1,
+    borderRadius: 10,
+  },
   contentItem: {
+    width: "100%",
+    flex: 1,
+    backgroundColor: "white",
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -66,15 +124,24 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 50,
-    resizeMode: 'contain',
+    aspectRatio: 1.25,
+    borderRadius: 6,
+    resizeMode: 'cover',
+    padding: 15
   },
   progressItem: {
     width: '53.7%',
   },
   iconItem: {
     width: '13.3%',
+    padding: 15
   },
-
+  iconItem2: {
+    width: '100%',
+    flex:1,
+    alignItems: "flex-end",
+    padding: 15
+  },
   titleText: {
     fontSize: 24,
     fontWeight: "bold",

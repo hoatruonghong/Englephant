@@ -1,90 +1,37 @@
-import React, { useContext, useState }  from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, FlatList, TouchableOpacity } from "react-native";
+import React, { useEffect, useState }  from 'react';
+import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import axios from 'axios';
+
 import colors from './../../../assets/colors';
 import ListenReadItem from './../../components/ListenRead';
-
-const data = [
-    {
-        id: 1,
-        name: "My lovely cat",
-        image: '',
-        description: '',
-        audio: '',
-        price: 20,
-        quizDone: 6,
-        quizTotal: 6,
-        progress: "100%"
-    },
-    {
-        id: 2,
-        name: "Special birthday",
-        image: '',
-        description: '',
-        audio: '',
-        price: 20,
-        quizDone: 4,
-        quizTotal: 5,
-        progress: "80%"
-    },
-    {
-        id: 3,
-        name: "My lovely cat",
-        image: '',
-        description: '',
-        audio: '',
-        price: 20,
-        quizDone: 6,
-        quizTotal: 6,
-        progress: "100%"
-    },
-    {
-        id: 4,
-        name: "Special birthday",
-        image: '',
-        description: '',
-        audio: '',
-        price: 20,
-        quizDone: 4,
-        quizTotal: 5,
-        progress: "80%"
-    },
-    {
-        id: 5,
-        name: "My lovely cat",
-        image: '',
-        description: '',
-        audio: '',
-        price: 20,
-        quizDone: 6,
-        quizTotal: 6,
-        progress: "100%"
-    },
-    {
-        id: 6,
-        name: "Special birthday",
-        image: '',
-        description: '',
-        audio: '',
-        price: 20,
-        quizDone: 4,
-        quizTotal: 5,
-        progress: "80%"
-    },
-];
+import { useLogin } from '../../context/LoginProvider';
 
 export default function ListenRead({navigation}) {
-  return (
-    <View style={styles.container}>
-        <View style={styles.wrapContent}>
-            <FlatList
-                showsHorizontalScrollIndicator={false}
-                data={data}
-                renderItem={ListenReadItem}
-                keyExtractor={(item) => item.id}
-            />    
+    
+    const {profile} = useLogin();
+    const learnerId = profile.id;
+    const [data, setData] = useState();
+    //get lessons
+    useEffect(()=>{
+        uri = 'http://10.0.2.2:5000/api/lr/learner/'+learnerId;
+        axios.get(uri)
+        .then(function (res) {setData(res.data.data);})
+        .catch(function (error) {
+        console.log(error);
+        });
+    })
+    return (
+        <View style={styles.container}>
+            <View style={styles.wrapContent}>
+                <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    data={data}
+                    renderItem={({item, index})=><ListenReadItem item = {item} navigation={navigation}/>}
+                    keyExtractor={(item) => item.id+item.name}
+                />    
+            </View>
         </View>
-    </View>
-  )
+    )
 };
 
 

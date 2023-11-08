@@ -9,6 +9,7 @@ import learnerRouter from './routers/learner.js';
 import quizRouter from './routers/quiz.js';
 import flashcardRouter from './routers/flashcard.js';
 import idiomRouter from './routers/idiom.js';
+import lrRouter from './routers/lr.js';
 
 
 const app = express();
@@ -45,6 +46,7 @@ app
 .use('/api/quiz', quizRouter)
 .use('/api/card', flashcardRouter)
 .use('/api/idiom', idiomRouter)
+.use('/api/lr', lrRouter)
 
 app.listen(PORT, () => {
   console.log("Server started at PORT ", PORT);

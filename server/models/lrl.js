@@ -7,7 +7,11 @@ const ListeningReadingLessonSchema = new Schema(
     image: String,
     description: String,
     audio: String,
-    price: Number
+    price: Number,
+    next: {
+      type: mongoose.Types.ObjectId, 
+      ref: 'lrl' ,
+    }
   }
 );
 

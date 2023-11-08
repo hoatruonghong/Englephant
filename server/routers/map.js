@@ -1,5 +1,4 @@
 import express from "express";
-import { sendError, sendServerError, sendSuccess} from "../helper/client.js";
 //import models
 import map from '../models/map.js';
 import learnermap from '../models/learnermap.js';
@@ -87,18 +86,15 @@ router.get('/learn/:learnerId/:mapId', async (req, res) => {
 router.post('/unlock/:learnerId/:mapId', async (req, res) => {
   const {learnerId, mapId} = req.params;
   try {
-      const isUnlocked = await map.exists({learnerId, mapId});
+      const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
       if (isUnlocked) 
-        return sendError(res, "Already unlocked!");
+        return res.status(200).json({ message: "Already unlocked!" });
       const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
       const node1st = await node.find({mapId: mapId, position: 1});
       const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
-      console.log(unlockedmap);
-      console.log(unlockednode);
-      return sendSuccess(res, "Unlock successfully");
-  } catch (error) {
-      console.log(error);
-      return sendServerError(res);   
+      return res.status(200).json({ map: unlockedmap, node: unlockednode });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
   }
 });
 
@@ -297,7 +293,7 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     learnernoderesults.push({point: sumpoint, totalnumofquiz: sumtotalnumofquiz});
 
     //check if map has been unlocked already
-    const isUnlocked = await map.exists({learnerId, mapId});
+    const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
     if (!isUnlocked) {
       const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
       const node1st = await node.find({mapId: mapId, position: 1});

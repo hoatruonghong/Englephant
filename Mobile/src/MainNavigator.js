@@ -52,7 +52,7 @@ import Flashcard from './screens/Learning/Flashcard';
 import FlashcardDetails from './screens/Learning/FlashcardDetails';
 import Relax from './screens/Learning/Relax';
 import Sum from './screens/Learning/Sum';
-import Quiz from './screens/Quiz/Quiz';
+import LRQuiz from './screens/Quiz/LRQuiz';
 import {HeaderBar} from './components/HeaderBar';
 
 const Tab = createBottomTabNavigator();
@@ -72,19 +72,19 @@ function MyTabs() {
         }
       }>
       <Tab.Screen 
-        name="Learning" 
-        component={LearningScreens} 
-        options={{
-          tabBarIcon: ({color}) => (
-            <FontAwesomeIcon icon={faBookOpen} color={color} size={24}/>
-          )
-        }}/>
-      <Tab.Screen 
         name="Exercise" 
         component={ExerciseScreens} 
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesomeIcon icon={faDumbbell} color={color} size={24}/>
+          )
+        }}/>
+      <Tab.Screen 
+        name="Learning" 
+        component={LearningScreens} 
+        options={{
+          tabBarIcon: ({color}) => (
+            <FontAwesomeIcon icon={faBookOpen} color={color} size={24}/>
           )
         }}/>
       <Tab.Screen 
@@ -140,6 +140,11 @@ function LearningScreens() {
 function ExerciseScreens() {
   return (
     <Stack.Navigator screenOptions={styles.headerWrap}>
+      <Stack.Screen name="ListenRead" component={ListenRead} 
+        options={{
+          headerTitle: 'Nghe đọc',
+        }}
+      />
       <Stack.Screen name="ExerciseMain" component={ExerciseMain}
         options={{
           headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
@@ -150,11 +155,7 @@ function ExerciseScreens() {
           headerTitle: 'Phát âm',
         }}
       />
-      <Stack.Screen name="ListenRead" component={ListenRead} 
-        options={{
-          headerTitle: 'Nghe đọc',
-        }}
-      />
+      
       <Stack.Screen name="TalkRoom" component={TalkRoom}
         options={{
           headerTitle: 'Phòng giao tiếp',
@@ -213,7 +214,7 @@ function StackNavigator(){
       <Stack.Screen name="Warmup" component={Warmup} />
       <Stack.Screen name="LearningQuiz" component={LearningQuiz} />
       <Stack.Screen name="PracticeQuiz" component={PracticeQuiz} />
-      <Stack.Screen name="Quiz" component={Quiz} />
+      <Stack.Screen name="LRQuiz" component={LRQuiz} />
       <Stack.Screen name="ListeningReading" component={Warmup} />
       <Stack.Screen name="TalkRoom" component={Warmup} />
       <Stack.Screen name="Card" component={Warmup} />

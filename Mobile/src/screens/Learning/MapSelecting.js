@@ -72,7 +72,7 @@ export default function MapSelecting({navigation}) {
 
   //get maps
   useEffect(()=>{
-    uri = 'http://10.0.2.2:5000/api/map/learner/'+profile.id+'/'+profile.mode;
+    uri = 'http://10.0.2.2:5000/api/map/learner/'+learnerId+'/'+profile.mode;
     axios.get(uri)
     .then(function (res) {
       newData = res.data.data.concat({name:"None", image: "", active: true, status:0});
