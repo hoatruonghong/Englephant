@@ -94,125 +94,137 @@ function DonutChart({
   );
 };
 
-function VocalChart({
-  strokeWidth = 20,
-  size = 100,
-  data
+function PronunciationChart({
+  percentage = 75,
+  strokeWidth = 10,
+  size = 60,
+  color = colors.blue,
+  textColor,
+  textSize
 }) {
-  const [startAngles, setStartAngles] = React.useState([]);
   const center = size/2;
   const radius = (size - strokeWidth)/2;
   const circleCircumference = 2*Math.PI*radius;
-
-  let angle = 0;
-  const angles: number[] = [];
+  const strokeDashoffset = circleCircumference*(100-percentage)/100;
 
   return (
     <View>
       <Svg style={styles.container}
-      width={size}
-      height={size} 
-      viewBox={`0 0 ${size} ${size}`}
+        width={size}
+        height={size} 
+        viewBox={`0 0 ${size} ${size}`}
       >
+        <Circle 
+          cx='50%'
+          cy='50%'
+          stroke={color}
+          strokeWidth={strokeWidth}
+          r={radius}
+          fill="transparent"
+          strokeOpacity={0.2}
+        />
         <Circle
           cx={center}
           cy={center}
           r={radius}
           strokeWidth={strokeWidth}
-          stroke={'blue'}
-          strokeDashoffset={circleCircumference * (1 - 0.75)}
+          stroke={color}
+          strokeDashoffset={strokeDashoffset}
           strokeDasharray={circleCircumference}
-        />
-        {/* {data.map((item, index) => (
-          <Circle
-            key={`${item.color}-${index}`}
-            cx={center}
-            cy={center}
-            r={radius}
-            strokeWidth={strokeWidth}
-            stroke={item.color}
-            strokeDashoffset={circleCircumference * (100 - item.percent)/100}
-            strokeDasharray={circleCircumference}
-            // originX={center}
-            // originY={center}
-            // rotation={startAngles[index]}
-          />
-        ))} */}
+          strokeLinecap='round'
+          fill="transparent"
+        />        
       </Svg>
+      <TextInput
+        underlineColorAndroid="transparent"
+        editable={false}
+        defaultValue={percentage.toString()}
+        style={[StyleSheet.absoluteFillObject, 
+        {
+          fontSize: textSize? textSize : 16,
+          fontWeight: 'bold',
+          textAlign: 'center',
+          color: textColor? textColor : colors.blue,
+        }]}
+      />
     </View>
   );
 }
 
-function VocabularyChart(props) {
-  const { onPress } = props;
+function VocabularyChart({
+  totalNum = 0,
+  data,
+  strokeWidth = 10,
+  size = 60,
+  textColor,
+  textSize
+}) {
+  const center = size/2;
+  const radius = (size - strokeWidth)/2;
+  const circleCircumference = 2*Math.PI*radius;
+
+  let angle = -90;
+  let angles = [];
+  let strokeDashoffsets = [];
+  data.forEach(item => {
+    strokeDashoffsets.push(circleCircumference*(100-item.percentage)/100);
+    angles.push(angle);
+    angle += item.percentage/100*360;
+  });
+  
   return (
-    <View style={styles.container}>
-        <PieChart
-          data={[
-            {
-              name: 'Seoul',
-              population: 21500000,
-              color: 'red',
-              legendFontColor: '#7F7F7F',
-              legendFontSize: 15,
-            },
-            {
-              name: 'Toronto',
-              population: 2800000,
-              color: 'yellow',
-              legendFontColor: '#7F7F7F',
-              legendFontSize: 15,
-            },
-            {
-              name: 'New York',
-              population: 8538000,
-              color: 'green',
-              legendFontColor: '#7F7F7F',
-              legendFontSize: 15,
-            },
-            {
-              name: 'Moscow',
-              population: 11920000,
-              color: 'blue',
-              legendFontColor: '#7F7F7F',
-              legendFontSize: 15,
-            },
-          ]}
-          // width={Dimensions.get('window').width - 16}
-          width={100}
-          height={100}
-          chartConfig={{
-            backgroundColor: '#1cc910',
-            backgroundGradientFrom: '#eff3ff',
-            backgroundGradientTo: '#efefef',
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16,
-            },
-          }}
-          style={{
-            marginVertical: 8,
-            borderRadius: 16,
-          }}
-          accessor="population"
-          backgroundColor="transparent"
-          paddingLeft="15"
-          absolute //for the absolute number remove if you want percentage
-        />
+    <View>
+      <Svg style={styles.container}
+        width={size}
+        height={size} 
+        viewBox={`0 0 ${size} ${size}`}
+      >
+        {data.map((item, id) => {
+          return (
+            <Circle
+              cx={center}
+              cy={center}
+              r={radius}
+              strokeWidth={strokeWidth}
+              stroke={item.color}
+              strokeDashoffset={strokeDashoffsets[id]}
+              strokeDasharray={circleCircumference}
+              strokeLinecap='round'
+              fill="transparent"
+              originX={center}
+              originY={center}
+              rotation={angles[id]}
+            />
+          );
+        })}
+      </Svg>
+      <TextInput
+        underlineColorAndroid="transparent"
+        editable={false}
+        defaultValue={totalNum.toString()+" từ"}
+        style={[StyleSheet.absoluteFillObject, 
+        {
+          fontSize: textSize? textSize : 16,
+          fontWeight: 'bold',
+          textAlign: 'center',
+          color: textColor? textColor : colors.blue,
+        }]}
+      />
     </View>
   );
-};
+}
 
-function PronunciationChart(props) {
-    const { data } = props;
-    return (
-      <View style={styles.container}>
-          
+function DescriptItem({data}) {
+  return (
+    <View style={styles.descriptContainer}>
+      <View style={[styles.descriptColor,
+      { backgroundColor: data.color }]}>        
       </View>
-    );
-};
-  
+      <Text style={styles.descriptText}>{data.type}</Text>
+    </View>
+  );
+}
+
 function PercentChart(props) {
     const { data1 } = props;
     const data = {
@@ -261,7 +273,6 @@ function HistoryChart(props) {
 const styles = StyleSheet.create({
     container: {
       alignSelf: 'center',
-      backgroundColor:colors.yellow,
     },
     text: {
       fontSize: 16,
@@ -270,8 +281,24 @@ const styles = StyleSheet.create({
       letterSpacing: 0.25,
       color: colors.white,
     },
+    descriptContainer: {
+      width: '100%',
+      flexDirection: 'row',
+    },
+    descriptColor: {
+      width: 15,
+      height: 15,
+      borderRadius: 50,
+    },
+    descriptText: {
+      color: colors.black_green,
+      fontSize: 13,
+      fontWeight: 'regular',
+      paddingLeft: 5,
+      alignSelf: 'center'
+    }
   });
 
 module.exports = {
-    VocabularyChart, PronunciationChart, PercentChart, HistoryChart, DonutChart, VocalChart
+    VocabularyChart, PronunciationChart, PercentChart, HistoryChart, DonutChart, DescriptItem
 }

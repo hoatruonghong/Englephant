@@ -2,7 +2,7 @@ import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
 import Assesses from "./../../components/ItemAssess";
-import { VocabularyChart, PronunciationChart, PercentChart, DonutChart} from './../../components/Charts';
+import Charts from './../../components/Charts';
 import colors from './../../../assets/colors';
 import { useLogin } from './../../context/LoginProvider';
 import IconWrap from './../../components/IconWrap';
@@ -46,10 +46,13 @@ var worstPronunciation = [
 ];
 var VocalAssess = [
   {
-    color: colors.red, percent: 25
+    id: 1, color: colors.red, percentage: 50, type: 'Đã nhớ'
   },
   {
-    color: colors.blue, percent: 50
+    id: 2, color: colors.blue, percentage: 20, type: 'Gần nhớ'
+  },
+  {
+    id: 3, color: colors.yellow, percentage: 30, type: 'Mới học'
   },
 ];
 
@@ -122,13 +125,23 @@ export default function Account({navigation}) {
           <View style={styles.wrapLearningDetail}>
             <View style={styles.wrapVocalDetail}>
               <Text style={styles.trackingTitleText}>Từ vựng</Text>
-              <VocabularyChart />
+              <Charts.VocabularyChart 
+                data={VocalAssess} 
+                strokeWidth={15} size={100} totalNum={100} 
+                textColor={colors.black_green} textSize={18}/>
+              <View style={styles.trackingDescChart}>
+              {VocalAssess.map((item) => {
+                return (
+                  <Charts.DescriptItem data={item} />
+                );
+              })}
+              </View>
             </View>
 
             <View style={styles.wrapPronunDetail}>
               <View style={styles.wrapPronunHeaderDetail}>
                 <Text style={styles.trackingTitleText}>Phát âm</Text>
-                <DonutChart percentage={60} radius={35} strokeWidth={15}/>
+                <Charts.PronunciationChart percentage={75} strokeWidth={8} size={45}/>
               </View>
               <View style={styles.wrapPronunContentDetail}>
                 <Text style={styles.trackingText}>Các âm tốt</Text>
@@ -268,8 +281,13 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     borderColor: colors.bright_gray_brown,
+    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
+    paddingTop: '3%',
+    paddingBottom: '3%',
+  },
+  trackingDescChart: {
   },
   wrapPronunDetail: {
     flex: 1,
@@ -285,7 +303,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: '8%',
+    padding: '8%',
+    paddingTop: '2%',
+    paddingBottom: 0,
   },
   trackingTitleText: {
     fontSize: 16,
