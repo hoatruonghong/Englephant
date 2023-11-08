@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 const PQuizSchema = new Schema(
   {
     question: String,
-    video: String,
+    word: String,
+    audio: String,
     type: {
         type: String,
         enum: ["IPA", "Nghe", "Phát âm"]

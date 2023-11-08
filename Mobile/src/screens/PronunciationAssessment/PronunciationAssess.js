@@ -41,9 +41,6 @@ const audioSampleRate = "16000";
 async function doEval(userId, audioType, sampleRate, requestParams, audioPath, setShowResult) {
     const coreType = requestParams['coreType'];
 
-    //Hardcode
-    const result = 0.75;
-
     let getConnectSig = function () {
       var timestamp = new Date().getTime().toString();
       var sig = new jsSHA(appKey + timestamp + secretKey, 'TEXT').getHash("SHA-1", "HEX");
@@ -137,20 +134,21 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath, s
     });
 }
 
-
-const requestParams = {
-    coreType: coreType,
-    refText: refText
-};
-
 class PronunciationAssess extends Component {
-  sound = null;
+  constructor({refText}){
+    this.requestParams = {
+      coreType: coreType,
+      refText: refText
+  };
+  }
+  
   state = {
     audioFile: '',
     recording: false,
     loaded: false,
     paused: true,
     showResult: false,
+    result: 0
   };
   async componentDidMount() {
     await this.checkPermission();
@@ -190,8 +188,8 @@ class PronunciationAssess extends Component {
       console.log('Stop record');
       console.log('audioFile', audioFilePath);
       this.setState({ audioFile: audioFilePath, recording: false });
-      doEval(userId, audioType, audioSampleRate, requestParams, audioFilePath, this.setState({showResult: true}))
-      .then(data=>{console.log(data)})
+      doEval(userId, audioType, audioSampleRate, this.requestParams, audioFilePath, this.setState({showResult: true}))
+      .then(data=>{console.log(data); this.setState({result: data.result})})
       .catch(e=>{console.log(e)});
     } catch(error){
       console.log(error);
@@ -218,9 +216,8 @@ class PronunciationAssess extends Component {
     });
   };
 
-  play = async(url) => {
+  play = async() => {
     try {
-      console.log(url);
       await this.load('');
     } catch (error) {
       console.log(error);
@@ -248,7 +245,7 @@ class PronunciationAssess extends Component {
   changeRecordEvent = async() => {
     if(!this.state.recording){
       this.start();
-      this.setState({showResult: false})
+      this.setState({showResult: false, result: 0})
     } else {
       await this.stop();      
     }
@@ -257,7 +254,7 @@ class PronunciationAssess extends Component {
   changePlayEvent = () => {
     try{
       if(this.state.paused){
-        this.play('');
+        this.play();
       }
       else {
         this.pause();
@@ -272,7 +269,7 @@ class PronunciationAssess extends Component {
         <View style={styles.view}>
           <View style={{top:"20%", width: "100%", height: 200}}>
           {this.state.showResult &&
-          <PronunciationChart size={150} color={colors.blue} textSize={32}/>}
+          <PronunciationChart size={150} color={colors.blue} textSize={32} percentage={this.state.result}/>}
           </View>
           <TouchableOpacity style={styles.touchOpContainer} onPress={this.changeRecordEvent}>
             <FontAwesomeIcon icon="microphone"  color={colors.main_green} size={50}/>

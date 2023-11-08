@@ -55,8 +55,8 @@ export default function PronunciationQuiz({route, navigation}) {
 
     const validateAnswer = (type) => {
         switch (type){
-            case "Từ - Nghe":
-            case "Từ - Hình": {
+            case "IPA":
+            case "Nghe": {
                 let correct_option = null;
                 for (let x in answers)
                     if (answers[x].isCorrect)
@@ -67,8 +67,7 @@ export default function PronunciationQuiz({route, navigation}) {
                 }
                 break;
             }
-            case "Điền - Nghe":
-            case "Điền - Hình":{
+            case "Phát âm":{
                 let correct_option = answers[0];
                 setIsDisabled(true);
                 if(text==correct_option.content){

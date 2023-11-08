@@ -18,8 +18,8 @@ import { faXmark, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faXmark, faVolumeUp);
 
-function reducer(score, curentId){
-    return score.map((s, i) => (i === curentId)?  s + 1 : s );
+function reducer(score, currentId){
+    return score.map((s, i) => (i === currentId)?  s + 1 : s );
   }
 
 export default function LearningQuiz({route, navigation}) {
@@ -174,8 +174,12 @@ export default function LearningQuiz({route, navigation}) {
                 getAnswers(0);
             setCurrentLessonIndex(currentLessonIndex+1);
         } else {
-            if (recorder.current && recorder.current.state.recording == true)
-                recorder.current.changeRecordEvent();
+            if (recorder.current) {
+                if(recorder.current.state.result>75)
+                    dispatch(currentCardIndex);
+                if(recorder.current.state.recording == true)
+                    recorder.current.changeRecordEvent();
+            }
             if(currentQuestionIndex==numofquiz-1){
                 //last question
                 validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
@@ -362,7 +366,7 @@ export default function LearningQuiz({route, navigation}) {
                 case "Phát âm - Nghe":
                     return (
                         <View style={styles.wrapOptions}>
-                            <PronunciationAssess ref={recorder}/>
+                            <PronunciationAssess ref={recorder} refText={answers[0].content}/>
                         </View>
                     )
                 case "Điền - Nghe":
