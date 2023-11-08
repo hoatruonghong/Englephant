@@ -18,7 +18,7 @@ function DonutChart({
   radius = 40,
   strokeWidth = 15,
   duration = 500,
-  color = colors.blue,
+  color = colors.black_green,
   delay = 0,
   textColor,
   textSize,
@@ -87,7 +87,7 @@ function DonutChart({
           fontSize: textSize? textSize : 16,
           fontWeight: 'bold',
           textAlign: 'center',
-          color: textColor? textColor : colors.blue,
+          color: textColor? textColor : colors.main_green,
         }]}
       />
     </View>
@@ -98,7 +98,7 @@ function PronunciationChart({
   percentage = 75,
   strokeWidth = 10,
   size = 60,
-  color = colors.blue,
+  color = colors.main_green,
   textColor,
   textSize
 }) {
@@ -144,7 +144,7 @@ function PronunciationChart({
           fontSize: textSize? textSize : 16,
           fontWeight: 'bold',
           textAlign: 'center',
-          color: textColor? textColor : colors.blue,
+          color: textColor? textColor : colors.black_green,
         }]}
       />
     </View>
@@ -207,7 +207,7 @@ function VocabularyChart({
           fontSize: textSize? textSize : 16,
           fontWeight: 'bold',
           textAlign: 'center',
-          color: textColor? textColor : colors.blue,
+          color: textColor? textColor : colors.black_green,
         }]}
       />
     </View>

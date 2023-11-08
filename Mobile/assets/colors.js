@@ -9,10 +9,12 @@ const colors = {
     yellow: "#F2CB40",
     blue: "#5BB4DE",
     red: "#EE6037",
+    orange: "#F1B03E",
+    green_2: "#C6D172",
+    green_3: "#D4CF61",
     black: "#1A1A1A",
     white: "#FFFFFF",
     shadow_gray_brown: "#875826",
-    orange: "#EE6037",
   };
   
   export default colors;

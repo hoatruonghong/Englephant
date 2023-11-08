@@ -1,9 +1,9 @@
 import express from "express";
 //import models
-import learnerlrl from '../models/learnerlrl.js';
-import lrl from '../models/lrl.js';
-import lrquiz from '../models/lrquiz.js';
-import lranswer from '../models/lranswer.js';
+import learnerpl from '../models/learnerpl.js';
+import pl from '../models/pl.js';
+import pquiz from '../models/pquiz.js';
+import panswer from '../models/panswer.js';
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/quiz/:lessonId', async (req, res) => {
     try {
         const { lessonId } = req.params;
-        const quizzes = await lrquiz.find({lesson: lessonId})
+        const quizzes = await pquiz.find({lesson: lessonId})
         return res.status(200).json({ quiz: quizzes});
     } catch (err) {
       return res.status(500).json({ message: JSON.stringify(err) });
@@ -22,7 +22,7 @@ router.get('/quiz/:lessonId', async (req, res) => {
 router.get('/answer/:quizId', async (req, res) => {
   try {
     const { quizId } = req.params;
-    const answers = await lranswer.find({quizId: quizId});   
+    const answers = await panswer.find({quizId: quizId});   
     return res.status(200).json({ data: answers });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
@@ -33,7 +33,7 @@ router.get('/answer/:quizId', async (req, res) => {
 router.get('/:lessonId', async (req, res) => {
   try {
     const { lessonId } = req.params;
-    const lesson = await lrl.findById(lessonId);
+    const lesson = await pl.findById(lessonId);
     return res.status(200).json({ data: lesson });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
@@ -44,9 +44,9 @@ router.get('/:lessonId', async (req, res) => {
 router.get('/learner/:learnerId', async (req, res) => {
     try {
         const { learnerId } = req.params;
-        const alllessons = await lrl.find();
+        const alllessons = await pl.find();
         const data = await Promise.all(alllessons.map(async lesson => {
-        const activelesson = await learnerlrl.findOne({learnerId: learnerId, lrlId: lesson._id});
+        const activelesson = await learnerpl.findOne({learnerId: learnerId, plId: lesson._id});
         if (activelesson){
             lesson._doc.active = true;
             lesson._doc.point = activelesson.point;
@@ -68,10 +68,10 @@ router.post('/:lessonId', async (req, res) => {
   const {lessonId} = req.params;
   const {learnerId} = req.body;
   try {
-      const isUnlocked = await learnerlrl.exists({learnerId: learnerId, lrlId: lessonId});
+      const isUnlocked = await learnerpl.exists({learnerId: learnerId, plId: lessonId});
       if (isUnlocked) 
         return res.status(200).json({ message: "Already unlocked!" });
-      const unlockedlr = await learnerlrl.create({learnerId: learnerId, lrlId: lessonId, status: 0});
+      const unlockedlr = await learnerpl.create({learnerId: learnerId, plId: lessonId, status: 0});
       return res.status(200).json({ data: unlockedlr });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });  
@@ -83,9 +83,9 @@ router.get('/result/:lessonId', async (req, res) => {
   const { lessonId } = req.params;
   const { learnerId, point, totalnumofquiz } = req.body;
   try {
-    const result = await learnerlrl.findOne({lrlId: lessonId, learnerId: learnerId});
+    const result = await learnerpl.findOne({plId: lessonId, learnerId: learnerId});
     if (point> result.point)
-      await learnerlrl.findByIdAndUpdate( result._id, { point: point, total: totalnumofquiz });
+      await learnerpl.findByIdAndUpdate( result._id, { point: point, total: totalnumofquiz });
     res.status(200).json({ message: "Update Node result successfully!" })
   } catch (error) {
       return res.status(500).json({ message: JSON.stringify(error) });

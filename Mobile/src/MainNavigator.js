@@ -55,6 +55,7 @@ import Sum from './screens/Learning/Sum';
 import LRQuiz from './screens/Quiz/LRQuiz';
 import {HeaderBar} from './components/HeaderBar';
 import LRLesson from './screens/Exercise/LRLesson';
+import PronunciationQuiz from './screens/Quiz/PronunciationQuiz';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -216,6 +217,7 @@ function StackNavigator(){
       <Stack.Screen name="LearningQuiz" component={LearningQuiz} />
       <Stack.Screen name="PracticeQuiz" component={PracticeQuiz} />
       <Stack.Screen name="LRQuiz" component={LRQuiz} />
+      <Stack.Screen name="PronunciationQuiz" component={PronunciationQuiz}/>
       </Stack.Group>
 
       <Stack.Screen name="Setting" component={Setting} 

@@ -103,11 +103,7 @@ router.get('/lock/:learnerId/:mapId', async (req, res) => {
   const {learnerId, mapId} = req.params;
   try {
       const lockedmap = await map.findById(mapId);
-      console.log(learnerId);
       const previousmap = await learnermap.find({learnerId: learnerId, mapId: lockedmap.previousmap});
-      console.log(previousmap);
-      console.log(previousmap[0].mapId);
-      console.log(previousmap[0].status);
       let isFree = true;
       let condition = "";
       if (previousmap[0].status<=1)
@@ -230,7 +226,6 @@ router.post('/node/:nodeId', async (req, res) => {
     const cur_node = await node.findById(nodeId);
     if(cur_node.next){
       const next_node = await learnernode.findOne({nodeId : cur_node.next});
-      console.log(next_node)
       if (!next_node){
         const dbLearnerNode = new learnernode({
           learnerId: learnerId,
@@ -238,7 +233,6 @@ router.post('/node/:nodeId', async (req, res) => {
         })
         await dbLearnerNode.save();
       }
-      console.log(cur_node.next)
       return res.status(200).json({ message: "Unlock new Node successfully!", nodeId: cur_node.next });
     } else {
       return res.status(500).json({ message: "Cannot find node with given id" });
@@ -298,8 +292,6 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
       const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
       const node1st = await node.find({mapId: mapId, position: 1});
       const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
-      console.log(unlockedmap);
-      console.log(unlockednode);
     }
 
     //update status for map

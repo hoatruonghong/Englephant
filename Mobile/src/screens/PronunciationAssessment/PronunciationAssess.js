@@ -15,7 +15,7 @@ import Sound from 'react-native-sound';
 import AudioRecord from 'react-native-audio-record';
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import * as Progress from 'react-native-progress';
+import {PronunciationChart} from '../../components/Charts';
 
 import colors from '../../../assets/colors';
 
@@ -38,8 +38,11 @@ const refText = "supermarket"; // Change the reference text according to your ne
 const audioType = "wav"; // Change the audio type corresponding to the audio file.
 const audioSampleRate = "16000";
 
-async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
+async function doEval(userId, audioType, sampleRate, requestParams, audioPath, setShowResult) {
     const coreType = requestParams['coreType'];
+
+    //Hardcode
+    const result = 0.75;
 
     let getConnectSig = function () {
       var timestamp = new Date().getTime().toString();
@@ -121,6 +124,7 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
                 console.log(xhr.responseText);
               }
             };
+            setShowResult();
             return;
           }catch(e){
             console.log('e on send');  
@@ -145,7 +149,8 @@ class PronunciationAssess extends Component {
     audioFile: '',
     recording: false,
     loaded: false,
-    paused: true
+    paused: true,
+    showResult: false,
   };
   async componentDidMount() {
     await this.checkPermission();
@@ -185,7 +190,7 @@ class PronunciationAssess extends Component {
       console.log('Stop record');
       console.log('audioFile', audioFilePath);
       this.setState({ audioFile: audioFilePath, recording: false });
-      doEval(userId, audioType, audioSampleRate, requestParams, audioFilePath)
+      doEval(userId, audioType, audioSampleRate, requestParams, audioFilePath, this.setState({showResult: true}))
       .then(data=>{console.log(data)})
       .catch(e=>{console.log(e)});
     } catch(error){
@@ -243,6 +248,7 @@ class PronunciationAssess extends Component {
   changeRecordEvent = async() => {
     if(!this.state.recording){
       this.start();
+      this.setState({showResult: false})
     } else {
       await this.stop();      
     }
@@ -264,6 +270,10 @@ class PronunciationAssess extends Component {
   render(){
     return (
         <View style={styles.view}>
+          <View style={{top:"20%", width: "100%", height: 200}}>
+          {this.state.showResult &&
+          <PronunciationChart size={150} color={colors.blue} textSize={32}/>}
+          </View>
           <TouchableOpacity style={styles.touchOpContainer} onPress={this.changeRecordEvent}>
             <FontAwesomeIcon icon="microphone"  color={colors.main_green} size={50}/>
           </TouchableOpacity>
@@ -277,10 +287,11 @@ const styles = StyleSheet.create({
   view: {
     height: "40%",
     backgroundColor: 'white',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   touchOpContainer: {
     alignItems: 'center',
+    top: "20%"
   },
   word: {
     color: colors.black,

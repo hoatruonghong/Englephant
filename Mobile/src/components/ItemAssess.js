@@ -12,10 +12,10 @@ function PronunDetail(props) {
             <View style={styles.progress}>
                 <View style={{
                     width: item.percentage + "%",
-                    backgroundColor: color ? color : colors.blue,
+                    backgroundColor: color ? color : colors.main_green,
                     borderRadius: 10,
                     borderWidth: 1,
-                    borderColor: color ? color : colors.blue,
+                    borderColor: color ? color : colors.main_green,
                     marginTop: '6%',
                     marginBottom: '6%',
                 }}>

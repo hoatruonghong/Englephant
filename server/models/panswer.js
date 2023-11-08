@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const LRAnswerSchema = new Schema(
+const PAnswerSchema = new Schema(
   {
     content: {
         type: String,
@@ -11,10 +11,10 @@ const LRAnswerSchema = new Schema(
     },
     quizId: {
       type: mongoose.Types.ObjectId, 
-      ref: 'lrquiz' ,
+      ref: 'pquiz' ,
     }
   },
 );
 
 
-export default mongoose.model("lranswer", LRAnswerSchema);
+export default mongoose.model("panswer", PAnswerSchema);

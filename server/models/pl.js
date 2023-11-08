@@ -4,13 +4,14 @@ const { Schema } = mongoose;
 const PronunciationLessonSchema = new Schema(
   {
     name: String,
-    image: String,
-    sounds: [{
-      soundId: {
+    sound1: {
         type: mongoose.Types.ObjectId, 
         ref: 'sound' ,
-      }
-    }]
+    },
+    sound2: {
+      type: mongoose.Types.ObjectId, 
+      ref: 'sound' ,
+    }
   }
 );
 

@@ -46,13 +46,13 @@ var worstPronunciation = [
 ];
 var VocalAssess = [
   {
-    id: 1, color: colors.red, percentage: 50, type: 'Đã nhớ'
+    id: 1, color: colors.yellow, percentage: 30, type: 'Mới học'
   },
   {
-    id: 2, color: colors.blue, percentage: 20, type: 'Gần nhớ'
+    id: 2, color: colors.orange, percentage: 20, type: 'Gần nhớ'
   },
   {
-    id: 3, color: colors.yellow, percentage: 30, type: 'Mới học'
+    id: 3, color: colors.red, percentage: 50, type: 'Đã nhớ'
   },
 ];
 
@@ -61,7 +61,7 @@ export default function Account({navigation}) {
   const renderPronunAssess = (items) => {
     return (
       items.forEach(element => {
-        return <Assesses.PronunDetail item={element} color={colors.blue}/>
+        return <Assesses.PronunDetail item={element} color={colors.main_green}/>
       })
     );
   }
@@ -146,9 +146,9 @@ export default function Account({navigation}) {
               <View style={styles.wrapPronunContentDetail}>
                 <Text style={styles.trackingText}>Các âm tốt</Text>
                 <View style={styles.trackingPronunWrap}>                  
-                  <Assesses.PronunDetail item={bestPronunciation[0]} color={colors.blue}/>
-                  <Assesses.PronunDetail item={bestPronunciation[1]} color={colors.main_green}/>
-                  <Assesses.PronunDetail item={bestPronunciation[2]} color={colors.brightest_green}/>
+                  <Assesses.PronunDetail item={bestPronunciation[0]} color={colors.main_green}/>
+                  <Assesses.PronunDetail item={bestPronunciation[1]} color={colors.green_2}/>
+                  <Assesses.PronunDetail item={bestPronunciation[2]} color={colors.green_3}/>
                 </View>
               </View>
               <View style={styles.wrapPronunContentDetail}>

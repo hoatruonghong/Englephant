@@ -10,6 +10,7 @@ import quizRouter from './routers/quiz.js';
 import flashcardRouter from './routers/flashcard.js';
 import idiomRouter from './routers/idiom.js';
 import lrRouter from './routers/lr.js';
+import pronunciationRouter from './routers/pronunciation.js';
 
 
 const app = express();
@@ -47,6 +48,7 @@ app
 .use('/api/card', flashcardRouter)
 .use('/api/idiom', idiomRouter)
 .use('/api/lr', lrRouter)
+.use('/api/pronunciation', pronunciationRouter)
 
 app.listen(PORT, () => {
   console.log("Server started at PORT ", PORT);
