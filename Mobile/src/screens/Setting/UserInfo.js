@@ -2,15 +2,25 @@ import React, { useContext, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, FlatList, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
-
+import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import Learner from './../../api/Learner';
 import { useLogin } from './../../context/LoginProvider';
 
 export default function UserInfo({navigation}) {
-  const { setIsLoggedIn, profile } = useLogin();
+  const {setIsLoggedIn, profile } = useLogin();
   const [dataUser, setDataUser] = React.useState(profile);
-  const [name, setName] = useState(profile.username);
+  const [name, setName] = useState(profile.fullname);
   const [phone, setPhone] = useState(profile.phone);
   const [email, setEmail] = useState(profile.email);
+  const handleSave = async () => {
+    try {
+      const res = await Learner.update({fullname: name, phone: phone, email:email, id: profile._id});
+      console.log(res.data);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -18,44 +28,36 @@ export default function UserInfo({navigation}) {
           {/* Update detail */}
           <Text style={styles.titleText}>Tên người dùng</Text>
           <View style={styles.detailForm}>
-            <View style={styles.inputIcon}>
-              <Image source={require("./../../../assets/images/user-icon.png")} />
-            </View>
+            <FontAwesomeIcon icon="fa-solid fa-user" size={20} color={colors.bright_gray_brown} style={styles.inputIcon} />
             <TextInput style={styles.inputText}
                 placeholder={profile.username}
                 value={name}
                 onChangeText={text=>setName(text)}
             />
           </View>
-
           {/* Update detail */}
           <Text style={styles.titleText}>Số điện thoại</Text>
           <View style={styles.detailForm}>
-            <View style={styles.inputIcon}>
-              <Image source={require("./../../../assets/images/phone-icon.png")} />
-            </View>
+            <FontAwesomeIcon icon="fa-solid fa-phone" size={20} color={colors.bright_gray_brown} style={styles.inputIcon} />
             <TextInput style={styles.inputText}
                 placeholder={profile.phone}
                 value={phone}
                 onChangeText={text=>setPhone(text)}
             />
-          </View>
-          
+          </View>          
           {/* Update detail */}
           <Text style={styles.titleText}>Email</Text>
           <View style={styles.detailForm}>
-            <View style={styles.inputIcon}>
-              <Image source={require("./../../../assets/images/a-email-icon.png")} />
-            </View>
+            <FontAwesomeIcon icon="fa-solid fa-at" size={20} color={colors.bright_gray_brown} style={styles.inputIcon} />
             <TextInput style={styles.inputText}
-                placeholder={profile.email}
-                value={email}
-                onChangeText={text=>setEmail(text)}
+              placeholder={profile.email}
+              value={email}
+              onChangeText={text=>setEmail(text)}
             />
           </View>
         </View>  
         <View style={styles.wrapButton}>      
-          <Buttons.BlueButton title="Lưu" />
+          <Buttons.BlueButton title="Lưu" onPress={handleSave}/>
         </View>
     </View>
   )
@@ -79,32 +81,23 @@ const styles = StyleSheet.create({
     },    
     detailForm: {
       flexDirection: "row",
-      justifyContent: "flex-start",
+      width: '100%',
+      height: 45,
+      borderWidth: 1.5,
+      borderRadius: 16,
+      borderColor: colors.bright_gray_brown,
+      backgroundColor: colors.white,
+      alignItems: 'center',
     },
     inputIcon: {
-      height: 40,
-      borderWidth: 1,
-      borderTopLeftRadius: 16,
-      borderBottomLeftRadius: 16,
-      borderTopColor: colors.bright_gray_brown,
-      borderBottomColor: colors.bright_gray_brown,
-      borderLeftColor: colors.bright_gray_brown,
-      borderRightColor: colors.white,
-      padding: 10,
-      backgroundColor: colors.white,
+      marginLeft: '3%',
+      marginRight: '2%',
     },
     inputText: {
-      height: 40,
-      width: '88%',
-      borderWidth: 1,
-      borderTopRightRadius: 16,
-      borderBottomRightRadius: 16,
-      borderTopColor: colors.bright_gray_brown,
-      borderBottomColor: colors.bright_gray_brown,
-      borderLeftColor: colors.white,
-      borderRightColor: colors.bright_gray_brown,
-      padding: 10,
-      backgroundColor: colors.white,
+      width: '90%',
+      height: 45,
+      fontSize: 16,
+      fontWeight: 'regular',
     },
     wrapButton: {
       alignItems: 'center',

@@ -1,5 +1,5 @@
 import React, { useContext, useState }  from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TextInput, useWindowDimensions } from "react-native";
+import { Text, View, StyleSheet, ImageBackground, Image, TextInput } from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 import content from './../../../declarations.d';

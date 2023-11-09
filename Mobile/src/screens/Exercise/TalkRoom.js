@@ -1,12 +1,11 @@
 import React, { useContext, useState }  from 'react';
-import { Modal, Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, FlatList, TouchableOpacity } from "react-native";
-import Buttons from "./../../components/Buttons";
-import colors from './../../../assets/colors';
+import { Modal, Text, View, StyleSheet, Image, FlatList, TouchableOpacity, useWindowDimensions } from "react-native";
+import GoButton from '../../components/GoButton';
 import TalkRoomItem from './../../components/TalkRoom';
 import IconWrap from './../../components/IconWrap';
-import { RedButton } from './../../components/Buttons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { ChooseModal } from './../../components/Modals';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import colors from './../../../assets/colors';
 
 const talkRoomData = [
     {
@@ -63,6 +62,7 @@ const talkRoomData = [
 
 export default function TalkRoom({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
+    const {height, width} = useWindowDimensions();
 
     const renderWrapInfo = () => {
         return (
@@ -147,7 +147,11 @@ export default function TalkRoom({navigation}) {
             />
         </View>
         <View style={styles.wrapChoose}>
-            <RedButton title="GO" onPress={handleGoButton} />
+            <GoButton 
+                onPress={()=>handleGoButton()}
+                height={height} 
+                width={width}
+            />
         </View>
         {ChooseRoomModal()}
     </View>

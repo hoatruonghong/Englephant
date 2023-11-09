@@ -6,27 +6,28 @@ import content from './../../../declarations.d';
 import SelectDropdown from 'react-native-select-dropdown'
 import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { useLogin } from '../../context/LoginProvider';
-import axios from 'axios';
 
 import Auth from './../../api/Auth';
+import Learner from './../../api/Learner';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 const minutes = ["10", "15", "20", "30"];
 
 const SetGoal = ({route, navigation}) => {
     const [targetTime, setTargetTime] = useState('');
-    const { setIsLoggedIn, learnerId, setLearnerId } = useLogin();
+    const { setIsLoggedIn, learnerId, setLearnerId, setProfile } = useLogin();
 
     const handleRegister = async () => {
         route.params.targetTime = targetTime;
-        // console.log('full_info', route.params);
         try {
             console.log(route.params);
-            const res = await axios.post('http://10.0.2.2:5000/api/auth/register', route.params);
-            console.log(res.data);
-            // setLearnerId(res.data.data.learner_id);
-
-            // setIsLoggedIn(true);
+            const res = await Auth.register(route.params);
+            // console.log("res", res.data);
+            const learnerInfo = await Learner.getInfo({id: res.data.data.learner_id});
+            // console.log("learner", learnerInfo);
+            setLearnerId(res.data.data.learner_id);
+            setProfile(learnerInfo);
+            setIsLoggedIn(true);
         } catch (error) {
             console.log(error);
         }
@@ -53,11 +54,10 @@ const SetGoal = ({route, navigation}) => {
                 data={minutes}
                 onSelect={(selectedItem, index) => {
                     setTargetTime(selectedItem);
-                    // console.log(selectedItem, index)
                 }}
                 defaultButtonText={'-- phút'}
                 buttonTextAfterSelection={(selectedItem, index) => {
-                    return selectedItem
+                    return selectedItem + " phút"
                 }}
                 rowTextForSelection={(item, index) => {
                     return item
@@ -120,9 +120,9 @@ const styles = StyleSheet.create({
         borderColor: colors.main_green,
       },
     dropdownBtnTxt: {color: colors.main_green, textAlign: 'left'},
-    dropdownDropdownStyle: {backgroundColor: '#EFEFEF'},
+    dropdownDropdownStyle: {backgroundColor: '#EFEFEF', borderRadius: 12},
     dropdownRowStyle: {backgroundColor: '#EFEFEF', borderBottomColor: colors.main_green},
-    dropdownRowTxtStyle: {color: colors.main_green, textAlign: 'left'},
+    dropdownRowTxtStyle: {color: colors.black_green, textAlign: 'left'},
     
     formContainer: {
         top: 120,

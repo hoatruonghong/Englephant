@@ -204,20 +204,25 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderColor: colors.main_green,
     }, 
-    dropdownBtnTxt: {
-        color: colors.main_green, 
+    dropdownBtnText: {
+        color: colors.black_green, 
         textAlign: 'left',
+        fontSize: 16,
+        fontWeight: 'regular',
     },
     dropdownDropdownStyle: {
-        backgroundColor: '#EFEFEF'
+        backgroundColor: '#EFEFEF',
+        borderRadius: 12,
     },
     dropdownRowStyle: {
         backgroundColor: '#EFEFEF', 
         borderBottomColor: colors.main_green
     },
     dropdownRowTxtStyle: {
-        color: colors.main_green, 
-        textAlign: 'left'
+        color: colors.black_green, 
+        textAlign: 'left',
+        fontSize: 16,
+        fontWeight: 'regular',
     },
     
     label:{

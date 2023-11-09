@@ -6,7 +6,7 @@ import Notice from './../../components/Notice';
 const notificationData = [
     {
       id: "1",
-      image: require("./../../../assets/images/mascot.png"),
+      image: require("./../../../assets/images/avatar.jpg"),
       title: "Vượt qua chặng đầu",
       date: "Hôm nay",
       content: "Bạn đã vượt qua chặng đầu tiên. Tiếp tục với những bài học thú vị cùng Elephant nha!",
@@ -64,18 +64,17 @@ const notificationData = [
 export default function Notification({navigation}) {
   return (
     <View style={styles.container}>
-        <View style={styles.wrapNotification}>
-            <FlatList
-                showsHorizontalScrollIndicator={false}
-                data={notificationData}
-                renderItem={Notice}
-                keyExtractor={(item) => item.id}
-            />
-        </View>
+      <View style={styles.wrapNotification}>
+        <FlatList
+          showsHorizontalScrollIndicator={false}
+          data={notificationData}
+          renderItem={Notice}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     </View>
   )
 };
-
 
 const styles = StyleSheet.create({
     container:{

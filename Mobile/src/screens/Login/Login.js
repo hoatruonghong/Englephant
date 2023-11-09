@@ -6,6 +6,7 @@ import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { isValidEmail, isValidObjField, updateError } from '../../utils/validForms';
 import { useLogin } from '../../context/LoginProvider';
 import Auth from './../../api/Auth';
+import Learner from './../../api/Learner';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 
@@ -17,9 +18,14 @@ export default function Login({navigation}) {
   
   const handleLogin = async () => {
     const res = await Auth.login({username, password});
-    setProfile(res.data.data.user);
-    setIsLoggedIn(true);
-    console.log(res.data.data.user);
+    if (res.status == 200) {
+      setIsLoggedIn(true);
+      const learnerData = await Learner.getInfo({id: res.data.data.user.id});
+      setProfile(learnerData.data.data);
+    } else {
+      console.log(res);
+    }
+    
   };
 
   const isValidForm = () => {

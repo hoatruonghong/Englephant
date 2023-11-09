@@ -142,11 +142,6 @@ function LearningScreens() {
 function ExerciseScreens() {
   return (
     <Stack.Navigator screenOptions={styles.headerWrap}>
-      <Stack.Screen name="ListenRead" component={ListenRead} 
-        options={{
-          headerTitle: 'Nghe đọc',
-        }}
-      />
       <Stack.Screen name="ExerciseMain" component={ExerciseMain}
         options={{
           headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
@@ -157,7 +152,11 @@ function ExerciseScreens() {
           headerTitle: 'Phát âm',
         }}
       />
-      
+      <Stack.Screen name="ListenRead" component={ListenRead} 
+        options={{
+          headerTitle: 'Nghe đọc',
+        }}
+      />
       <Stack.Screen name="TalkRoom" component={TalkRoom}
         options={{
           headerTitle: 'Phòng giao tiếp',
