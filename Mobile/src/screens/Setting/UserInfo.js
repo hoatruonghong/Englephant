@@ -5,18 +5,20 @@ import colors from './../../../assets/colors';
 import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import Learner from './../../api/Learner';
 import { useLogin } from './../../context/LoginProvider';
+import axios from 'axios';
 
 export default function UserInfo({navigation}) {
-  const {setIsLoggedIn, profile } = useLogin();
-  const [dataUser, setDataUser] = React.useState(profile);
+  const {setIsLoggedIn, setProfile, profile, learnerId } = useLogin();
+  const [dataUser, setDataUser] = React.useState(profile);  
   const [name, setName] = useState(profile.fullname);
   const [phone, setPhone] = useState(profile.phone);
   const [email, setEmail] = useState(profile.email);
+
   const handleSave = async () => {
     try {
-      const res = await Learner.update({fullname: name, phone: phone, email:email, id: profile._id});
-      console.log(res.data);
-      
+      const res = await Learner.update({fullname: name, phone: phone, email:email, id: learnerId});
+      setDataUser(res.data.data)
+      console.log('updated',res.data.data);      
     } catch (error) {
       console.log(error);
     }
@@ -30,7 +32,7 @@ export default function UserInfo({navigation}) {
           <View style={styles.detailForm}>
             <FontAwesomeIcon icon="fa-solid fa-user" size={20} color={colors.bright_gray_brown} style={styles.inputIcon} />
             <TextInput style={styles.inputText}
-                placeholder={profile.username}
+                placeholder={dataUser.fullname}
                 value={name}
                 onChangeText={text=>setName(text)}
             />
@@ -40,7 +42,7 @@ export default function UserInfo({navigation}) {
           <View style={styles.detailForm}>
             <FontAwesomeIcon icon="fa-solid fa-phone" size={20} color={colors.bright_gray_brown} style={styles.inputIcon} />
             <TextInput style={styles.inputText}
-                placeholder={profile.phone}
+                placeholder={dataUser.phone}
                 value={phone}
                 onChangeText={text=>setPhone(text)}
             />
@@ -50,7 +52,7 @@ export default function UserInfo({navigation}) {
           <View style={styles.detailForm}>
             <FontAwesomeIcon icon="fa-solid fa-at" size={20} color={colors.bright_gray_brown} style={styles.inputIcon} />
             <TextInput style={styles.inputText}
-              placeholder={profile.email}
+              placeholder={dataUser.email}
               value={email}
               onChangeText={text=>setEmail(text)}
             />

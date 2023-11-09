@@ -1,5 +1,5 @@
-import React, { useContext, useState }  from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import React, { useContext, useState, useEffect }  from 'react';
+import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity, RefreshControl } from "react-native";
 import Buttons from "./../../components/Buttons";
 import SmallButton from '../../components/SmallButton';
 import Assesses from "./../../components/ItemAssess";
@@ -11,6 +11,8 @@ import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
+import Learner from './../../api/Learner';
+import axios from 'axios';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 library.add(faBell, faGear);
@@ -85,13 +87,28 @@ var historyProgress = [
 ];
 
 export default function Account({navigation}) {
-  const { setIsLoggedIn, profile, learnerId } = useLogin();
+  const { setIsLoggedIn, learnerId, setProfile } = useLogin();
+  const [learner, setLearner] = useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  useEffect(()=>{
+    uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
+    axios.get(uri)
+    .then(function (res) {
+      setLearner(res.data.data);
+      setProfile(res.data.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  })
+
   var totalTime = 0, totalWord = 0;
   historyProgress.forEach(element => {
     totalTime += element.learnedTime;
     totalWord += element.learnedWord;
   });
-  // console.log(learnerId, profile);
+
   return (    
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
@@ -112,13 +129,13 @@ export default function Account({navigation}) {
                   />
                 </TouchableOpacity>
                 <View style={styles.info}>
-                  <Text style={styles.infoUserName}>{profile.fullname}</Text>
+                  <Text style={styles.infoUserName}>{learner.fullname}</Text>
                   <View style={styles.iconWrap}>
                     <View style={styles.iconHeart}>
-                      <IconWrap name="heart" num={profile.heart}/>
+                      <IconWrap name="heart" num={learner.heart}/>
                     </View>
                     <View style={styles.iconPeanut}>
-                      <IconWrap name="peanut" num={profile.peanut} hasPlus={true}/>
+                      <IconWrap name="peanut" num={learner.peanut} hasPlus={true}/>
                     </View>
                   </View>
                 </View>

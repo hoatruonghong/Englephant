@@ -9,6 +9,8 @@ const LoginProvider = ({children}) => {
         id:"6523a83652d8423281c01341",    
         username:"TestAccount",
         fullname:"TestAccount",
+        phone:"1234567890",
+        email:"",
         password:"123456",
         bornYear:"2018",
         mode:"Trẻ em",
