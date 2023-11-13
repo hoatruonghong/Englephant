@@ -13,6 +13,10 @@ const PQuizSchema = new Schema(
     sound: {
         type: mongoose.Types.ObjectId, 
         ref: 'sound' ,
+    },
+    category: {
+        type: String,
+        enum: ["Luyện tập", "Phân biệt"]
     }
   },
 );

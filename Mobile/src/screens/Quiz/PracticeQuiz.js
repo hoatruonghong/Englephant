@@ -1,5 +1,5 @@
 import React, { useState, createRef, useEffect }  from 'react';
-import { Text, View, StyleSheet, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
+import { Text, View, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
 import Sound from 'react-native-sound';
 import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';
@@ -129,19 +129,23 @@ export default function PracticeQuiz({route, navigation}) {
 
     //Handle pressing Next action
     const handleNext = () => {
-            if (recorder.current && recorder.current.state.recording == true)
+        if (recorder.current) {
+            if(recorder.current.state.result>75)
+                setScore(score+1);
+            if(recorder.current.state.recording == true)
                 recorder.current.changeRecordEvent();
-            if(currentQuestionIndex==numofquiz-1){
-                //last question
-                validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
-                handleResult();
-            } else {
-                validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
-                getAnswers(currentQuestionIndex+1);
-                setCurrentQuestionIndex(currentQuestionIndex+1);
-                setCurrentOptionSelected(null);
-                setIsDisabled(false);
-            }
+        }
+        if(currentQuestionIndex==numofquiz-1){
+            //last question
+            validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
+            handleResult();
+        } else {
+            validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
+            getAnswers(currentQuestionIndex+1);
+            setCurrentQuestionIndex(currentQuestionIndex+1);
+            setCurrentOptionSelected(null);
+            setIsDisabled(false);
+        }
         Animated.timing(progress, {
             toValue: currentQuestionIndex+1,
             duration: 1000,

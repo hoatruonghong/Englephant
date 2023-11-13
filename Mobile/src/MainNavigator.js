@@ -55,6 +55,7 @@ import Sum from './screens/Learning/Sum';
 import LRQuiz from './screens/Quiz/LRQuiz';
 import {HeaderBar} from './components/HeaderBar';
 import LRLesson from './screens/Exercise/LRLesson';
+import PLesson from './screens/Exercise/PLesson';
 import PronunciationQuiz from './screens/Quiz/PronunciationQuiz';
 
 const Tab = createBottomTabNavigator();
@@ -74,19 +75,19 @@ function MyTabs() {
         }
       }>
       <Tab.Screen 
-        name="Exercise" 
-        component={ExerciseScreens} 
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesomeIcon icon={faDumbbell} color={color} size={24}/>
-          )
-        }}/>
-      <Tab.Screen 
         name="Learning" 
         component={LearningScreens} 
         options={{
           tabBarIcon: ({color}) => (
             <FontAwesomeIcon icon={faBookOpen} color={color} size={24}/>
+          )
+        }}/>
+      <Tab.Screen 
+        name="Exercise" 
+        component={ExerciseScreens} 
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesomeIcon icon={faDumbbell} color={color} size={24}/>
           )
         }}/>
       <Tab.Screen 
@@ -142,14 +143,14 @@ function LearningScreens() {
 function ExerciseScreens() {
   return (
     <Stack.Navigator screenOptions={styles.headerWrap}>
-      <Stack.Screen name="ListenRead" component={ListenRead} 
-        options={{
-          headerTitle: 'Nghe đọc',
-        }}
-      />
       <Stack.Screen name="ExerciseMain" component={ExerciseMain}
         options={{
           headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+        }}
+      />
+      <Stack.Screen name="ListenRead" component={ListenRead} 
+        options={{
+          headerTitle: 'Nghe đọc',
         }}
       />
       <Stack.Screen name="Pronunciation" component={Pronunciation} 
@@ -218,6 +219,7 @@ function StackNavigator(){
       <Stack.Screen name="PracticeQuiz" component={PracticeQuiz} />
       <Stack.Screen name="LRQuiz" component={LRQuiz} />
       <Stack.Screen name="PronunciationQuiz" component={PronunciationQuiz}/>
+      <Stack.Screen name="PLesson" component={PLesson} />
       </Stack.Group>
 
       <Stack.Screen name="Setting" component={Setting} 

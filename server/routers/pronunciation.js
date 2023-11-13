@@ -4,6 +4,7 @@ import learnerpl from '../models/learnerpl.js';
 import pl from '../models/pl.js';
 import pquiz from '../models/pquiz.js';
 import panswer from '../models/panswer.js';
+import sound from '../models/sound.js';
 
 const router = express.Router();
 
@@ -49,9 +50,7 @@ router.get('/learner/:learnerId', async (req, res) => {
         const activelesson = await learnerpl.findOne({learnerId: learnerId, plId: lesson._id});
         if (activelesson){
             lesson._doc.active = true;
-            lesson._doc.point = activelesson.point;
-            lesson._doc.total = activelesson.total;
-            lesson._doc.isDone = activelesson.point/activelesson.total>=0.5? true : false;
+            lesson._doc.progress = activelesson.progress;
         } else {
             lesson._doc.active = false;
         }
@@ -62,6 +61,20 @@ router.get('/learner/:learnerId', async (req, res) => {
       return res.status(500).json({ message: JSON.stringify(err) });
     }
   });
+
+//Learner: Get all video instruction
+router.get('/video/:sound1Id/:sound2Id', async (req, res) => {
+  try {
+    const { sound1Id, sound2Id } = req.params;
+    console.log(sound1Id, sound2Id)
+    const sound1 = await sound.findById(sound1Id);
+    const sound2 = await sound.findById(sound2Id);
+    const data = {sound1: sound1, sound2: sound2};
+    return res.status(200).json({ data: data });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
 
 //Learner: Unlock Lesson
 router.post('/:lessonId', async (req, res) => {

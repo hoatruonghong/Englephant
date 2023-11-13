@@ -1,8 +1,10 @@
-import React, { useState, useEffect }  from 'react';
-import { Text, View, StyleSheet, Image, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
+import React, { useState, createRef, useEffect }  from 'react';
+import { Text, View, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
-import Buttons from "../../components/Buttons";
-import colors from '../../../assets/colors';
+import Sound from 'react-native-sound';
+import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';
+import Buttons from "./../../components/Buttons";
+import colors from './../../../assets/colors';
 import style from '../styles';
 import styles from "./QuizStyle";
 import MascotCry from '../../../assets/svg/mascot_cry.svg';
@@ -67,15 +69,8 @@ export default function PronunciationQuiz({route, navigation}) {
                 }
                 break;
             }
-            case "Phát âm":{
-                let correct_option = answers[0];
-                setIsDisabled(true);
-                if(text==correct_option.content){
-                    setScore(score+1);
-                }
-                onChangeText("");
-                break;
-            }
+            case "Phát âm":
+                return
         }        
     };
 
@@ -126,19 +121,23 @@ export default function PronunciationQuiz({route, navigation}) {
 
     //Handle pressing Next action
     const handleNext = () => {
-            if (recorder.current && recorder.current.state.recording == true)
+        if (recorder.current) {
+            if(recorder.current.state.result>75)
+                setScore(score+1);
+            if(recorder.current.state.recording == true)
                 recorder.current.changeRecordEvent();
-            if(currentQuestionIndex==numofquiz-1){
-                //last question
-                validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
-                handleResult();
-            } else {
-                validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
-                getAnswers(currentQuestionIndex+1);
-                setCurrentQuestionIndex(currentQuestionIndex+1);
-                setCurrentOptionSelected(null);
-                setIsDisabled(false);
-            }
+        }
+        if(currentQuestionIndex==numofquiz-1){
+            //last question
+            validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
+            handleResult();
+        } else {
+            validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
+            getAnswers(currentQuestionIndex+1);
+            setCurrentQuestionIndex(currentQuestionIndex+1);
+            setCurrentOptionSelected(null);
+            setIsDisabled(false);
+        }
         Animated.timing(progress, {
             toValue: currentQuestionIndex+1,
             duration: 1000,
@@ -171,9 +170,7 @@ export default function PronunciationQuiz({route, navigation}) {
     const renderQuestion = () => {
         let content_type = "none";
         let question = quizzes[currentQuestionIndex];
-        if (question.image){
-            content_type = "image";
-        }
+        console.log(question)
         if (question.audio){
             content_type = "audio";
         }
@@ -232,24 +229,11 @@ export default function PronunciationQuiz({route, navigation}) {
                             size={50}/>
                     </TouchableOpacity>
                 )
-            case "image":
-                return (<Image style={{
-                    width: "80%",
-                    alignSelf: "center",
-                    aspectRatio: 1.25,
-                    resizeMode: "cover",
-                    borderColor: colors.bright_gray_brown,
-                    borderWidth: 2,
-                    borderRadius: 16
-                  }} source={{uri: item.image}}/>)
         }
     }
     const renderOptions = () => {
         let type = "word";
         if (answers && answers.length>0){
-            if (answers[0].image){
-                type = "image";
-            }
             if (answers[0].audio){
                 type = "audio";
             }
@@ -360,6 +344,7 @@ export default function PronunciationQuiz({route, navigation}) {
         <SafeAreaView style={styles.container}>
             {renderProgressBar()}
             {renderQuestion()}
+            {quizzes[currentQuestionIndex].word && <Text style={styles.wordStyle}>quizzes[currentQuestionIndex].word</Text>}
             {renderOptions()}
             {renderButton()}
             {renderModal()}

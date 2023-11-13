@@ -1,5 +1,5 @@
 import React, { useReducer, useState, createRef }  from 'react';
-import { Text, View, StyleSheet, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
+import { Text, View, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
 import Sound from 'react-native-sound';
 import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';

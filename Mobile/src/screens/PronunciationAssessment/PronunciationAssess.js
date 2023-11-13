@@ -189,7 +189,7 @@ class PronunciationAssess extends Component {
       console.log('audioFile', audioFilePath);
       this.setState({ audioFile: audioFilePath, recording: false });
       doEval(userId, audioType, audioSampleRate, this.requestParams, audioFilePath, this.setState({showResult: true}))
-      .then(data=>{console.log(data); this.setState({result: data.result})})
+      .then(data=>{console.log(data); this.setState({result: data.result.overall})})
       .catch(e=>{console.log(e)});
     } catch(error){
       console.log(error);

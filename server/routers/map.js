@@ -287,12 +287,12 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     learnernoderesults.push({point: sumpoint, totalnumofquiz: sumtotalnumofquiz});
 
     //check if map has been unlocked already
-    const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
-    if (!isUnlocked) {
-      const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
-      const node1st = await node.find({mapId: mapId, position: 1});
-      const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
-    }
+    // const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
+    // if (!isUnlocked) {
+    //   const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
+    //   const node1st = await node.find({mapId: mapId, position: 1});
+    //   const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
+    // }
 
     //update status for map
     let numofstars = (sumpoint/sumtotalnumofquiz >= 0.8)? ((totalgotcards == totalcards)? 3: 2) :1;

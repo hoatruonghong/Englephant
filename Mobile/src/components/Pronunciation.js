@@ -1,42 +1,85 @@
 import * as React from "react";
-import { Text, View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import axios from "axios";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+//import icons
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faChalkboardUser,faDumbbell, faDice } from '@fortawesome/free-solid-svg-icons';
+library.add(faChalkboardUser,faDumbbell, faDice);
 
 import colors from './../../assets/colors';
 
 function LessonItem(props) {
-    const { onPress, title, isLearned, type } = props;
-    var image_source = "";
+    const { title, type, item, navigation } = props;
+    let icon = "";
+    let color = '';
+    let onPress;
     switch (type) {
         case 1:
-            image_source = require("./../../assets/images/instruct.png");
+            icon = faChalkboardUser;
+            color = colors.blue;
+            onPress=()=>{
+              uri = 'http://10.0.2.2:5000/api/pronunciation/video/'+item.sound1+'/'+item.sound2;
+              console.log(item.sound1,item.sound2)
+              axios.get(uri)
+              .then(function (res) {
+                navigation.navigate("PLesson",{lessons: [res.data.data.sound1.video, res.data.data.sound2.video]});
+              })
+              .catch(function (error) {
+                  console.log(error);
+              });
+            }
             break;
         case 2:
-            image_source = require("./../../assets/images/distinguish.png");
+            icon = faDice;
+            color= colors.yellow;
+            onPress=()=>{
+              uri = 'http://10.0.2.2:5000/api/pronunciation/quiz/'+item._id;
+              console.log(uri)
+              axios.get(uri)
+              .then(function (res) {
+                navigation.navigate("PronunciationQuiz",{lessonId: item._id, quizzes: res.data.quiz});
+              })
+              .catch(function (error) {
+                  console.log(error);
+              });
+            }
             break;
         case 3:
-            image_source = require("./../../assets/images/practice.png");
+            icon = faDumbbell;
+            color = colors.red;
+            onPress=()=>{
+              uri = 'http://10.0.2.2:5000/api/pronunciation/quiz/'+item._id;
+              axios.get(uri)
+              .then(function (res) {
+                navigation.navigate("PronunciationQuiz",{lessonId: item._id, quizzes: res.data.quiz});
+              })
+              .catch(function (error) {
+                  console.log(error);
+              });
+            }
             break;
     }
     return (
-        <TouchableOpacity style={styles.lessonItem}>
-            <Image source={image_source} />
+        <TouchableOpacity style={styles.lessonItem} onPress={()=>onPress()}>
+            <FontAwesomeIcon icon={icon} color={color} size={34}/>
             <Text style={styles.contentText}>{title}</Text>
         </TouchableOpacity>
     );
 };
 
-export default function PronunciationItem({ item }) {
+export default function PronunciationItem({ item, navigation, learnerId }) {
   return (
     <View style={styles.PronunciationItemWrapper}>
       <View style={styles.topItem}>
-        <Image source={require("./../../assets/images/ellipse-white-pot.png")} />
+        <View style={styles.dot} />
         <Text style={styles.titleText}>{item.name}</Text>
-        <Image source={require("./../../assets/images/ellipse-white-pot.png")} />
+        <View style={styles.dot} />
       </View>
       <View style={styles.contentItem}>
-        <LessonItem title={"Hướng dẫn"} type={1}/>
-        <LessonItem title={"Phân biệt"} type={2}/>
-        <LessonItem title={"Luyện tập"} type={3}/>
+        <LessonItem title={"Hướng dẫn"} type={1} item={item} navigation={navigation}/>
+        <LessonItem title={"Phân biệt"} type={2} item={item} navigation={navigation}/>
+        <LessonItem title={"Luyện tập"} type={3} item={item} navigation={navigation}/>
       </View>
     </View>
   );
@@ -78,7 +121,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontSize: 24,
-    fontWeight: "400",
+    fontWeight: "600",
     color: colors.white,
   },
   contentText: {
@@ -86,5 +129,11 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.black_green,
     marginTop: 5,
+  },
+  dot:{
+      width: 10,
+      aspectRatio: 1,
+      borderRadius: 10,
+      backgroundColor: "white"
   },
 });
