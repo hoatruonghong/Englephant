@@ -8,13 +8,20 @@ const LoginProvider = ({children}) => {
     const [profile, setProfile] = useState({
         id:"6523a83652d8423281c01341",    
         username:"TestAccount",
+        fullname:"TestAccount",
+        phone:"1234567890",
+        email:"",
         password:"123456",
         bornYear:"2018",
-        mode:"Trẻ em"});
+        mode:"Trẻ em",
+        peanut: 0,
+        heart: 0,
+        bud: 0
+    });
 
     return(
         <LoginContext.Provider 
-            value={{isLoggedIn, setIsLoggedIn, profile, setProfile}}
+            value={{isLoggedIn, setIsLoggedIn, profile, setProfile, learnerId, setLearnerId}}
         >
             {children}
         </LoginContext.Provider>

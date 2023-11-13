@@ -158,7 +158,11 @@ function ExerciseScreens() {
           headerTitle: 'Phát âm',
         }}
       />
-      
+      <Stack.Screen name="ListenRead" component={ListenRead} 
+        options={{
+          headerTitle: 'Nghe đọc',
+        }}
+      />
       <Stack.Screen name="TalkRoom" component={TalkRoom}
         options={{
           headerTitle: 'Phòng giao tiếp',

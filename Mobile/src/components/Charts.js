@@ -166,7 +166,7 @@ function VocabularyChart({
   let angle = -90;
   let angles = [];
   let strokeDashoffsets = [];
-  data.forEach(item => {
+  data.forEach((item, id) => {
     strokeDashoffsets.push(circleCircumference*(100-item.percentage)/100);
     angles.push(angle);
     angle += item.percentage/100*360;
@@ -182,6 +182,7 @@ function VocabularyChart({
         {data.map((item, id) => {
           return (
             <Circle
+              key={id}
               cx={center}
               cy={center}
               r={radius}
@@ -263,9 +264,30 @@ function PercentChart(props) {
 
 function HistoryChart(props) {
     const { data } = props;
+    const day = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+    let max = 0;
+    data.forEach(element => {
+      if (max < element.learnedTime) max = element.learnedTime;
+    });
+    let percentages = [];
+    data.forEach(element => {
+      percentages.push(element.learnedTime/max*100+"%");
+    });
+
     return (
-      <View style={styles.container}>
-          
+      <View style={styles.historyContainer}>
+        {
+          data.map((item, id) => {
+            return (
+            <View key={id} style={styles.historyItem}>
+              <View style={styles.historyBar}>
+                <View style={[styles.progress, {height: percentages[id]}]}></View>
+              </View>
+              <Text style={styles.historyText}>{day[id]}</Text>
+            </View>
+            )
+          })
+        }        
       </View>
     );
 };
@@ -296,7 +318,35 @@ const styles = StyleSheet.create({
       fontWeight: 'regular',
       paddingLeft: 5,
       alignSelf: 'center'
-    }
+    },
+    historyContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    historyItem: {
+      width: '12%',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    historyBar: {
+      backgroundColor: colors.brightest_green,
+      borderRadius: 14,
+      width: 30,
+      height: 120,
+      flexDirection: 'column',
+      justifyContent: 'flex-end',
+    },
+    progress: {
+      borderRadius: 14,
+      backgroundColor: colors.main_green,
+    },
+    historyText: {
+      color: colors.black_green,
+      fontSize: 13,
+      fontWeight: 'regular',
+      alignSelf: 'center'
+    },
   });
 
 module.exports = {

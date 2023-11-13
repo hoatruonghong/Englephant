@@ -1,14 +1,21 @@
-import React, { useContext, useState }  from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
+import React, { useContext, useState, useEffect }  from 'react';
+import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, TouchableOpacity, RefreshControl } from "react-native";
 import Buttons from "./../../components/Buttons";
+import SmallButton from '../../components/SmallButton';
 import Assesses from "./../../components/ItemAssess";
 import Charts from './../../components/Charts';
 import colors from './../../../assets/colors';
 import { useLogin } from './../../context/LoginProvider';
 import IconWrap from './../../components/IconWrap';
 import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
+import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
+import Learner from './../../api/Learner';
+import axios from 'axios';
 
 const image = require("./../../../assets/images/forest-landscape.png");
+library.add(faBell, faGear);
 
 var dataUser = {
   avatar: "./../../../assets/images/avatar-default.png",
@@ -55,16 +62,52 @@ var VocalAssess = [
     id: 3, color: colors.red, percentage: 50, type: 'Đã nhớ'
   },
 ];
+var historyProgress = [
+  {
+    learnedTime: 10, learnedWord: 0 
+  },
+  {
+    learnedTime: 20, learnedWord: 6 
+  },
+  {
+    learnedTime: 30, learnedWord: 10 
+  },
+  {
+    learnedTime: 25, learnedWord: 8
+  },
+  {
+    learnedTime: 30, learnedWord: 5 
+  },
+  {
+    learnedTime: 10, learnedWord: 0 
+  },
+  {
+    learnedTime: 15, learnedWord: 3 
+  },
+];
 
 export default function Account({navigation}) {
-  const { setIsLoggedIn, profile } = useLogin();
-  const renderPronunAssess = (items) => {
-    return (
-      items.forEach(element => {
-        return <Assesses.PronunDetail item={element} color={colors.main_green}/>
-      })
-    );
-  }
+  const { setIsLoggedIn, learnerId, setProfile } = useLogin();
+  const [learner, setLearner] = useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  useEffect(()=>{
+    uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
+    axios.get(uri)
+    .then(function (res) {
+      setLearner(res.data.data);
+      setProfile(res.data.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  })
+
+  var totalTime = 0, totalWord = 0;
+  historyProgress.forEach(element => {
+    totalTime += element.learnedTime;
+    totalWord += element.learnedWord;
+  });
 
   return (    
     <ImageBackground source={image} style={styles.imageBgContainer}>
@@ -86,19 +129,21 @@ export default function Account({navigation}) {
                   />
                 </TouchableOpacity>
                 <View style={styles.info}>
-                  <Text style={styles.infoUserName}>{profile.username}</Text>
+                  <Text style={styles.infoUserName}>{learner.fullname}</Text>
                   <View style={styles.iconWrap}>
                     <View style={styles.iconHeart}>
-                      <IconWrap name="heart" num={10}/>
+                      <IconWrap name="heart" num={learner.heart}/>
                     </View>
                     <View style={styles.iconPeanut}>
-                      <IconWrap name="peanut" num={100} hasPlus={true}/>
+                      <IconWrap name="peanut" num={learner.peanut} hasPlus={true}/>
                     </View>
                   </View>
                 </View>
               </View>
 
               <View style={styles.moreWrap}>
+                {/* <SmallButton onPress={() => navigation.navigate('Notification')} width={350} icon={faBell}/>
+                <SmallButton onPress={() => navigation.navigate('Setting')} width={350} icon={faGear}/> */}
                 <TouchableOpacity style={styles.iconLink} onPress={() => navigation.navigate('Notification')}>
                   <FontAwesomeIcon icon="fa-solid fa-bell" color={colors.shadow_gray_brown} size={24}/>
                 </TouchableOpacity>
@@ -130,9 +175,9 @@ export default function Account({navigation}) {
                 strokeWidth={15} size={100} totalNum={100} 
                 textColor={colors.black_green} textSize={18}/>
               <View style={styles.trackingDescChart}>
-              {VocalAssess.map((item) => {
+              {VocalAssess.map((item, id) => {
                 return (
-                  <Charts.DescriptItem data={item} />
+                  <Charts.DescriptItem key={id} data={item} />
                 );
               })}
               </View>
@@ -164,8 +209,17 @@ export default function Account({navigation}) {
           </View>
           {/* Learning History */}
           <View style={styles.wrapLearningHistory}>
-            <Text>History</Text>
-
+            <View style={styles.wrapTotalNum}>
+              <Text style={styles.trackingTitleText}>Tuần này</Text>
+              <Text style={styles.trackingTitleText}>{totalWord} từ mới</Text>
+            </View>
+            <View style={styles.wrapLearningChart}>
+              <Charts.HistoryChart data={historyProgress}/>
+            </View>
+            <View style={styles.wrapTotalNum}>
+              <Text style={styles.trackingTitleText}>Thời gian học</Text>
+              <Text style={styles.trackingTitleText}>{totalTime} phút</Text>
+            </View>
           </View>
           {/* Game */}
           <TouchableOpacity style={styles.wrapGame}>
@@ -230,6 +284,8 @@ const styles = StyleSheet.create({
   moreWrap: {
     width: '14%',
     justifyContent: 'space-between',
+    padding: 0,
+    margin: 0,
   },
   iconLink: {
     backgroundColor: colors.white,
@@ -276,7 +332,7 @@ const styles = StyleSheet.create({
     marginTop: '2.08%',
   },
   wrapVocalDetail: {
-    flex: 1,
+    flex: 0.49,
     backgroundColor: colors.white,
     borderWidth: 2,
     borderRadius: 10,
@@ -290,7 +346,7 @@ const styles = StyleSheet.create({
   trackingDescChart: {
   },
   wrapPronunDetail: {
-    flex: 1,
+    flex: 0.49,
     backgroundColor: colors.white,
     borderWidth: 2,
     borderRadius: 10,
@@ -330,8 +386,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: '2.08%',
+    paddingLeft: '5%',
+    paddingRight: '5%',
   },
-  
+  wrapTotalNum: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    margin: '2%',
+  },
+  wrapLearningChart: {
+    width: '100%',
+  },
+
+
   wrapGame: {
     backgroundColor: colors.white,
     borderWidth: 2,

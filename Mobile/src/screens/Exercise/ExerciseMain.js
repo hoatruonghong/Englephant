@@ -18,7 +18,6 @@ export default function ExerciseMain({navigation}) {
         const res = await Idiom.loadRandom();
         setSentence(res.data.data.sentence);
         setMeaning(res.data.data.meaning);
-        console.log(res.data.data);
     };
 
     return (

@@ -11,7 +11,7 @@ export default function Notice({ item }) {
         </View>
         <View style={styles.contentItem}>
             <View style={styles.leftItem}>
-                <Image source={item.image} style={styles.profileImage} />
+                <Image source={item.image} style={styles.profileImage}/>
             </View>
             <View style={styles.rightItem}>
                 <View style={styles.topRightItem}>
@@ -20,7 +20,6 @@ export default function Notice({ item }) {
                     <Text style={styles.date}>{item.date}</Text>
                 </View>
                 </View>
-
                 <Text style={styles.content}>{item.content}</Text>
             </View>
         </View>
@@ -39,10 +38,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     elevation: 10,
     shadowOffset: { width: 1, height: 1 },
-    shadowOpacity:  0.25,
+    shadowOpacity: 0.25,
     shadowRadius: 4,
     shawdowColor: colors.shadow_gray_brown,
-    flex: 1,
     flexDirection: "column",
     marginBottom: 10,
   },
@@ -54,22 +52,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   leftItem: {
-    alignSelf: "center",
-    paddingRight: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    width: '20%',
+  },
+  profileImage: {
+    borderRadius: 50,
+    width: 65,
+    height: 65,
+    resizeMode: 'contain',
   },
   rightItem: {
     flexDirection: "column",
-    flex: 1,
+    width: '80%',
+    alignSelf: 'center'
   },
   row: {
     flexDirection: "row",
   },
-  profileImage: {
-    width: 50,
-    height: 50,
-    // borderRadius: 25,
-  },
-
   topRightItem: {
     justifyContent: "space-between",
     flexDirection: "row",
@@ -81,12 +81,12 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 16,
-    fontWeight: "400",
+    fontWeight: "regular",
     color: colors.shadow_gray_brown,
   },
   content: {
     fontSize: 16,
-    fontWeight: "400",
+    fontWeight: "regular",
     color: colors.black_green,
   },
 });
