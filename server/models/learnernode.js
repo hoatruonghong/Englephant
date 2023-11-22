@@ -11,11 +11,19 @@ const LearnerNodeSchema = new Schema(
         type: mongoose.Types.ObjectId, 
         ref: 'node' ,
     },
+    mapId: {
+      type: Number,
+      ref: "map"
+    },
     point: {
       type: Number,
       default: 0
     },
     totalnumofquiz: {
+      type: Number,
+      default: 0
+    },
+    time: {
       type: Number,
       default: 0
     },

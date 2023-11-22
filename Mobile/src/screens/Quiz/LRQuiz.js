@@ -155,7 +155,7 @@ export default function LRQuiz({route, navigation}) {
     };
 
     const renderImage = (image) => {
-        return (
+        return ( image &&
                 <Image style={{
                     width: "80%",
                     alignSelf: "center",

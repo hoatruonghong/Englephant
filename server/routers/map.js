@@ -1,6 +1,7 @@
 import express from "express";
 //import models
 import map from '../models/map.js';
+import learner from "../models/learner.js";
 import learnermap from '../models/learnermap.js';
 import learnernode from '../models/learnernode.js';
 import learnercard from '../models/learnercard.js';
@@ -86,13 +87,15 @@ router.get('/learn/:learnerId/:mapId', async (req, res) => {
 router.post('/unlock/:learnerId/:mapId', async (req, res) => {
   const {learnerId, mapId} = req.params;
   try {
-      const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
-      if (isUnlocked) 
-        return res.status(200).json({ message: "Already unlocked!" });
-      const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
-      const node1st = await node.find({mapId: mapId, position: 1});
-      const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
-      return res.status(200).json({ map: unlockedmap, node: unlockednode });
+    const amap = await map.findById(mapId);
+    const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
+    if (isUnlocked) 
+      return res.status(200).json({ message: "Already unlocked!" });
+    const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0, name: amap.name});
+    const node1st = await node.find({mapId: mapId, position: 1});
+    const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
+    console.log(unlockedmap, unlockednode)
+    return res.status(200).json({ message: "Unlock successfully!" });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
   }
@@ -103,11 +106,11 @@ router.get('/lock/:learnerId/:mapId', async (req, res) => {
   const {learnerId, mapId} = req.params;
   try {
       const lockedmap = await map.findById(mapId);
-      const previousmap = await learnermap.find({learnerId: learnerId, mapId: lockedmap.previousmap});
+      const previousmap = await learnermap.findOne({learnerId: learnerId, mapId: lockedmap.previousmap});
       let isFree = true;
       let condition = "";
-      if (previousmap[0].status<=1)
-        condition = 'Hoàn thành map '+previousmap[0].name+' từ 2* trở lên để mở khoá';
+      if (previousmap.status<=1)
+        condition = 'Hoàn thành map '+previousmap.name+' từ 2* trở lên để mở khoá';
       else {
         if (lockedmap.price>0){
           isFree = lockedmap.price;
@@ -208,10 +211,10 @@ router.delete('/delete-map/:mode/topic/:name', async (req, res) => {
 router.put('/node-result/:nodeId', async (req, res) => {
   try {
     const { nodeId } = req.params;
-    const { learnerId, point, totalnumofquiz } = req.body;
+    const { learnerId, point, totalnumofquiz, time } = req.body;
     const node_result = await learnernode.findOne({nodeId: nodeId, learnerId: learnerId});
-    if (point> node_result.point)
-      await learnernode.findByIdAndUpdate( node_result._id, { point: point, totalnumofquiz: totalnumofquiz });
+    if (point>= node_result.point)
+      await learnernode.findByIdAndUpdate( node_result._id, { point: point, totalnumofquiz: totalnumofquiz, time: time });
     res.status(200).json({ message: "Update Node result successfully!" })
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
@@ -270,10 +273,14 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     let sumtotalnumofquiz = 0;
     let totalgotcards = 0;
     let totalcards = 0;
+    let totaltime = 0;
+    let totaltimecontent = "";
 
     //Get results of all nodes in map
     for (let i = 0; i < length; i++){
       let newLearnerNode = await learnernode.findOne({nodeId: nodes[i]._id, learnerId: learnerId});
+      console.log(newLearnerNode.time);
+      totaltime = totaltime + newLearnerNode.time;
       learnernoderesults.push({point: newLearnerNode.point, totalnumofquiz: newLearnerNode.totalnumofquiz});
       if (i%2==0){
         let countcards = await flashcard.countDocuments({nodeId: nodes[i]._id});
@@ -287,18 +294,29 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     learnernoderesults.push({point: sumpoint, totalnumofquiz: sumtotalnumofquiz});
 
     //check if map has been unlocked already
-    // const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
-    // if (!isUnlocked) {
-    //   const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
-    //   const node1st = await node.find({mapId: mapId, position: 1});
-    //   const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
-    // }
+    const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
+    if (!isUnlocked) {
+      const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
+      const node1st = await node.find({mapId: mapId, position: 1});
+      const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
+      await learner.findByIdAndUpdate(learnerId, {currentMap: mapId})
+    }
 
     //update status for map
     let numofstars = (sumpoint/sumtotalnumofquiz >= 0.8)? ((totalgotcards == totalcards)? 3: 2) :1;
-    await learnermap.findByIdAndUpdate(mapId, { status: numofstars });
+    //timer
+    let minutes = Math.floor(totaltime / 60);
+    let seconds = totaltime % 60;
 
-    return res.status(200).json({ result: learnernoderesults, flashcard: {got: totalgotcards, total: totalcards} });
+    if (seconds < 10) {
+        seconds = '0' + seconds;
+    }
+
+    totaltimecontent=minutes + ':' + seconds;
+    
+    console.log(totaltimecontent)
+    await learnermap.findOneAndUpdate({mapId: mapId}, { status: numofstars });
+    return res.status(200).json({ result: learnernoderesults, flashcard: {got: totalgotcards, total: totalcards}, time: totaltimecontent });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
   }

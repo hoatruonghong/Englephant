@@ -48,8 +48,21 @@ export default function PracticeQuiz({route, navigation}) {
             console.log(error);
         });
     }
+    
+    //timer
+    const [timer, count] = useState(0);
+    const [timerIsActive, setTimerIsActive ] = useState(true);
 
-    useEffect(()=> {if (answers.length==0) getAnswers(0)})
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if(timerIsActive)
+                count(timer+1);
+            }, 1000);
+        if (answers.length==0)
+            getAnswers(0)
+        return () => clearInterval(interval);
+        }
+    );
 
     const chooseAnswer = (selectedOption) => {
         setCurrentOptionSelected(selectedOption);
@@ -107,7 +120,8 @@ export default function PracticeQuiz({route, navigation}) {
         axios.put(uri,{
             learnerId: learnerId,
             point: score,
-            totalnumofquiz: numofquiz
+            totalnumofquiz: numofquiz,
+            time: timer
         })
         .then(function (res) {
             console.log(res.data.message);
@@ -123,6 +137,7 @@ export default function PracticeQuiz({route, navigation}) {
             setPass(true);
             unlockNewNode(nodeId);
         }
+        setTimerIsActive(false);
         setShowResultModal(true);
         sendResult();
     }
@@ -240,7 +255,7 @@ export default function PracticeQuiz({route, navigation}) {
                     </TouchableOpacity>
                 )
             case "image":
-                return (<Image style={{
+                return (item.image && <Image style={{
                     width: "80%",
                     alignSelf: "center",
                     aspectRatio: 1.25,

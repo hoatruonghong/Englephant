@@ -34,11 +34,10 @@ const userId = "uid";
 const baseHOST = "https://api.speechsuper.com";
 
 const coreType = "word.eval"; // Change the coreType according to your needs.
-const refText = "supermarket"; // Change the reference text according to your needs.
 const audioType = "wav"; // Change the audio type corresponding to the audio file.
 const audioSampleRate = "16000";
 
-async function doEval(userId, audioType, sampleRate, requestParams, audioPath, setShowResult) {
+async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
     const coreType = requestParams['coreType'];
 
     let getConnectSig = function () {
@@ -121,7 +120,6 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath, s
                 console.log(xhr.responseText);
               }
             };
-            setShowResult();
             return;
           }catch(e){
             console.log('e on send');  
@@ -135,11 +133,10 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath, s
 }
 
 class PronunciationAssess extends Component {
-  constructor({refText}){
-    this.requestParams = {
-      coreType: coreType,
-      refText: refText
-  };
+  constructor(props){
+    super(props);
+    this.coreType = coreType;
+    this.refText = props.refText;
   }
   
   state = {
@@ -148,7 +145,8 @@ class PronunciationAssess extends Component {
     loaded: false,
     paused: true,
     showResult: false,
-    result: 0
+    result: 0,
+    error: false
   };
   async componentDidMount() {
     await this.checkPermission();
@@ -188,8 +186,9 @@ class PronunciationAssess extends Component {
       console.log('Stop record');
       console.log('audioFile', audioFilePath);
       this.setState({ audioFile: audioFilePath, recording: false });
-      doEval(userId, audioType, audioSampleRate, this.requestParams, audioFilePath, this.setState({showResult: true}))
-      .then(data=>{console.log(data); this.setState({result: data.result.overall})})
+      doEval(userId, audioType, audioSampleRate, {coreType: coreType, refText: this.refText}, audioFilePath)
+      .then(data=>{console.log(data); data.error? this.setState({error: true}): this.setState({result: data.result.overall})})
+      .then(()=>this.setState({showResult: true}))
       .catch(e=>{console.log(e)});
     } catch(error){
       console.log(error);

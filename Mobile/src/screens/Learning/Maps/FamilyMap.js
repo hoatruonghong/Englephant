@@ -48,7 +48,7 @@ export default function FamilyMap({navigation}){
       axios.get(uri)
       .then(function (res) {
         console.log(res.data.data);
-        navigation.navigate("Sum", {result: res.data.result, flashcard: res.data.flashcard});
+        navigation.navigate("Sum", {result: res.data.result, flashcard: res.data.flashcard, map: 2, time: res.data.time});
       })
       .catch(function (error) {
         console.log(error);
@@ -59,7 +59,8 @@ export default function FamilyMap({navigation}){
             <ImageBackground source={require("./../../../../assets/images/learningbg.png")} resizeMode="cover" style={{flex:1}}/>
             <View style={[styles.nodewrapper, styles.node5position]}>
               <View style={styles.pin}>
-                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[4])}]}></View>
+                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[4])}]}/>
+                <Text style={styles.position}>5</Text>
               </View>
               <Image 
                 style={[styles.node,{resizeMode: "cover"}]} 
@@ -73,7 +74,8 @@ export default function FamilyMap({navigation}){
             </View>
             <View style={[styles.nodewrapper, styles.node4position]}>
               <View style={styles.pin}>
-                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[3])}]}></View>
+                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[3])}]}/>
+                <Text style={styles.position}>4</Text>
               </View>
               <Image 
                 style={[styles.node,{resizeMode: "cover"}]} 
@@ -87,7 +89,8 @@ export default function FamilyMap({navigation}){
             </View>
             <View style={[styles.nodewrapper, styles.node3position]}>
               <View style={styles.pin}>
-                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[2])}]}></View>
+                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[2])}]}/>
+                <Text style={styles.position}>3</Text>
               </View>
               <Image 
                 style={[styles.node,{resizeMode: "cover"}]} 
@@ -101,7 +104,8 @@ export default function FamilyMap({navigation}){
             </View>
             <View style={[styles.nodewrapper, styles.node2position]}>
               <View style={styles.pin}>
-                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[1])}]}></View>
+                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[1])}]}/>
+                <Text style={styles.position}>2</Text>
               </View>
               <Image 
                 style={[styles.node,{resizeMode: "cover"}]} 
@@ -114,7 +118,9 @@ export default function FamilyMap({navigation}){
                 onPress={()=>onPressQuiz({navigation: navigation, position:2})}/>
             </View>
             <View style={[styles.nodewrapper, styles.node1position]}>
-              <View style={styles.pin}></View>
+              <View style={styles.pin}>
+                <Text style={styles.position}>1</Text>
+              </View>
               <Image 
                 style={[styles.node,{resizeMode: "cover"}]} 
                 source={{uri: "https://i.imgur.com/pNJmCXo.png"}}/>
@@ -163,7 +169,9 @@ const styles = StyleSheet.create({
       left: "45%",
       top: "5%",
       position: "absolute",
-      backgroundColor: colors.red
+      backgroundColor: colors.red,
+      justifyContent: "center",
+      alignItems: "center"
     },
     pinwrapper: {
       width: "100%",
@@ -214,16 +222,13 @@ const styles = StyleSheet.create({
       backgroundColor: colors.bright_gray_brown,
       transform: [{ rotate: '-10deg'}]
     },
-    text: {
-      width: 60,
-      fontSize: 18,
-      lineHeight: 22,
-      left: 10,
-      bottom: 35,
-      fontWeight: "700",
+    position: {
+      width: 10,
+      fontSize: 16,
+      lineHeight: 18,
+      fontWeight: "900",
       letterSpacing: 0.25,
-      color: colors.black_green,
-      position: "absolute",
-      transform: [{ rotate: '-52deg'}]
+      color: "white",
     },
+
   });

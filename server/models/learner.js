@@ -58,7 +58,8 @@ const LearnerSchema = new Schema(
     clothesId: {
         type: mongoose.Types.ObjectId, 
         ref: 'clothes' ,
-    }
+    },
+    currentMap: Number
 },
 { timestamps: true}
 );

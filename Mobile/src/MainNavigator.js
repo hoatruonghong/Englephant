@@ -72,6 +72,7 @@ function MyTabs() {
           tabBarInactiveTintColor: colors.bright_gray_brown,
           tabBarShowLabel: false,
           tabBarStyle: {height: "8%", borderTopWidth: 2, borderColor: colors.bright_gray_brown},
+          unmountOnBlur: true
         }
       }>
       <Tab.Screen 
@@ -112,7 +113,7 @@ function MyTabs() {
 
 function LearningScreens() {
   return (
-    <Stack.Navigator screenOptions={styles.headerWrap}>
+    <Stack.Navigator screenOptions={styles.headerWrap} initialRouteName='MapSelecting'>
       <Stack.Screen name="MapSelecting" component={MapSelecting}
         options={{
           headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
@@ -156,11 +157,6 @@ function ExerciseScreens() {
       <Stack.Screen name="Pronunciation" component={Pronunciation} 
         options={{
           headerTitle: 'Phát âm',
-        }}
-      />
-      <Stack.Screen name="ListenRead" component={ListenRead} 
-        options={{
-          headerTitle: 'Nghe đọc',
         }}
       />
       <Stack.Screen name="TalkRoom" component={TalkRoom}

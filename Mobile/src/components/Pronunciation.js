@@ -13,6 +13,7 @@ function LessonItem(props) {
     const { title, type, item, navigation } = props;
     let icon = "";
     let color = '';
+    let visible = true;
     let onPress;
     switch (type) {
         case 1:
@@ -20,7 +21,6 @@ function LessonItem(props) {
             color = colors.blue;
             onPress=()=>{
               uri = 'http://10.0.2.2:5000/api/pronunciation/video/'+item.sound1+'/'+item.sound2;
-              console.log(item.sound1,item.sound2)
               axios.get(uri)
               .then(function (res) {
                 navigation.navigate("PLesson",{lessons: [res.data.data.sound1.video, res.data.data.sound2.video]});
@@ -34,11 +34,11 @@ function LessonItem(props) {
             icon = faDice;
             color= colors.yellow;
             onPress=()=>{
-              uri = 'http://10.0.2.2:5000/api/pronunciation/quiz/'+item._id;
-              console.log(uri)
+              uri = 'http://10.0.2.2:5000/api/pronunciation/quiz/2/'+item.sound1+'/'+item.sound2;
               axios.get(uri)
               .then(function (res) {
-                navigation.navigate("PronunciationQuiz",{lessonId: item._id, quizzes: res.data.quiz});
+                const quizzes = res.data.quiz.map((q,i)=>{return {...q, sound: q.sound==item.sound1? 1: 2}})
+                navigation.navigate("PronunciationQuiz",{lessonId: item._id, quizzes: quizzes, sound1: item.sound1, sound2: item.sound2});
               })
               .catch(function (error) {
                   console.log(error);
@@ -48,8 +48,9 @@ function LessonItem(props) {
         case 3:
             icon = faDumbbell;
             color = colors.red;
+            if (item.progress!=3) visible = false;
             onPress=()=>{
-              uri = 'http://10.0.2.2:5000/api/pronunciation/quiz/'+item._id;
+              uri = 'http://10.0.2.2:5000/api/pronunciation/quiz/3/'+item.sound1+'/'+item.sound2;
               axios.get(uri)
               .then(function (res) {
                 navigation.navigate("PronunciationQuiz",{lessonId: item._id, quizzes: res.data.quiz});
@@ -61,7 +62,7 @@ function LessonItem(props) {
             break;
     }
     return (
-        <TouchableOpacity style={styles.lessonItem} onPress={()=>onPress()}>
+        <TouchableOpacity style={[styles.lessonItem, {opacity: visible? 1: 0.5}]} onPress={()=>onPress()}>
             <FontAwesomeIcon icon={icon} color={color} size={34}/>
             <Text style={styles.contentText}>{title}</Text>
         </TouchableOpacity>

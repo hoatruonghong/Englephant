@@ -16,7 +16,8 @@ const LoginProvider = ({children}) => {
         mode:"Trẻ em",
         peanut: 0,
         heart: 0,
-        bud: 0
+        bud: 0,
+        currentMap: 3
     });
 
     return(

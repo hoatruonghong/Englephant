@@ -1,7 +1,8 @@
-import React, { useReducer, useState, createRef }  from 'react';
+import React, { useReducer, useState, createRef, useEffect }  from 'react';
 import { Text, View, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
-import Sound from 'react-native-sound';
+import {Vimeo} from 'react-native-vimeo-iframe';
+import SoundPlayer from 'react-native-sound-player';
 import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
@@ -20,7 +21,7 @@ library.add(faXmark, faVolumeUp);
 
 function reducer(score, currentId){
     return score.map((s, i) => (i === currentId)?  s + 1 : s );
-  }
+}
 
 export default function LearningQuiz({route, navigation}) {
 
@@ -42,6 +43,20 @@ export default function LearningQuiz({route, navigation}) {
     const [progress, setProgress] = useState(new Animated.Value(0));
     const [text, onChangeText] = useState('');
     const [pass, setPass] = useState(false);
+    const [rerecord, setRerecord] = useState(false);
+
+    //timer
+    const [timer, count] = useState(0);
+    const [timerIsActive, setTimerIsActive ] = useState(true);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if(timerIsActive)
+                count(timer+1);
+            }, 1000);
+        return () => clearInterval(interval);
+        }
+    );
 
     //create ref to interact with Pronunciation Assess component
     const recorder = createRef()
@@ -152,7 +167,8 @@ export default function LearningQuiz({route, navigation}) {
         axios.put(uri,{
             learnerId: learnerId,
             point: score.reduce((s, i) => s + i, 0),
-            totalnumofquiz: numofquiz
+            totalnumofquiz: numofquiz,
+            time: timer
         })
         .then(function (res) {
             console.log(res.data.message);
@@ -163,6 +179,7 @@ export default function LearningQuiz({route, navigation}) {
     }
     //Handle showing result
     const handleResult = () => {
+        setTimerIsActive(false);
         getFlashcards();
         sendResult();
     }
@@ -179,6 +196,8 @@ export default function LearningQuiz({route, navigation}) {
                     dispatch(currentCardIndex);
                 if(recorder.current.state.recording == true)
                     recorder.current.changeRecordEvent();
+                if(recorder.current.state.error)
+                    setRerecord(true)
             }
             if(currentQuestionIndex==numofquiz-1){
                 //last question
@@ -215,7 +234,7 @@ export default function LearningQuiz({route, navigation}) {
                 }]}>
                 </Animated.View>
             </View>
-            <TouchableOpacity style={[style.close, {right: "2%"}]} onPress={()=>navigation.goBack(null)}>
+            <TouchableOpacity style={[style.close, {right: "2%"}]} onPress={()=>{setAnswers([]);navigation.goBack(null)}}>
                 <FontAwesomeIcon icon={faXmark} color={colors.black_green} size={30}/>
             </TouchableOpacity>
             </View>
@@ -261,10 +280,25 @@ export default function LearningQuiz({route, navigation}) {
         )
     };
 
+    const videoCallbacks = {
+        timeupdate: (data) => console.log('timeupdate: ', data),
+        play: (data) => console.log('play: ', data),
+        pause: (data) => console.log('pause: ', data),
+        fullscreenchange: (data) => console.log('fullscreenchange: ', data),
+        ended: (data) => console.log('ended: ', data),
+        controlschange: (data) => console.log('controlschange: ', data),
+      };
+
     const renderContent = (type, item) => {
         switch (type) {
             case "video":
-                return;
+                return(
+                    <Vimeo
+                        videoId={item.video}
+                        params={'api=1&autoplay=0'}
+                        handlers={videoCallbacks}
+                    />
+                );
             case "none":
                 return;
             case "word":
@@ -278,35 +312,61 @@ export default function LearningQuiz({route, navigation}) {
                      }]}>{item.content}</Text>
                 )
             case "audio":
-                const sound = new Sound(item.audio, error => {
-                    if (error) {
-                      console.log('error', error.message);
-                    }
-                })
+                SoundPlayer.loadUrl("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
+                // const sound = new Sound('https://www.soundjay.com/button/button-1.mp3','',
+                // error => {
+                //   if (error) {
+                //     console.log('play error: ',error)
+                //   } else {
+                //     console.log("Playing sound");
+                //     sound.play(() => {
+                //       // Release when it's done so we're not using up resources
+                //       sound.release();
+                //     });
+                //   }
+                // })
                 return (
-                    <TouchableOpacity 
-                        style={{width: "100%", height: "50%", alignItems: "center", justifyContent: "center"}} 
-                        onPress={
-                            ()=>sound.play(success => {
-                                sound.release();
-                                if (success) {
-                                  console.log('Successfully finished playing');
-                                } else {
-                                  console.log('Playback failed due to audio decoding errors');
-                                }
-                              })}>
-                        <FontAwesomeIcon 
-                            icon={faVolumeUp}  
-                            color={
-                                item==currentOptionSelected?
-                                colors.white:
-                                colors.bright_gray_brown
-                            } 
-                            size={50}/>
-                    </TouchableOpacity>
+                    <View>
+                        <TouchableOpacity 
+                            style={{width: "100%", height: "50%", alignItems: "center", justifyContent: "center"}} 
+                            onPress={
+                                ()=>{SoundPlayer.play(); console.log('play')}}>
+                            <FontAwesomeIcon 
+                                icon={faVolumeUp}  
+                                color={
+                                    item==currentOptionSelected?
+                                    colors.white:
+                                    colors.bright_gray_brown
+                                } 
+                                size={50}/>
+                        </TouchableOpacity>
+                        <Modal 
+                        transparent={true}
+                        visible={rerecord}
+                        onRequestClose={() => {
+                            setRerecord(false);
+                        }}
+                    >  
+                        <View style={styles.wrapper}>
+                        <View style={styles.modalView}>
+                            <View style={{flexDirection:'row', width: "100%"}}>
+                            <TouchableOpacity style={[style.close, {right: "4%"}]} onPress={()=>setRerecord(false)}>
+                                <FontAwesomeIcon icon="xmark"  color={colors.black_green} size={30}/>
+                            </TouchableOpacity>
+                            <Text style={styles.titleStyle}>Englephant chưa nghe được</Text>
+                            </View>
+                            <View style={{width: 90, height: 68, marginTop: "5%"}}>
+                            <MascotCry 
+                                viewBox='0 0 68 90'/>
+                            </View>
+                            <Text style={[styles.textStyle, {textAlign: 'center'}]}>Bạn có thể phát âm lại được không?</Text>
+                        </View>
+                        </View>
+                    </Modal>
+                    </View>
                 )
             case "image":
-                return (<Image style={{
+                return (item.image && <Image style={{
                     width: "80%",
                     aspectRatio: 1.25,
                     alignSelf: "center",
@@ -317,6 +377,7 @@ export default function LearningQuiz({route, navigation}) {
                   }} source={{uri: item.image}}/>)
         }
     }
+      
     const renderOptions = () => {
         let type = "word";
         if (answers && answers.length>0){
@@ -358,13 +419,13 @@ export default function LearningQuiz({route, navigation}) {
                                 )
                             }
                             contentContainerStyle={{width: "100%", height: "100%"}}
-                            >
-                            </FlatList>
+                            />
                         )
                     }
                 case "Phát âm - Hình":
                 case "Phát âm - Nghe":
                     return (
+                        answers.length== 1 && 
                         <View style={styles.wrapOptions}>
                             <PronunciationAssess ref={recorder} refText={answers[0].content}/>
                         </View>
@@ -381,6 +442,8 @@ export default function LearningQuiz({route, navigation}) {
                             />
                         </View>
                     )
+                default:
+                    return ;
         }
     };
 
@@ -434,7 +497,7 @@ export default function LearningQuiz({route, navigation}) {
         <SafeAreaView style={styles.container}>
             {renderProgressBar()}
             {currentLessonIndex < numofcard? renderLesson() : renderQuestion()}
-            {renderOptions()}
+            {currentLessonIndex == numofcard && renderOptions()}
             {renderButton()}
             {renderModal()}
             

@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { Text, StyleSheet, TouchableOpacity, ImageBackground} from "react-native";
 import colors from "../../assets/colors";
 import MapTitleContainer from "../../assets/svg/map_title_container.svg";
@@ -12,7 +11,6 @@ library.add(faStar);
 
 
 export default function Map(props) {
-  const [data, setData] = React.useState([]);
   const { name, image, lock, star, height, width, index, navigation, learnerId, onPressLockedMap, onPressUnlockedMap } = props;
 
   if (name == "None"){
@@ -44,7 +42,7 @@ export default function Map(props) {
         <MapTitleContainer width="100%"
                   height="100%"
                   viewBox='0 -41 80 120'/>
-        <Text style={styles.text}>{name}</Text>
+        <Text style={styles.text}>{name? name.toUpperCase(): name}</Text>
         <FontAwesomeIcon icon={star1} style={[styles.star,{left: 32, bottom: 7}]}/>
         <FontAwesomeIcon icon={star2} style={[styles.star,{left: 42, bottom: 19}]}/>
         <FontAwesomeIcon icon={star3} style={[styles.star,{left: 52, bottom: 31}]}/>
@@ -67,10 +65,10 @@ const styles = StyleSheet.create({
     position: "absolute"
   },
   text: {
-    width: 60,
+    width: 80,
     fontSize: 18,
     lineHeight: 22,
-    left: 10,
+    left: 5,
     bottom: 35,
     fontWeight: "700",
     letterSpacing: 0.25,
