@@ -109,4 +109,19 @@ flashcardRouter.delete('/delete/:learnerId', async (req, res) => {
   }
 });
 
+/**
+ * @route GET /api/card/archive/:learnerId
+ * @description Learner: Get all having flashcards for Archive screen
+ * @access public
+ */
+flashcardRouter.get('/archive/:learnerId', async (req, res) => {
+  try {
+    const { learnerId } = req.params;
+    const flashcards = await learnercard.find({learnerId: learnerId})
+    return res.status(200).json({ data: flashcards });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
 export default flashcardRouter

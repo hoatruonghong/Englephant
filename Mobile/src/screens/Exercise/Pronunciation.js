@@ -1,59 +1,42 @@
-import React, { useContext, useState }  from 'react';
+import React, { useEffect, useState }  from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, FlatList, TouchableOpacity } from "react-native";
+import axios from 'axios';
 import colors from './../../../assets/colors';
 import PronunciationItem from './../../components/Pronunciation';
+import { useLogin } from '../../context/LoginProvider';
 
-const data = [
-    {
-        id: 1,
-        name: "Âm /i:/ - /I/",
-        progress: 1,
-    },
-    {
-        id: 2,
-        name: "Âm /p/ - /b/",
-        progress: 1,
-    },
-    {
-        id: 3,
-        name: "Âm /t/ - /d/",
-        progress: 1,
-    },
-    {
-        id: 4,
-        name: "Âm /u:/ - /u/",
-        progress: 1,
-    },
-    {
-        id: 5,
-        name: "Âm /p/ - /b/",
-        progress: 1,
-    },
-    {
-        id: 6,
-        name: "Âm /t/ - /d/",
-        progress: 1,
-    },
-    {
-        id: 7,
-        name: "Âm /u:/ - /u/",
-        progress: 1,
-    }
-];
 
-export default function Pronunciation({navigation}) {
-  return (
-    <View style={styles.container}>
-        <View style={styles.wrapContent}>
-            <FlatList
-                showsHorizontalScrollIndicator={false}
-                data={data}
-                renderItem={PronunciationItem}
-                keyExtractor={(item) => item.id}
-            />    
+export default function Pronunciation({navigation}) {    //get answers
+
+    const {profile} = useLogin();
+    const learnerId = profile.id;
+    const [data, setData] = useState([]);
+
+
+    //get all pronunciation lessons
+    useEffect(()=>{
+        const uri = 'http://10.0.2.2:5000/api/pronunciation/learner/'+learnerId;
+        axios.get(uri)
+        .then(function (res) {
+            setData(res.data.data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    });
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.wrapContent}>
+                <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    data={data}
+                    renderItem={({item, index})=><PronunciationItem item = {item} navigation={navigation} learnerId={learnerId}/>}
+                    keyExtractor={(item) => item.id+item.name}
+                />    
+            </View>
         </View>
-    </View>
-  )
+    )
 };
 
 

@@ -61,6 +61,7 @@ export default function MapSelecting({navigation}) {
   }
   const {profile} = useLogin();
   const learnerId = profile.id;
+  const currentMap = profile.currentMap;
   const {height, width} = useWindowDimensions();
   const slider = createRef();
   const [data, setData] = useState([]);
@@ -160,8 +161,7 @@ export default function MapSelecting({navigation}) {
             <View style={styles.chat}>
               <Text style={styles.text}>Have a nice day!!!</Text>
             </View>
-            <SmallButton onPress={()=>{}} width={width} icon={faList}/>
-            <SmallButton onPress={()=>{}} width={width} icon={faCircleInfo}/>
+            {/* <SmallButton onPress={()=>{}} width={width} icon={faList}/> */}
           </View>
           <Image
             style={{
@@ -179,26 +179,25 @@ export default function MapSelecting({navigation}) {
           transparent={true}
           visible={notiModalVisible}
           onRequestClose={() => {
-            setModalVisible(!modalVisible);
+            setNotiModalVisible(false);
           }}
-      >
-        <View style={styles.wrapper}>
-        <View style={styles.modalView}>
-          <View style={{flexDirection:'row', width: "100%"}}>
-          <TouchableOpacity style={[style.close, {right: "4%"}]} onPress={()=>setNotiModalVisible(false)}>
-                <FontAwesomeIcon icon="xmark"  color={colors.black_green} size={30}/>
-            </TouchableOpacity>
-            <Text style={styles.titleStyle}>Map chưa mở</Text>
+        >
+          <View style={styles.wrapper}>
+          <View style={styles.modalView}>
+            <View style={{flexDirection:'row', width: "100%"}}>
+            <TouchableOpacity style={[style.close, {right: "4%"}]} onPress={()=>setNotiModalVisible(false)}>
+                  <FontAwesomeIcon icon="xmark"  color={colors.black_green} size={30}/>
+              </TouchableOpacity>
+              <Text style={styles.titleStyle}>Map chưa mở</Text>
+            </View>
+            <View style={{width: 90, height: 68, marginTop: "5%"}}>
+            <MascotCry 
+                viewBox='0 0 68 90'/>
+            </View>
+            <Text style={[styles.textStyle, {textAlign: 'center'}]}>{modalContent}</Text>
           </View>
-          <View style={{width: 90, height: 68, marginTop: "5%"}}>
-          <MascotCry 
-              viewBox='0 0 68 90'/>
           </View>
-          <Text style={[styles.textStyle, {textAlign: 'center'}]}>{modalContent}</Text>
-        </View>
-        </View>
-            
-      </Modal>
+        </Modal>
         <SideIndicator 
           isLeft = {true} 
           onPress = {()=>pressSideIndicator({isLeft: true})} 
@@ -242,7 +241,7 @@ export default function MapSelecting({navigation}) {
           extraData={id}
           windowSize={1}
           initialNumToRender={3}
-          initialScrollIndex={0}
+          initialScrollIndex={currentMap-1}
           maxToRenderPerBatch={3}
           removeClippedSubviews={false}
         />
@@ -334,7 +333,7 @@ const styles = StyleSheet.create({
   },
   chat: {
     height: "80%",
-    aspectRatio: 2,
+    width:"65%",
     backgroundColor: colors.white,
     borderRadius: 20,
     borderWidth: 2,
@@ -349,6 +348,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   text: {
+    marginLeft: 10,
     color: colors.black_green,
     fontSize: 16,
   },

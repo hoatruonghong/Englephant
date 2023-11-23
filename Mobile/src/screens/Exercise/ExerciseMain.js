@@ -1,24 +1,23 @@
-import React, { useContext, useState }  from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TextInput, SafeAreaView, ScrollView, FlatList, TouchableOpacity } from "react-native";
+import React, { useState, useEffect }  from 'react';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import colors from './../../../assets/colors';
 import MascotExcited from '../../../assets/svg/mascot_more_excited.svg';
 import Idiom from './../../api/Idiom';
 
-
-var dataUser = {
-    hearts: 1,
-    peanuts: 10,
-};
-
 export default function ExerciseMain({navigation}) {
-    const [sentence, setSentence] = React.useState('Cut somebody some slack');
-    const [meaning, setMeaning] = React.useState('Đừng quá khắt khe');
+    const [sentence, setSentence] = useState('');
+    const [meaning, setMeaning] = useState('');
 
     const loadIdiom = async () => {
         const res = await Idiom.loadRandom();
         setSentence(res.data.data.sentence);
         setMeaning(res.data.data.meaning);
     };
+
+    useEffect(()=>{
+        if(sentence=='')
+            loadIdiom();
+    })
 
     return (
     <View style={styles.container}>

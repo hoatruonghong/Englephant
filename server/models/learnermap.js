@@ -11,7 +11,8 @@ const LearnerMapSchema = new Schema(
         type: Number, 
         ref: 'map' ,
     },
-    status: Number
+    status: Number,
+    name: String,
   }
 );
 

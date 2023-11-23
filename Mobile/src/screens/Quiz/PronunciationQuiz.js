@@ -1,8 +1,10 @@
-import React, { useState, useEffect }  from 'react';
-import { Text, View, StyleSheet, Image, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
+import React, { useState, createRef, useEffect }  from 'react';
+import { Text, View, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
-import Buttons from "../../components/Buttons";
-import colors from '../../../assets/colors';
+import Sound from 'react-native-sound';
+import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';
+import Buttons from "./../../components/Buttons";
+import colors from './../../../assets/colors';
 import style from '../styles';
 import styles from "./QuizStyle";
 import MascotCry from '../../../assets/svg/mascot_cry.svg';
@@ -12,24 +14,24 @@ import { useLogin } from '../../context/LoginProvider';
 //import icons
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faXmark);
+library.add(faXmark, faVolumeUp);
 
 export default function PronunciationQuiz({route, navigation}) {
 
     const {profile} = useLogin();
     const learnerId = profile.id;
-    const {lessonId, quizzes} = route.params;
+    const {lessonId, quizzes, sound1, sound2} = route.params;
     const numofquiz = quizzes.length;
     const [answers, setAnswers] = useState([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [currentOptionSelected, setCurrentOptionSelected] = useState(null);
     const [isDisabled, setIsDisabled] = useState(false);
-    const [score, setScore] = useState(0);
+    const [score1, setScore1] = useState(0);
+    const [score2, setScore2] = useState(0);
     const [showResultModal, setShowResultModal] = useState(false);
     const [progress, setProgress] = useState(new Animated.Value(0));
-    const [text, onChangeText] = useState('');
     const [pass, setPass] = useState(false);
 
     //create ref to interact with Pronunciation Assess component
@@ -47,13 +49,13 @@ export default function PronunciationQuiz({route, navigation}) {
         });
     }
 
-    useEffect(()=> {if (answers.length==0) getAnswers(0)})
+    useEffect(()=> {if (answers.length==0) getAnswers(0);})
 
     const chooseAnswer = (selectedOption) => {
         setCurrentOptionSelected(selectedOption);
     }
 
-    const validateAnswer = (type) => {
+    const validateAnswer = (type, sound) => {
         switch (type){
             case "IPA":
             case "Nghe": {
@@ -63,23 +65,16 @@ export default function PronunciationQuiz({route, navigation}) {
                         correct_option=answers[x];
                 setIsDisabled(true);
                 if(currentOptionSelected==correct_option){
-                    setScore(score+1);
+                    sound==1? setScore1(score1+1): setScore2(score2+1);
                 }
                 break;
             }
-            case "Phát âm":{
-                let correct_option = answers[0];
-                setIsDisabled(true);
-                if(text==correct_option.content){
-                    setScore(score+1);
-                }
-                onChangeText("");
-                break;
-            }
+            case "Phát âm":
+                return;
         }        
     };
 
-    const unlockNewLesson = (lessonId) => {
+    const unlockExercise = (lessonId) => {
         uri = 'http://10.0.2.2:5000/api/pronunciation/'+lessonId;
         axios.post(uri,{
             learnerId: learnerId
@@ -100,11 +95,13 @@ export default function PronunciationQuiz({route, navigation}) {
     //Send Node result to backend
     const sendResult = () => {
         uri = 'http://10.0.2.2:5000/api/pronunciation/result/'+lessonId;
-        console.log(uri)
         axios.put(uri,{
             learnerId: learnerId,
-            point: score,
-            totalnumofquiz: numofquiz
+            sound1: sound1,
+            accuracy1: score1/5,
+            sound2: sound2,
+            accuracy2: score2/5,
+            pass: pass
         })
         .then(function (res) {
             console.log(res.data.message);
@@ -115,10 +112,10 @@ export default function PronunciationQuiz({route, navigation}) {
     }
     //Handle showing result
     const handleResult = async () => {
-        console.log(score);
-        if (score>=numofquiz*0.6){
+        console.log(1,score1,2,score2);
+        if (score1/5>=0.6 && score2/5>=0.6){
             setPass(true);
-            unlockNewLesson(lessonId);
+            unlockExercise(lessonId);
         }
         setShowResultModal(true);
         sendResult();
@@ -126,19 +123,24 @@ export default function PronunciationQuiz({route, navigation}) {
 
     //Handle pressing Next action
     const handleNext = () => {
-            if (recorder.current && recorder.current.state.recording == true)
+        let sound = quizzes[currentQuestionIndex].sound;
+        if (recorder.current) {
+            if(recorder.current.state.result>75)
+                sound==1? setScore1(score1+1): setScore2(score2+1);
+            if(recorder.current.state.recording == true)
                 recorder.current.changeRecordEvent();
-            if(currentQuestionIndex==numofquiz-1){
-                //last question
-                validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
-                handleResult();
-            } else {
-                validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
-                getAnswers(currentQuestionIndex+1);
-                setCurrentQuestionIndex(currentQuestionIndex+1);
-                setCurrentOptionSelected(null);
-                setIsDisabled(false);
-            }
+        }
+        if(currentQuestionIndex==numofquiz-1){
+            //last question
+            validateAnswer(quizzes[currentQuestionIndex].type, sound);
+            handleResult();
+        } else {
+            validateAnswer(quizzes[currentQuestionIndex].type, sound);
+            getAnswers(currentQuestionIndex+1);
+            setCurrentQuestionIndex(currentQuestionIndex+1);
+            setCurrentOptionSelected(null);
+            setIsDisabled(false);
+        }
         Animated.timing(progress, {
             toValue: currentQuestionIndex+1,
             duration: 1000,
@@ -171,10 +173,7 @@ export default function PronunciationQuiz({route, navigation}) {
     const renderQuestion = () => {
         let content_type = "none";
         let question = quizzes[currentQuestionIndex];
-        if (question.image){
-            content_type = "image";
-        }
-        if (question.audio){
+        if (question.audio||question.audio==""){
             content_type = "audio";
         }
         if (question.video){
@@ -184,6 +183,7 @@ export default function PronunciationQuiz({route, navigation}) {
             <View style={styles.wrapQuestions}>
                 {renderContent(content_type, question)}
                 <Text style={styles.questionText}>{question.question}</Text>
+                {quizzes[currentQuestionIndex].word && <Text style={styles.wordStyle}>{quizzes[currentQuestionIndex].word}</Text>}
             </View>
         )
     };
@@ -232,24 +232,11 @@ export default function PronunciationQuiz({route, navigation}) {
                             size={50}/>
                     </TouchableOpacity>
                 )
-            case "image":
-                return (<Image style={{
-                    width: "80%",
-                    alignSelf: "center",
-                    aspectRatio: 1.25,
-                    resizeMode: "cover",
-                    borderColor: colors.bright_gray_brown,
-                    borderWidth: 2,
-                    borderRadius: 16
-                  }} source={{uri: item.image}}/>)
         }
     }
     const renderOptions = () => {
         let type = "word";
         if (answers && answers.length>0){
-            if (answers[0].image){
-                type = "image";
-            }
             if (answers[0].audio){
                 type = "audio";
             }
@@ -258,8 +245,8 @@ export default function PronunciationQuiz({route, navigation}) {
             }
         }
         switch (quizzes[currentQuestionIndex].type){
-            case "Từ - Nghe":
-            case "Từ - Hình":
+            case "IPA":
+            case "Nghe":
                 {
                     return (
                         <FlatList style={styles.wrapOptions}
@@ -283,28 +270,16 @@ export default function PronunciationQuiz({route, navigation}) {
                                 </TouchableOpacity>
                             )
                         }
-                        contentContainerStyle={{width: "100%", height: "100%"}}
+                        contentContainerStyle={{width: "100%", height: "100%", justifyContent: "flex-end"}}
                         >
                         </FlatList>
                     )
                 }
-            case "Phát âm - Hình":
-            case "Phát âm - Nghe":
+            case "Phát âm":
                 return (
+                    answers.length== 1 && 
                     <View style={styles.wrapOptions}>
-                        <PronunciationAssess ref={recorder}/>
-                    </View>
-                )
-            case "Điền - Nghe":
-            case "Điền - Hình":
-                return (
-                    <View style={styles.wrapOptions}>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={text=>onChangeText(text.toLowerCase().trim())}
-                            value={text}
-                            placeholder='Điền vào đây'
-                        />
+                        <PronunciationAssess ref={recorder} refText={answers[0].content}/>
                     </View>
                 )
         }

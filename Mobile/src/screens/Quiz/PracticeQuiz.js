@@ -1,5 +1,5 @@
 import React, { useState, createRef, useEffect }  from 'react';
-import { Text, View, StyleSheet, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
+import { Text, View, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
 import Sound from 'react-native-sound';
 import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';
@@ -48,8 +48,21 @@ export default function PracticeQuiz({route, navigation}) {
             console.log(error);
         });
     }
+    
+    //timer
+    const [timer, count] = useState(0);
+    const [timerIsActive, setTimerIsActive ] = useState(true);
 
-    useEffect(()=> {if (answers.length==0) getAnswers(0)})
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if(timerIsActive)
+                count(timer+1);
+            }, 1000);
+        if (answers.length==0)
+            getAnswers(0)
+        return () => clearInterval(interval);
+        }
+    );
 
     const chooseAnswer = (selectedOption) => {
         setCurrentOptionSelected(selectedOption);
@@ -107,7 +120,8 @@ export default function PracticeQuiz({route, navigation}) {
         axios.put(uri,{
             learnerId: learnerId,
             point: score,
-            totalnumofquiz: numofquiz
+            totalnumofquiz: numofquiz,
+            time: timer
         })
         .then(function (res) {
             console.log(res.data.message);
@@ -123,25 +137,30 @@ export default function PracticeQuiz({route, navigation}) {
             setPass(true);
             unlockNewNode(nodeId);
         }
+        setTimerIsActive(false);
         setShowResultModal(true);
         sendResult();
     }
 
     //Handle pressing Next action
     const handleNext = () => {
-            if (recorder.current && recorder.current.state.recording == true)
+        if (recorder.current) {
+            if(recorder.current.state.result>75)
+                setScore(score+1);
+            if(recorder.current.state.recording == true)
                 recorder.current.changeRecordEvent();
-            if(currentQuestionIndex==numofquiz-1){
-                //last question
-                validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
-                handleResult();
-            } else {
-                validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
-                getAnswers(currentQuestionIndex+1);
-                setCurrentQuestionIndex(currentQuestionIndex+1);
-                setCurrentOptionSelected(null);
-                setIsDisabled(false);
-            }
+        }
+        if(currentQuestionIndex==numofquiz-1){
+            //last question
+            validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
+            handleResult();
+        } else {
+            validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
+            getAnswers(currentQuestionIndex+1);
+            setCurrentQuestionIndex(currentQuestionIndex+1);
+            setCurrentOptionSelected(null);
+            setIsDisabled(false);
+        }
         Animated.timing(progress, {
             toValue: currentQuestionIndex+1,
             duration: 1000,
@@ -236,7 +255,7 @@ export default function PracticeQuiz({route, navigation}) {
                     </TouchableOpacity>
                 )
             case "image":
-                return (<Image style={{
+                return (item.image && <Image style={{
                     width: "80%",
                     alignSelf: "center",
                     aspectRatio: 1.25,

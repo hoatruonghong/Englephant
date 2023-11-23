@@ -78,6 +78,13 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         color: colors.black_green,
+    },
+    wordStyle: {
+        width: "100%",
+        fontSize: 32,
+        fontWeight: "bold",
+        color: colors.black_green,
+        textAlign: "center"
     }
 });
 

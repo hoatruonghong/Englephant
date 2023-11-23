@@ -1,5 +1,5 @@
 import React, { useState, useEffect }  from 'react';
-import { Text, View, StyleSheet, Image, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
+import { Text, View, Image, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
 import Buttons from "../../components/Buttons";
 import colors from '../../../assets/colors';
@@ -155,7 +155,7 @@ export default function LRQuiz({route, navigation}) {
     };
 
     const renderImage = (image) => {
-        return (
+        return ( image &&
                 <Image style={{
                     width: "80%",
                     alignSelf: "center",

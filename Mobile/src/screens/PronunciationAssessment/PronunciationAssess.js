@@ -34,11 +34,10 @@ const userId = "uid";
 const baseHOST = "https://api.speechsuper.com";
 
 const coreType = "word.eval"; // Change the coreType according to your needs.
-const refText = "supermarket"; // Change the reference text according to your needs.
 const audioType = "wav"; // Change the audio type corresponding to the audio file.
 const audioSampleRate = "16000";
 
-async function doEval(userId, audioType, sampleRate, requestParams, audioPath, setShowResult) {
+async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
     const coreType = requestParams['coreType'];
 
     let getConnectSig = function () {
@@ -118,11 +117,12 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath, s
             xhr.onreadystatechange = function () {
               if (xhr.readyState == 4 && xhr.status == 200) {
                 t2 = Math.round(new Date().getTime() / 1000);
-                console.log(xhr.responseText);
+                console.log(xhr.responseText)
+                resolve(xhr.responseText);
+                return xhr.responseText;
               }
             };
-            setShowResult();
-            return;
+            return xhr.responseText;
           }catch(e){
             console.log('e on send');  
             reject(e);
@@ -135,11 +135,10 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath, s
 }
 
 class PronunciationAssess extends Component {
-  constructor({refText}){
-    this.requestParams = {
-      coreType: coreType,
-      refText: refText
-  };
+  constructor(props){
+    super(props);
+    this.coreType = coreType;
+    this.refText = props.refText;
   }
   
   state = {
@@ -148,7 +147,8 @@ class PronunciationAssess extends Component {
     loaded: false,
     paused: true,
     showResult: false,
-    result: 0
+    result: 0,
+    error: false
   };
   async componentDidMount() {
     await this.checkPermission();
@@ -188,8 +188,11 @@ class PronunciationAssess extends Component {
       console.log('Stop record');
       console.log('audioFile', audioFilePath);
       this.setState({ audioFile: audioFilePath, recording: false });
-      doEval(userId, audioType, audioSampleRate, this.requestParams, audioFilePath, this.setState({showResult: true}))
-      .then(data=>{console.log(data); this.setState({result: data.result})})
+      doEval(userId, audioType, audioSampleRate, {coreType: coreType, refText: this.refText}, audioFilePath)
+      .then(data=>{
+        const jsondata = JSON.parse(data); 
+        jsondata.error? this.setState({error: true}): this.setState({result: jsondata.result.overall})})
+      .then(()=>this.setState({showResult: true}))
       .catch(e=>{console.log(e)});
     } catch(error){
       console.log(error);

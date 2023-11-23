@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -8,20 +8,22 @@ import {
   useWindowDimensions,
   View
 } from 'react-native';
+import axios from 'axios';
+
 import MascotHappy from '../../../assets/svg/mascot_happy.svg';
 import colors from '../../../assets/colors';
 import styles from '../styles';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, fas, faStar } from '@fortawesome/free-solid-svg-icons';
+import { useLogin } from '../../context/LoginProvider';
 
 library.add(fas);
 
-const time = "40:32";
-
-
 export default function Sum({route, navigation}) {
-  const {result, flashcard} = route.params;
+  const {result, flashcard, map, time} = route.params;
+  const {profile} = useLogin();
+  const learnerId = profile.id;
   const resultlength = result.length;
   const numofhearts = result[resultlength-1].point;
   const totalnumofquiz = result[resultlength-1].totalnumofquiz;
@@ -29,6 +31,18 @@ export default function Sum({route, navigation}) {
   const totalnumofflashcard = flashcard.total;
   const numofstars = (numofhearts/totalnumofquiz >= 0.8)? ((numofflashcard == totalnumofflashcard)? 3: 2) :1;
   const {height, width} = useWindowDimensions();
+
+  useEffect(()=>{
+    uri = 'http://10.0.2.2:5000/api/map/unlock/'+learnerId+'/'+(map+1);
+    console.log(uri)
+    axios.post(uri)
+    .then(function (res) {
+        console.log(res.data.message)
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  })
 
   const renderHeart = () => {
     return (<View style={style.subsubContainer}>
