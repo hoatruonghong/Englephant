@@ -11,7 +11,12 @@ import flashcardRouter from './routers/flashcard.js';
 import idiomRouter from './routers/idiom.js';
 import lrRouter from './routers/lr.js';
 import pronunciationRouter from './routers/pronunciation.js';
-
+import talkroomRouter from './routers/talkroom.js';
+import exchangeRouter from './routers/exchange.js';
+import tutorManageRouter from './routers/admin/tutor.js';
+import exchangetableManageRouter from './routers/admin/exchange.js';
+import tutorAccountRouter from './routers/tutor/account.js';
+import tutorWorkshiftRouter from "./routers/tutor/workshift.js";
 
 const app = express();
 dotenv.config()
@@ -49,7 +54,29 @@ app
 .use('/api/idiom', idiomRouter)
 .use('/api/lr', lrRouter)
 .use('/api/pronunciation', pronunciationRouter)
+.use('/api/talkroom', talkroomRouter)
+.use('/api/exchangetable', exchangeRouter)
+
+//admin routes
+.use('/api/admin/tutor', tutorManageRouter)
+.use('/api/admin/exchangetable', exchangetableManageRouter)
+
+//tutor routes
+.use('/api/tutor/account', tutorAccountRouter)
+.use('/api/tutor/workshift', tutorWorkshiftRouter)
 
 app.listen(PORT, () => {
   console.log("Server started at PORT ", PORT);
 });
+
+//Socket.io
+import { initIO, getIO } from './socket.js';
+import { createServer } from 'http';
+const httpServer = createServer(app);
+
+initIO(httpServer);
+httpServer.listen(8000, () => {
+  console.log("HTTPServer started on port 8000");
+});
+
+getIO();

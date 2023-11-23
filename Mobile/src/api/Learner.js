@@ -2,11 +2,13 @@ import axios from 'axios';
 
 const update = async (params) => {
     try {
-        console.log(params);
+        console.log('heeee',params);
         const result = await axios.put('http://10.0.2.2:5000/api/learner/'+params.id, {
             fullname: params.fullname,
             phone: params.password,
             email: params.email,
+            gender: params.gender,
+            bornYear: params.bornYear,
         });
         return result;
     } catch (error) {

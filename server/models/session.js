@@ -6,7 +6,7 @@ const SessionSchema = new Schema(
     startTime: {
         type: Date,
     },
-    duration: String,
+    duration: Number,
     tutorId: {
       type: mongoose.Types.ObjectId, 
       ref: 'tutor' ,

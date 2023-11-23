@@ -3,7 +3,7 @@ import { Modal, Text, View, StyleSheet, Image, FlatList, TouchableOpacity, useWi
 import GoButton from '../../components/GoButton';
 import TalkRoomItem from './../../components/TalkRoom';
 import IconWrap from './../../components/IconWrap';
-import { ChooseModal } from './../../components/Modals';
+import Modals from './../../components/Modals';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from './../../../assets/colors';
 
@@ -59,6 +59,33 @@ const talkRoomData = [
 
     }, 
 ];
+const timeModalData = [15,20,30];
+
+const buyPeanutModalData = [
+    {
+        peanut: 10, price: 10000
+    },
+    {
+        peanut: 15, price: 15000
+    },
+    {
+        peanut: 20, price: 20000
+    }
+];
+const moreTimeModalData = [
+    {
+        time: 10, peanut: 10
+    },
+    {
+        time: 15, peanut: 10
+    },
+    {
+        time: 20, peanut: 10
+    },
+    {
+        time: 40, peanut: 40
+    }
+];
 
 export default function TalkRoom({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -99,37 +126,24 @@ export default function TalkRoom({navigation}) {
     const ChooseRoomModal = () => {
         return (
             <View>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={()=> setModalVisible(false)}
-                >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalHeader}>
-                            <View style={styles.modalTitle}>
-                                <Text style={styles.modalTitleText}>Chọn phòng</Text>
-                            </View>
-                            <TouchableOpacity onPress={()=>setModalVisible(false)}>
-                                <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.white} style={styles.modalTitleIcon}/>
-                            </TouchableOpacity>
-                        </View>
-                        <View style={styles.modalContent}>
-                            <TouchableOpacity style={styles.modalTimeItem}>
-                                <Text style={styles.modalTimeTitle}>15 phút</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.modalTimeItem}>
-                                <Text style={styles.modalTimeTitle}>20 phút</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.modalTimeItem}>
-                                <Text style={styles.modalTimeTitle}>30 phút</Text>
-                            </TouchableOpacity>
-                        </View>
-                        
-                    </View>
-
-                </Modal>
-                {/* <ChooseModal visible={modalVisible} setModalVisible={setModalVisible}/> */}
+                <Modals.MultipleSelectModal 
+                visible={modalVisible} 
+                setModalVisible={setModalVisible}
+                title='ChooseRoom'
+                data={timeModalData}
+                />
+                {/* <Modals.MultipleSelectModal 
+                visible={modalVisible} 
+                setModalVisible={setModalVisible}
+                title='BuyPeanut'
+                data={buyPeanutModalData}
+                /> */}
+                {/* <Modals.MultipleSelectModal 
+                visible={modalVisible} 
+                setModalVisible={setModalVisible}
+                title='MoreTime'
+                data={moreTimeModalData}
+                /> */}
             </View>
         );
     };
@@ -158,7 +172,6 @@ export default function TalkRoom({navigation}) {
 
   )
 };
-
 
 const styles = StyleSheet.create({
     container:{

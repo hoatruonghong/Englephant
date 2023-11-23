@@ -87,8 +87,8 @@ var historyProgress = [
 ];
 
 export default function Account({navigation}) {
-  const { setIsLoggedIn, learnerId, setProfile } = useLogin();
-  const [learner, setLearner] = useState('');
+  const { setIsLoggedIn, learnerId, setProfile, profile } = useLogin();
+  const [learner, setLearner] = useState(profile);
   const [refreshing, setRefreshing] = React.useState(false);
 
   useEffect(()=>{
@@ -102,7 +102,6 @@ export default function Account({navigation}) {
       console.log(error);
     });
   })
-
   var totalTime = 0, totalWord = 0;
   historyProgress.forEach(element => {
     totalTime += element.learnedTime;

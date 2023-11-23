@@ -8,21 +8,29 @@ import { TOKEN_LIST,TOKEN_BLACKLIST } from './../index.js';
  */
 export const verifyToken = async (req, res, next) => {
     try {
-        const data = req.headers['authorization']
-        const token = data?.split(" ")[1];
-        if(!token) return sendError(res, 'jwt must be provided.', 401)
-        console.log(TOKEN_LIST);
-        if(token in TOKEN_LIST || token in TOKEN_BLACKLIST)
-            return sendError(res, "Unauthorized.", 401)
+        // const data = req.headers['authorization']
+        // const token = data?.split(" ")[1];
+        // if(!token) return sendError(res, 'jwt must be provided.', 401)
+        // console.log(TOKEN_LIST);
+        // if(token in TOKEN_LIST || token in TOKEN_BLACKLIST)
+        //     return sendError(res, "Unauthorized.", 401)
         
-        const { payload } = jwt.verify(token, process.env.JWT_SECRET_KEY, {
-            complete: true
-        })
+        // const { payload } = jwt.verify(token, process.env.JWT_SECRET_KEY, {
+        //     complete: true
+        // })
         
-        if(!payload.user) return sendError(res, "Unauthorized.", 401)
+        // if(!payload.user) return sendError(res, "Unauthorized.", 401)
 
-        req.verifyToken = token
-        req.user = payload.user
+        // req.verifyToken = token
+        // req.user = payload.user
+        // next()
+        const authHeader = req.header('Authorization')
+        const token = authHeader && authHeader.split(" ")[1]
+
+        if (!token) return sendError(res, "Unauthorized.", 401)
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+        req.user = decoded.user
         next()
 
     } catch (error) {

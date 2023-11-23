@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2&family=Roboto:ital,wght@0,400;1,700&display=swap');
+
+:root {
+  --main-green: #9FC55A;
+  --black-green: #10401B;
+  --dark-green: #397624;
+  --bright-green: #D2EC81;
+  --brightest-green: #E6FAA7;
+  --dark-brown: #885928;
+  --bright-gray-brown: #BFB785;
+  --yellow: #F2CB40;
+  --blue: #5BB4DE;
+  --red: #EE6037;
+  --orange: #F1B03E;
+  --green-2: #C6D172;
+  --green-3: #D4CF61;
+  --black: #1A1A1A;
+  --white: #FFFFFF;
+  --shadow-gray-brown: #875826;
+}
+
+.tutorContainer {
+    background-color: var(--brightest-green);
+    flex-direction: row;
+    min-height: 100vh;;
+    height: 100%;
+}
+.mainContainer {
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
+}
+.titleText {
+    font-size: x-large;
+    font-weight: 400;
+    font-family: 'Baloo 2', sans-serif;
+    color: var(--dark-green);
+}
+.infoWrap{
+    background-color: var(--white);
+    border-radius: 20px;
+    min-height: 200px;
+    padding: 4%;
+}
+/* chart */
+.worktimeChart {
+    background-color: var(--yellow);
+}
+
+/* button */
+.goBtn {
+    background-color: var(--main-green);
+    text-align: center;
+    width: 100%;
+    border-radius: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.btnText {
+    text-decoration: none;
+    color: var(--white);
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-align: center;
+}

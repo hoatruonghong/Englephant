@@ -91,21 +91,12 @@ authRouter.post('/login', async (req, res) => {
         const accessToken = jwt.sign(
             {user: learnerData},
             process.env.JWT_SECRET_KEY,
-            {expiresIn: '5m'}
-        )
-
-        const refreshToken = jwt.sign(
-            {user: learnerData},
-            process.env.JWT_REFRESH_SECRET_KEY,
-            {expiresIn: '1h'}
+            // {expiresIn: '5m'}
         )
 
         const response = {
             accessToken,
-            refreshToken
         }
-
-        TOKEN_LIST['refreshToken'] = response
 
         return sendSuccess(res, 'Login successfully.', {
             response,

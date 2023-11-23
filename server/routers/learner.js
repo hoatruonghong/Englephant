@@ -51,13 +51,13 @@ learnerRouter.get('/:id', async (req, res) => {
 learnerRouter.put('/:id', async (req, res) => {
     try {
         const { id } = req.params
-        const { fullname, email, phone } = req.body
+        const { fullname, email, phone, bornYear, gender } = req.body
 
         const learner = await Learner.findById(id)
         if (!learner) sendError(res, "Information not found.");
 
-        await Learner.findByIdAndUpdate(id, {phone: phone, email: email, fullname: fullname});
-        return sendSuccess(res, "Update account information successfully.", { fullname, phone, email });        
+        await Learner.findByIdAndUpdate(id, {phone: phone, email: email, fullname: fullname, bornYear: bornYear, gender: gender});
+        return sendSuccess(res, "Update account information successfully.", { fullname, phone, email, bornYear, gender });        
     } catch (error) {
         console.log(error);
         return sendServerError(res);  
