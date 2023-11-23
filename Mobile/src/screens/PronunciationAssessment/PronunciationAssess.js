@@ -117,10 +117,12 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
             xhr.onreadystatechange = function () {
               if (xhr.readyState == 4 && xhr.status == 200) {
                 t2 = Math.round(new Date().getTime() / 1000);
-                console.log(xhr.responseText);
+                console.log(xhr.responseText)
+                resolve(xhr.responseText);
+                return xhr.responseText;
               }
             };
-            return;
+            return xhr.responseText;
           }catch(e){
             console.log('e on send');  
             reject(e);
@@ -187,7 +189,9 @@ class PronunciationAssess extends Component {
       console.log('audioFile', audioFilePath);
       this.setState({ audioFile: audioFilePath, recording: false });
       doEval(userId, audioType, audioSampleRate, {coreType: coreType, refText: this.refText}, audioFilePath)
-      .then(data=>{console.log(data); data.error? this.setState({error: true}): this.setState({result: data.result.overall})})
+      .then(data=>{
+        const jsondata = JSON.parse(data); 
+        jsondata.error? this.setState({error: true}): this.setState({result: jsondata.result.overall})})
       .then(()=>this.setState({showResult: true}))
       .catch(e=>{console.log(e)});
     } catch(error){

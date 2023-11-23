@@ -3,6 +3,7 @@ import { Text, View, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity,
 import axios from 'axios';
 import {Vimeo} from 'react-native-vimeo-iframe';
 import SoundPlayer from 'react-native-sound-player';
+import Sound from 'react-native-sound';
 import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
@@ -44,6 +45,7 @@ export default function LearningQuiz({route, navigation}) {
     const [text, onChangeText] = useState('');
     const [pass, setPass] = useState(false);
     const [rerecord, setRerecord] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     //timer
     const [timer, count] = useState(0);
@@ -312,25 +314,24 @@ export default function LearningQuiz({route, navigation}) {
                      }]}>{item.content}</Text>
                 )
             case "audio":
-                SoundPlayer.loadUrl("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
-                // const sound = new Sound('https://www.soundjay.com/button/button-1.mp3','',
-                // error => {
-                //   if (error) {
-                //     console.log('play error: ',error)
-                //   } else {
-                //     console.log("Playing sound");
-                //     sound.play(() => {
-                //       // Release when it's done so we're not using up resources
-                //       sound.release();
-                //     });
-                //   }
-                // })
+                const sound = new Sound(item.audio,'',
+                error => {
+                  if (error) 
+                    console.log('play error: ',error)
+                })
                 return (
                     <View>
                         <TouchableOpacity 
                             style={{width: "100%", height: "50%", alignItems: "center", justifyContent: "center"}} 
                             onPress={
-                                ()=>{SoundPlayer.play(); console.log('play')}}>
+                                ()=>{
+                                    sound.play(() => {
+                                        console.log('playing');
+                                        // Release when it's done so we're not using up resources
+                                        sound.release();
+                                    }); 
+                                }
+                            }>
                             <FontAwesomeIcon 
                                 icon={faVolumeUp}  
                                 color={
