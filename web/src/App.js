@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Landing />} />
           <Route path='/tutor' element={<Tutor />} />
-          <Route path='/talkroom' element={<TalkRoom />} />
+          <Route path='/tutor/talkroom' element={<TalkRoom />} />
           <Route path='/login' element={<Auth authRoute="login" />} />
           <Route path='/forget-password' element={<Auth authRoute="forget-password" />} />
           <Route path='/verify-otp' element={<Auth authRoute="verify-otp" />} />

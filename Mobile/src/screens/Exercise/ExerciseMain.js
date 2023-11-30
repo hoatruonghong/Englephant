@@ -67,7 +67,7 @@ export default function ExerciseMain({navigation}) {
             </View>
 
             {/* Skills */}
-            <TouchableOpacity style={styles.wrapSkills} onPress={()=>navigation.navigate("TalkRoom")}>
+            <TouchableOpacity style={styles.wrapSkills} onPress={()=>navigation.navigate("TutorRoom")}>
                 <View style={styles.skillsHeader}>
                     <Image source={require("./../../../assets/images/ellipse-pot.png")} />
                     <Text style={styles.titleText}>Luyện kĩ năng</Text>

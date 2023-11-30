@@ -3,13 +3,7 @@ import {
   Text,
   View,
   StyleSheet,
-  ImageBackground,
-  Image,
   TextInput,
-  SafeAreaView,
-  ScrollView,
-  FlatList,
-  TouchableOpacity,
 } from 'react-native';
 import Buttons from './../../components/Buttons';
 import colors from './../../../assets/colors';

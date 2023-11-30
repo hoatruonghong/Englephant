@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Text, View, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import colors from './../../../assets/colors';
+import Buttons from './../../components/Buttons';
 import SocketIOClient from 'socket.io-client';
 import {
 	// ScreenCapturePickerView,
@@ -200,12 +201,11 @@ export default function ChatRoom({navigation}) {
     setType("JOIN");
   }
 
-
   //UI
 
   const JoinScreen = () => {
     return (
-      <View style={styles.container}>
+      <View style={styles.container}>        
         <Text>{callerId}</Text>
         <Text>Enter call id of another user</Text>
         <TextInput
@@ -306,7 +306,7 @@ export default function ChatRoom({navigation}) {
         {localStream ? (
           <RTCView
             objectFit={'cover'}
-            style={{flex: 1, backgroundColor: colors.yellow}}
+            style={{flex: 1, backgroundColor: colors.main_green}}
             streamURL={localStream.toURL()}
           />
         ) : null}
@@ -317,23 +317,29 @@ export default function ChatRoom({navigation}) {
             streamURL={remoteStream.toURL()}
           />
         ) : null}
+        <View style={styles.btnWrap}>
+          <Buttons.MicroButton />
+          <Buttons.EndCallButton />
+          <Buttons.CamButton />
+        </View>
       </View>
     )
   };
 
   console.log(type);
-  switch (type) {
-    case 'JOIN':
-      return JoinScreen();
-    case 'INCOMING_CALL':
-      return IncomingCallScreen();
-    case 'OUTGOING_CALL':
-      return OutGoingCallScreen();
-    case 'WEBRTC_ROOM':
-      return WebrtcRoomScreen();
-    default:
-      return null;
-  }
+  // switch (type) {
+  //   case 'JOIN':
+  //     return JoinScreen();
+  //   case 'INCOMING_CALL':
+  //     return IncomingCallScreen();
+  //   case 'OUTGOING_CALL':
+  //     return OutGoingCallScreen();
+  //   case 'WEBRTC_ROOM':
+  //     return WebRTCRoomScreen();
+  //   default:
+  //     return null;
+  // }
+  return WebRTCRoomScreen();
 }
 
 const styles = StyleSheet.create({
@@ -342,4 +348,10 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: colors.brightest_green,
   },
+  btnWrap: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: colors.bright_gray_brown
+  }
 });

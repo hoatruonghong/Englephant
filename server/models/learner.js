@@ -59,6 +59,10 @@ const LearnerSchema = new Schema(
         type: mongoose.Types.ObjectId, 
         ref: 'clothes' ,
     },
+    talkroomTime: {
+        type: Number,
+        default: 0,
+    },
     currentMap: Number
 },
 { timestamps: true}

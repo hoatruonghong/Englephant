@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import type {PropsWithChildren} from 'react';
 import { View, StyleSheet, useWindowDimensions, Text } from 'react-native';
 import axios from 'axios';
@@ -57,6 +57,9 @@ import {HeaderBar} from './components/HeaderBar';
 import LRLesson from './screens/Exercise/LRLesson';
 import PLesson from './screens/Exercise/PLesson';
 import PronunciationQuiz from './screens/Quiz/PronunciationQuiz';
+import ChatRoom from './screens/Exercise/ChatRoom';
+import Archive from './screens/Archive/Archive';
+import TutorRoom from './screens/Exercise/TutorRoom';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -92,7 +95,7 @@ function MyTabs() {
           )
         }}/>
       <Tab.Screen 
-        name="Archive" 
+        name="ArchiveCollection" 
         component={ArchiveScreens} 
         options={{
           tabBarIcon: ({ color }) => (
@@ -112,29 +115,30 @@ function MyTabs() {
 }
 
 function LearningScreens() {
+  const {profile} = useLogin();
   return (
     <Stack.Navigator screenOptions={styles.headerWrap} initialRouteName='MapSelecting'>
       <Stack.Screen name="MapSelecting" component={MapSelecting}
         options={{
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:profile.heart}, {name:"peanut", num:profile.peanut, hasPlus: true}]}/>)},
         }}
       />
       <Stack.Screen name="2" component={FamilyMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:profile.heart}, {name:"peanut", num:profile.peanut, hasPlus: true}]}/>)},
         }}
       />
       <Stack.Screen name="1" component={FruitMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:profile.heart}, {name:"peanut", num:profile.peanut, hasPlus: true}]}/>)},
         }}
       />
       <Stack.Screen name="3" component={SchoolMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:profile.heart}, {name:"peanut", num:profile.peanut, hasPlus: true}]}/>)},
         }}      
       />
     </Stack.Navigator>    
@@ -142,11 +146,12 @@ function LearningScreens() {
 }
 
 function ExerciseScreens() {
+  const {profile} = useLogin();
   return (
     <Stack.Navigator screenOptions={styles.headerWrap}>
       <Stack.Screen name="ExerciseMain" component={ExerciseMain}
         options={{
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:profile.heart}, {name:"peanut", num:profile.peanut, hasPlus: true}]}/>)},
         }}
       />
       <Stack.Screen name="ListenRead" component={ListenRead} 
@@ -164,15 +169,28 @@ function ExerciseScreens() {
           headerTitle: 'Phòng giao tiếp',
         }}
       />
+      <Stack.Screen name="ChatRoom" component={ChatRoom}
+        options={{
+          headerTitle: 'Vào phòng',
+        }}
+      />
+      <Stack.Screen name="TutorRoom" component={TutorRoom}
+        options={{
+          headerTitle: 'Vào phòng',
+        }}
+      />
     </Stack.Navigator>    
   )
 }
 
 function ArchiveScreens() {
+  const {profile} = useLogin();
   return (
-    <Stack.Navigator      
-      screenOptions={{ headerShown: false }} >
-      <Stack.Screen name="ExerciseMain" component={ExerciseMain} />
+    <Stack.Navigator screenOptions={styles.headerWrap}>
+      <Stack.Screen name="Archive" component={Archive} 
+      options={{
+        headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:profile.heart}, {name:"card", num:10, total: 18}]}/>)},
+      }}/>
 
     </Stack.Navigator>    
   )
