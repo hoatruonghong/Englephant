@@ -13,12 +13,13 @@ import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
 import Learner from './../../api/Learner';
 import axios from 'axios';
+import MyCalendar from './../../components/Calendar';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 library.add(faBell, faGear);
 
 var dataUser = {
-  avatar: "./../../../assets/images/avatar-default.png",
+  avatar: "./../../../assets/images/avatar.jpg",
   name: "Hong Hoa",
   hearts: 1,
   peanuts: 10,
@@ -121,10 +122,10 @@ export default function Account({navigation}) {
           {/* User info */}
           <View style={styles.wrapUserInfo}>
               <View style={styles.infoWrap}>
-                <TouchableOpacity style={styles.avatar}>
+                <TouchableOpacity style={styles.avatar} onPress={()=>navigation.navigate('Wardrobe')}>
                   <Image
                     style={styles.avatarImage}
-                    source={require("./../../../assets/images/avatar-default.png")}
+                    source={require("./../../../assets/images/avatar.jpg")}
                   />
                 </TouchableOpacity>
                 <View style={styles.info}>
@@ -161,9 +162,8 @@ export default function Account({navigation}) {
               </View>
             </View>
             <View style={styles.trackingCalendar}>
-              <Text>Calendar</Text>
+              <MyCalendar />
             </View>
-            {/* <MyCalendar /> */}
           </View>
           {/* Learning Detail */}
           <View style={styles.wrapLearningDetail}>
@@ -259,9 +259,17 @@ const styles = StyleSheet.create({
   },
   avatar: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarImage: {
+    resizeMode: 'contain',
+    borderRadius: 50,
+    width: '100%',
   },
   info: {
     flex: 2,
+    paddingLeft: 5,
   },
   infoUserName: {
     textAlign: 'left',

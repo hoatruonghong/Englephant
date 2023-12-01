@@ -1,37 +1,51 @@
-import React from 'react'
-import { Text, View, StyleSheet, Pressable } from "react-native";
+import React, {useState} from 'react';
+import {Calendar, CalendarProvider, WeekCalendar} from 'react-native-calendars';
+import {Text, View, StyleSheet, Pressable, Dimensions} from 'react-native';
 import colors from './../../assets/colors';
 
-const months = ["January", "February", "March", "April", 
-"May", "June", "July", "August", "September", "October", 
-"November", "December"];
-const nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-const weekDays = [
-    "Sun","Mon","Tue","Wed","Thu","Fri","Sat"
-];
-var state = {
-    activeDate: new Date()
-};
-function generateMatrix() {
-    var matrix = [];
-    // The following code creates the header 
-    matrix[0] = this.weekDays;
-    // The remaining code will go here 
+export default function MyCalendar() {
+//   const [selected, setSelected] = useState('');
+  return (
+    <View style={styles.container}>
+      {/* <Calendar
+        onDayPress={day => {
+          setSelected(day.dateString);
+        }}
+        markedDates={{
+            '2023-11-29': {selected: true, selectedColor: colors.main_green},
+            '2023-12-01': {selected: true, selectedColor: colors.main_green}
+        }}
+        initialDate="2023-10-01"
+        minDate="2023-10-01"
+        maxDate="2023-12-31"
+      /> */}
+
+      <CalendarProvider 
+        date={new Date().toISOString()}
+        showTodayButton
+        >
+        <WeekCalendar
+          style={styles.dateList}
+          onDayPress={day => console.log(day)}
+          firstDay={1}
+          allowShadow={false}
+          markedDates={{
+            '2023-11-29': {selected: true, selectedColor: colors.main_green},
+            '2023-12-01': {selected: true, selectedColor: colors.main_green},
+          }}
+        />
+      </CalendarProvider>
+    </View>
+  );
 }
 
-export default function MyCalendar() {
-    return (
-        <View style={styles.container}>
-            <Text>Weekly tracking</Text>
-        </View>
-        
-    );
-};
-
 const styles = StyleSheet.create({
-    container: {
-        borderRadius: 10,
-        elevation: 4, 
-    },
-
+  container: {
+    backgroundColor: colors.white,
+  },
+  calendarWrap: {
+    width: '100%',
+  },
+  dateList: {
+  },
 });

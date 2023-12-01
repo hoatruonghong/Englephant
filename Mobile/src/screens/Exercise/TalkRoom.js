@@ -120,7 +120,8 @@ export default function TalkRoom({navigation}) {
     };
     
     const handleGoButton = () => {
-        setModalVisible(true);
+        // setModalVisible(true);
+        navigation.navigate('TutorRoom');
     };
 
     const ChooseRoomModal = () => {

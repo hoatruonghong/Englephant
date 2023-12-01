@@ -17,7 +17,7 @@ export default function Wardrobe({navigation}) {
                 />
             </View>
             <View style={styles.wardrobeWrap}>
-            
+                <Buttons.GreenButton title="Mặc" />
             </View>
         </View>
     )
@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
         backgroundColor: colors.brightest_green,
     },
     avatarWrap: {   
-        height: '36%',     
+        height: '36%',
+        marginTop: '5%',
         marginLeft: '8%',
         marginRight: '8%',
         borderRadius: 16,
@@ -48,10 +49,9 @@ const styles = StyleSheet.create({
     },
     wardrobeWrap: {
         height: '58%',
-        marginLeft: '5%',
-        marginRight: '5%',
+        margin: '5%',
         borderRadius: 20,
-        backgroundColor: colors.shadow_gray_brown
-
+        backgroundColor: colors.shadow_gray_brown,
+        padding: '3%',
     }
   });

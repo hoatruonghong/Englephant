@@ -1,16 +1,16 @@
-import React from 'react'
-import './../../../styles/dashboard.css';
+import React from "react";
+import "./../../../styles/dashboard.css";
 
-const tutorImg = './../../../assets/images/tutor-avatar.jpg';
+import avatar from "./../../../assets/images/tutor-avatar.jpg";
+
 const Dashboard = () => {
   return (
-    <div className='dashboardContainer'>
-        <img
-			src={tutorImg}
-			alt='tutor-img'
-		/>
+    <div className="dashboardContainer">
+      <div className="imgWrap">
+        <img src={avatar} alt="tutor-img" className="avatarImage" />
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

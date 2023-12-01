@@ -64,3 +64,33 @@
     letter-spacing: 2px;
     text-align: center;
 }
+
+/* column table */
+table {
+	display: table;
+    width: 100%;
+}
+table tr {
+	display: table-cell;
+}
+table tr td {
+	display: block;
+}
+.dayText {
+    text-align: center;
+    color: var(--black-green);
+    font-size: 16;
+    font-weight: 500;
+}
+.calendarText {
+    text-align: center;
+    color: var(--dark-green);
+    font-size: 16;
+    font-weight: 500;
+}
+.durationText {
+    text-align: center;
+    color: var(--red);
+    font-size: 16;
+    font-weight: 500;
+}

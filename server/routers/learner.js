@@ -1,4 +1,6 @@
 import express from "express"
+import jwt from "jsonwebtoken"
+import argon2 from "argon2"
 const learnerRouter = express.Router();
 
 import { sendError, sendServerError, sendSuccess } from "../helper/client.js"
@@ -61,6 +63,34 @@ learnerRouter.put('/:id', async (req, res) => {
     } catch (error) {
         console.log(error);
         return sendServerError(res);  
+    }
+});
+
+/**
+ * @route PUT /api/learner/:id/change-password
+ * @description learner change password
+ * @access public
+ */
+learnerRouter.put('/:id/change-password', async (req, res) => {
+    try {
+        const { id } = req.params
+        const { oldPassword, newPassword } = req.body
+
+        const learner = await Learner.findById(id)
+        if (learner) {
+            const passwordValid = await argon2.verify(learner.password, oldPassword)
+            if (!passwordValid) return sendError(res, 'current password is wrong')
+        }
+        else return sendError(res, 'learner not exists')    
+
+        const password = await argon2.hash(newPassword)
+
+        await Learner.findByIdAndUpdate(id, {password: password});
+        return sendSuccess(res, "Change password successfully.");
+
+    } catch (error) {
+        console.log(error);
+        return sendServerError(res);
     }
 });
 

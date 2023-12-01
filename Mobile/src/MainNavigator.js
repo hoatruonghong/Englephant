@@ -60,6 +60,7 @@ import PronunciationQuiz from './screens/Quiz/PronunciationQuiz';
 import ChatRoom from './screens/Exercise/ChatRoom';
 import Archive from './screens/Archive/Archive';
 import TutorRoom from './screens/Exercise/TutorRoom';
+import Wardrobe from './screens/Setting/Wardrobe';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -173,12 +174,7 @@ function ExerciseScreens() {
         options={{
           headerTitle: 'Vào phòng',
         }}
-      />
-      <Stack.Screen name="TutorRoom" component={TutorRoom}
-        options={{
-          headerTitle: 'Vào phòng',
-        }}
-      />
+      />      
     </Stack.Navigator>    
   )
 }
@@ -245,8 +241,11 @@ function StackNavigator(){
       <Stack.Screen name="UserInfo" component={UserInfo} 
         options={{ headerTitle: 'Cập nhật thông tin' }} />
       <Stack.Screen name="Notification" component={Notification} 
-         options={{ headerTitle: 'Thông báo' }} />
-
+        options={{ headerTitle: 'Thông báo' }} />
+      <Stack.Screen name="Wardrobe" component={Wardrobe} 
+        options={{ headerTitle: 'Tủ đồ' }} />
+      <Stack.Screen name="TutorRoom" component={TutorRoom}
+        options={{  headerTitle: 'Vào phòng' }} />
       
       <Stack.Screen name="LRLesson" component={LRLesson}
         options={({ route }) => ({ title: route.params.name })}

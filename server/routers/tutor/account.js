@@ -48,7 +48,7 @@ router.put('/change-password/:id', async (req, res) => {
         const password = await argon2.hash(newPassword)
 
         await Tutor.findByIdAndUpdate(id, {password: password});
-        return sendSuccess(res, "Change password successfully.");        
+        return sendSuccess(res, "Change password successfully.");
     } catch (error) {
         console.log(error);
         return sendServerError(res);  
