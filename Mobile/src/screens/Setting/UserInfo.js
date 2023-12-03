@@ -37,6 +37,9 @@ export default function UserInfo({navigation}) {
         id: learnerId,
       });
       await setDataUser(res.data.data);
+      const learnerData = await Learner.getInfo({id: learnerId});
+      await setProfile(learnerData.data.data);
+      navigation.navigate("Setting");
     } catch (error) {
       console.log(error);
     }

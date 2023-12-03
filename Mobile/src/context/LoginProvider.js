@@ -4,7 +4,7 @@ const LoginContext = createContext();
 
 const LoginProvider = ({children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(true);
-    const [learnerId, setLearnerId] = useState('');
+    const [learnerId, setLearnerId] = useState('6523a83652d8423281c01341');
     const [profile, setProfile] = useState({
         id:"6523a83652d8423281c01341",    
         username:"TestAccount",
@@ -17,7 +17,10 @@ const LoginProvider = ({children}) => {
         peanut: 0,
         heart: 0,
         bud: 0,
-        currentMap: 3
+        currentMap: 3,
+        gender: "Nam",
+        talkroomTime: 20,
+        targetTime: 10,
     });
 
     return(

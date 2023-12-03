@@ -40,8 +40,8 @@ class TutorRoom extends React.Component {
   }
 
   componentDidMount = () => {
-    this.socket = io.connect('https://fd56-27-71-109-14.ngrok-free.app', {
-      path: '/io/webrtc',
+    this.socket = io("https://64ce-27-71-109-14.ngrok-free.app/webrtcPeer", {
+      path: "/io/webrtc",
       query: {},
     });
 
@@ -70,7 +70,7 @@ class TutorRoom extends React.Component {
         //   'username': '[USERNAME]'
         // },
         {
-          urls: 'stun:stun.l.google.com:19302',
+          urls: 'stun:stun.l.google.com:19302'
         },
       ],
     };
@@ -92,7 +92,6 @@ class TutorRoom extends React.Component {
     };
 
     this.pc.onaddstream = e => {
-      debugger;
       // this.remoteVideoref.current.srcObject = e.streams[0]
       setTimeout(() => {
         this.setState({
@@ -102,11 +101,11 @@ class TutorRoom extends React.Component {
     };
 
     const success = stream => {
-      console.log(stream.toURL());
+      console.log("success", stream.toURL());
       this.setState({
         localStream: stream,
       });
-      this.pc.addStream(stream);
+      this.pc.addTrack(stream);
     };
 
     const failure = e => {
@@ -115,7 +114,7 @@ class TutorRoom extends React.Component {
 
     let isFront = true;
     mediaDevices.enumerateDevices().then(sourceInfos => {
-      console.log(sourceInfos);
+      console.log("sourceInfos", sourceInfos);
       let videoSourceId;
       for (let i = 0; i < sourceInfos.length; i++) {
         const sourceInfo = sourceInfos[i];
@@ -202,7 +201,9 @@ class TutorRoom extends React.Component {
 
   render() {
     const {localStream, remoteStream} = this.state;
-
+    console.log("==============");
+    console.log("local stream ", localStream);
+    console.log("remote stream", remoteStream);
     const remoteVideo = remoteStream ? (
       <RTCView
         key={2}
@@ -227,6 +228,7 @@ class TutorRoom extends React.Component {
               style={{
                 flex: 1,
                 width: '100%',
+                height: '90%',
                 backgroundColor: 'black',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -240,9 +242,9 @@ class TutorRoom extends React.Component {
               zIndex: 1,
               bottom: 10,
               right: 10,
-              width: 100,
-              height: 200,
-              backgroundColor: 'black', //width: '100%', height: '100%'
+              width: "30%",
+              height: "32%",
+              backgroundColor: 'black',
             }}>
             <View style={{flex: 1}}>
               <TouchableOpacity
@@ -307,8 +309,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   rtcView: {
-    width: 200, //dimensions.width,
-    height: 200, //dimensions.height / 2,
+    width: "100%", 
+    height: "100%",
     backgroundColor: 'black',
   },
   scrollView: {
@@ -317,8 +319,8 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   rtcViewRemote: {
-    width: 400,
-    height: 400, //dimensions.height / 2,
+    width: "80%",
+    height: "80%",
     backgroundColor: 'black',
   },
   btnWrap: {

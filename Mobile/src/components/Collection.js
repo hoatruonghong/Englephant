@@ -4,7 +4,7 @@ import colors from './../../assets/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
 function renderCollection(flashcards) {
-  console.log('==================');
+  // console.log('========key==========');
   const flashLength = flashcards.length;
   const numRow = Math.floor(flashLength / 3);
   const numLeft = flashLength % 3;
@@ -22,7 +22,7 @@ function renderCollection(flashcards) {
 
 function renderRow(flashcards, rowId) {
   return (
-    <View style={styles.row} keyExtractor={rowId}>
+    <View style={styles.row} key={rowId}>
       {flashcards.map((flashcard, index) => {
         return renderFlashcard(flashcard, index, rowId * 3 + index);
       })}
@@ -31,7 +31,6 @@ function renderRow(flashcards, rowId) {
 }
 
 function renderFlashcard(flashcard, position, id) {
-  // console.log(flashcard._id, flashcard.archived, id);
   var customStyle = styles.image1;
   switch (position) {
     case 1:
@@ -41,9 +40,13 @@ function renderFlashcard(flashcard, position, id) {
       customStyle = styles.image3;
       break;
   }
-
   return (
-    <TouchableOpacity style={[styles.imageWrap, customStyle]} keyExtractor={id} onPress={()=>{console.log(flashcard._id, "id");}}>
+    <TouchableOpacity
+      style={[styles.imageWrap, customStyle]}
+      key={id}
+      onPress={() => {
+        console.log(flashcard._id, 'id');
+      }}>
       {flashcard.archived ? (
         <Image
           source={require('./../../assets/images/archive-flashcard.png')}

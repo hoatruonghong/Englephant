@@ -66,14 +66,14 @@
 }
 
 /* column table */
-table {
+.table-col {
 	display: table;
     width: 100%;
 }
-table tr {
+.table-col tr {
 	display: table-cell;
 }
-table tr td {
+.table-col tr td {
 	display: block;
 }
 .dayText {
@@ -93,4 +93,31 @@ table tr td {
     color: var(--red);
     font-size: 16;
     font-weight: 500;
+}
+
+/*Talk room*/
+.talkroom {
+    width: 100%;
+    height: 100vh;
+}
+.videoWrap {
+    width: 100%;
+    height: 90%;
+    justify-content: center;
+    align-items: center;
+}
+.remoteVideo{
+    width: 100%;
+    height: 100%;
+    background-color: var(--black);
+    z-index: 1;
+}
+.localVideo{
+    position: absolute;
+    z-index: 10;
+    width: 15%;
+    height: 25%;
+    background-color: var(--black);
+    right: 0;
+    bottom: 0;
 }

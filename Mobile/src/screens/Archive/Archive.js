@@ -14,6 +14,7 @@ import Collection from './../../components/Collection';
 
 const data = [
   {
+    _id: "1",
     name: 'Family',
     flashcards: [
       {
@@ -55,6 +56,7 @@ const data = [
   },
   {
     name: 'Fruit',
+    _id: "2",
     flashcards: [
       {
         image: './../../assets/images/archive-flashcard.png',
@@ -99,7 +101,7 @@ export default function Archive({navigation}) {
         renderItem={({item, index}) => (
           <Collection item={item} />
         )}
-        keyExtractor={item => item.id + item.name}
+        keyExtractor={item => item._id + item.name}
         contentContainerStyle={styles.cardContainer}
       />
     </View>

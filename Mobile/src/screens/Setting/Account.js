@@ -92,17 +92,17 @@ export default function Account({navigation}) {
   const [learner, setLearner] = useState(profile);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  useEffect(()=>{
-    uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
-    axios.get(uri)
-    .then(function (res) {
-      setLearner(res.data.data);
-      setProfile(res.data.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  })
+  // useEffect(()=>{
+  //   uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
+  //   axios.get(uri)
+  //   .then(function (res) {
+  //     setLearner(res.data.data);
+  //     setProfile(res.data.data);
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
+  // })
   var totalTime = 0, totalWord = 0;
   historyProgress.forEach(element => {
     totalTime += element.learnedTime;

@@ -1,4 +1,4 @@
-import React, { useContext, useState }  from 'react';
+import React, { useContext, useState, useEffect }  from 'react';
 import { Modal, Text, View, StyleSheet, Image, FlatList, TouchableOpacity, useWindowDimensions } from "react-native";
 import GoButton from '../../components/GoButton';
 import TalkRoomItem from './../../components/TalkRoom';
@@ -6,6 +6,7 @@ import IconWrap from './../../components/IconWrap';
 import Modals from './../../components/Modals';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from './../../../assets/colors';
+import { useLogin } from '../../context/LoginProvider';
 
 const talkRoomData = [
     {
@@ -90,6 +91,10 @@ const moreTimeModalData = [
 export default function TalkRoom({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const {height, width} = useWindowDimensions();
+    const {profile, learnerId} = useLogin();
+    const [peanut, setPeanut] = useState(profile.peanut);
+    const [talkroomTime, setTalkroomTime] = useState(profile.talkroomTime);
+
 
     const renderWrapInfo = () => {
         return (
@@ -105,10 +110,10 @@ export default function TalkRoom({navigation}) {
                 <View style={styles.infoLeftContent}>                    
                     <Text style={styles.smallText}>Hiện bạn đang có</Text>
                     <View style={styles.wrapIcon}>
-                        <IconWrap name="peanut" num={10} hasPlus={true}/>
+                        <IconWrap name="peanut" num={peanut} hasPlus={true}/>
                     </View>
                     <View style={styles.wrapIcon}>
-                        <IconWrap name="time" num={60} hasPlus={true}/>
+                        <IconWrap name="time" num={talkroomTime} hasPlus={true}/>
                     </View>
                 </View>
                 <View style={styles.infoRightContent}>
