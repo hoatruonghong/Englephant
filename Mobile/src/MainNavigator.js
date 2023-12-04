@@ -59,7 +59,6 @@ import PLesson from './screens/Exercise/PLesson';
 import PronunciationQuiz from './screens/Quiz/PronunciationQuiz';
 import ArchiveScreen from './screens/Archive/ArchiveScreen';
 import ChatRoom from './screens/Exercise/ChatRoom';
-import Archive from './screens/Archive/Archive';
 import TutorRoom from './screens/Exercise/TutorRoom';
 import Wardrobe from './screens/Setting/Wardrobe';
 
@@ -208,7 +207,7 @@ function ArchiveScreens() {
 
   return (
     <Stack.Navigator screenOptions={styles.headerWrap}>
-      <Stack.Screen name="Archive" component={Archive} 
+      <Stack.Screen name="Archive" component={ArchiveScreen} 
       options={{
         headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"card", num:card, total: total}]}/>)},
       }}/>

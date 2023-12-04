@@ -18,13 +18,11 @@ import axios from 'axios';
 import Map from '../../components/Map';
 import SideIndicator from '../../components/SideIndicator';
 import GoButton from '../../components/GoButton';
-import SmallButton from '../../components/SmallButton';
 
 import { useLogin } from '../../context/LoginProvider';
 
 //import assets
 import colors from '../../../assets/colors';
-import MascotDef from '../../../assets/svg/mascot_default.svg';
 import MascotCry from '../../../assets/svg/mascot_cry.svg';
 import style from '../styles';
 

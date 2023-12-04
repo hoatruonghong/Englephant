@@ -1,21 +1,21 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {Text, View, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
 import colors from './../../assets/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 
+const numofcardspermap = 9;
+
 function renderCollection(flashcards) {
   // console.log('========key==========');
-  const flashLength = flashcards.length;
-  const numRow = Math.floor(flashLength / 3);
-  const numLeft = flashLength % 3;
+  while (flashcards.length!=numofcardspermap){
+    flashcards.push({status: "Empty"});
+  }
+  const numRow = numofcardspermap/3;
   var count = 0;
   var listRow = [];
   for (let i = 0; i < numRow; i++) {
     listRow.push(renderRow(flashcards.slice(count, count + 3), i));
     count += 3;
-  }
-  if (numLeft != 0) {
-    listRow.push(renderRow(flashcards.slice(-numLeft), numRow));
   }
   return listRow;
 }
@@ -42,14 +42,15 @@ function renderFlashcard(flashcard, position, id) {
   }
   return (
     <TouchableOpacity
-      style={[styles.imageWrap, customStyle]}
+      style={[styles.imageWrap, customStyle, {backgroundColor: flashcard.status == "Empty" ? colors.bright_gray_brown : colors.white, 
+      overflow: "hidden"}]}
       key={id}
       onPress={() => {
         console.log(flashcard._id, 'id');
       }}>
-      {flashcard.archived ? (
-        <Image
-          source={require('./../../assets/images/archive-flashcard.png')}
+      {flashcard.status != "Empty" ? (
+        <ImageBackground
+          source={{uri: flashcard.img}}
           style={styles.image}
         />
       ) : (
@@ -69,7 +70,7 @@ export default function Collection(props) {
 
   return (
     <View style={styles.archiveWrap}>
-      <Text style={styles.titleText}>{item.name}</Text>
+      <Text style={styles.titleText}>{item.map}</Text>
       <View style={styles.imagesWrap}>{renderCollection(flashcards)}</View>
     </View>
   );
@@ -96,7 +97,6 @@ const styles = StyleSheet.create({
   imageWrap: {
     width: '30%',
     height: 100,
-    backgroundColor: colors.white,
     borderRadius: 16,
     borderColor: colors.shadow_gray_brown,
     borderWidth: 3,
@@ -104,8 +104,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    resizeMode: 'contain',
+    resizeMode: 'stretch',
     width: '100%',
+    aspectRatio: 1,
+    alignSelf: "center",
   },
   image1: {},
   image2: {

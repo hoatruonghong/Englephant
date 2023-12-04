@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const FlashCardSchema = new Schema(
   {
-    _id: String,
+    _id: mongoose.Types.ObjectId,
     word: String,
     viemeaning: String,
     pos: String,

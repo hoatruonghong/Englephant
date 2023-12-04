@@ -1,6 +1,7 @@
 import express from "express"
 const flashcardRouter = express.Router();
 
+import learnermap from "../models/learnermap.js";
 import flashcard from "../models/flashcard.js";
 import learnercard from "../models/learnercard.js";
 import node from "../models/node.js";
@@ -120,8 +121,16 @@ flashcardRouter.delete('/delete/:learnerId', async (req, res) => {
 flashcardRouter.get('/archive/:learnerId', async (req, res) => {
   try {
     const { learnerId } = req.params;
-    const flashcards = await learnercard.find({learnerId: learnerId}).sort('mapId');
-    return res.status(200).json({ data: flashcards });
+    const activemaps = await learnermap.find({learnerId: learnerId});
+    const data = await Promise.all(activemaps.map(async map => {
+      const flashcards = await learnercard.find({learnerId: learnerId, mapId: map.mapId});
+      await Promise.all(flashcards.map(async card =>{
+        const cardimg = await flashcard.findById(card.cardId);
+        card._doc.img = cardimg.image;
+      }))
+      return {mapId: map.mapId, map: map.name, flashcards: flashcards};
+    }));
+    return res.status(200).json({ data: data });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
   }

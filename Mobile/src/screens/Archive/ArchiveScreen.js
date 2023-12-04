@@ -1,18 +1,3 @@
-/*import React, { useState, useEffect }  from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
-import FlashcardBox from '../../components/FlashcardBox';
-import colors from '../../../assets/colors';
-
-export default function Archive({navigation}) {
-
-    return (
-    <SafeAreaView>
-        <ScrollView style={styles.container}>
-            <FlashcardBox/>
-        </ScrollView>
-    </SafeAreaView>
-  )
-};*/
 import React, {useState, useEffect} from 'react';
 import {
   Text,
@@ -23,8 +8,11 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
+import axios from 'axios';
 import colors from './../../../assets/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+
+import { useLogin } from '../../context/LoginProvider';
 import Collection from './../../components/Collection';
 
 const data = [
@@ -108,19 +96,40 @@ const data = [
 ];
 
 export default function Archive({navigation}) {
-  return (
-    <View style={styles.container}>
-      <FlatList
-        showsHorizontalScrollIndicator={false}
-        data={data}
-        renderItem={({item, index}) => (
-          <Collection item={item} />
-        )}
-        keyExtractor={item => item._id + item.name}
-        contentContainerStyle={styles.cardContainer}
-      />
-    </View>
-  );
+    const {profile} = useLogin();
+    const learnerId = profile.id;
+    const [data, setData] = useState();
+    const [loadData, setLoadData] = useState(true);
+    //get archive
+    useEffect(()=>{
+        if (loadData){
+            uri = 'http://10.0.2.2:5000/api/card/archive/'+learnerId;
+            console.log(uri);
+            axios.get(uri)
+            .then(function (res) {
+                console.log(res.data.data);
+                setData(res.data.data);
+                setLoadData(false);
+            })
+            .catch(function (error) {
+            console.log(error);
+            });
+        }
+    })
+
+    return (
+        <View style={styles.container}>
+        <FlatList
+            showsHorizontalScrollIndicator={false}
+            data={data}
+            renderItem={({item, index}) => (
+            <Collection item={item} />
+            )}
+            keyExtractor={(item, index) => index}
+            contentContainerStyle={styles.cardContainer}
+        />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
