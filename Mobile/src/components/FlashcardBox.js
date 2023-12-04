@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, StyleSheet, TouchableOpacity, ImageBackground} from "react-native";
+import { Text, StyleSheet, TouchableOpacity, Image, View, FlatList} from "react-native";
 import colors from "../../assets/colors";
 import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -9,20 +9,20 @@ library.add(faQuestion);
 
 
 export default function Box(props) {
-    const { name, image, lock, star, height, width, index, navigation, learnerId, onPressLockedMap, onPressUnlockedMap } = props;
-    let star1 = farStar;
-    let star2 = farStar;
-    let star3 = farStar;
-    if (star == 3) {
-        star1 = faStar;
-        star2 = faStar;
-        star3 = faStar;
-    } else if (star == 2) {
-        star1 = faStar;
-        star2 = faStar;    
-    } else if (star == 1) star1 = faStar;
+    // const { name, image, lock, star, height, width, index, navigation, learnerId, onPressLockedMap, onPressUnlockedMap } = props;
+    // let star1 = farStar;
+    // let star2 = farStar;
+    // let star3 = farStar;
+    // if (star == 3) {
+    //     star1 = faStar;
+    //     star2 = faStar;
+    //     star3 = faStar;
+    // } else if (star == 2) {
+    //     star1 = faStar;
+    //     star2 = faStar;    
+    // } else if (star == 1) star1 = faStar;
     return (
-        <View style={[{width: width*0.8, aspectRatio: 1.15},styles.box]}>
+        <View style={[{width: "80%", aspectRatio: 1.15},styles.box]}>
             <FlatList style={styles.wrapOptions}
             numColumns={3}
             data={answers}
@@ -40,7 +40,7 @@ export default function Box(props) {
                                 colors.white
                         }]}
                     >
-                        {renderContent(type, item)}
+                        <Image/>
                     </TouchableOpacity>
                 )
             }

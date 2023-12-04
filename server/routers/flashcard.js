@@ -3,6 +3,7 @@ const flashcardRouter = express.Router();
 
 import flashcard from "../models/flashcard.js";
 import learnercard from "../models/learnercard.js";
+import node from "../models/node.js";
 
 /**
  * @route GET /api/card/learner/:learnerId
@@ -43,7 +44,7 @@ flashcardRouter.get('/node/:nodeId/:learnerId', async (req, res) => {
 flashcardRouter.get('/:cardId', async (req, res) => {
     try {
       const { cardId } = req.params;
-      const aflashcard = await flashcard.findById(cardId)
+      const aflashcard = await flashcard.findById(cardId);
       return res.status(200).json({ data: aflashcard });
     } catch (err) {
       return res.status(500).json({ message: JSON.stringify(err) });
@@ -59,11 +60,13 @@ flashcardRouter.post('/learner/:learnerid', async (req, res) => {
     try {
         const { learnerid } = req.params;
         const { cards, nodeId } = req.body;
+        const cur_node = await node.findById(nodeId);
         for (let i in cards){
             let dbLearnerCard = new learnercard({
                 learnerId: learnerid,
                 cardId: cards[i],
-                nodeId: nodeId
+                nodeId: nodeId,
+                map: cur_node.mapId
             })
             await dbLearnerCard.save();
         }
@@ -117,7 +120,7 @@ flashcardRouter.delete('/delete/:learnerId', async (req, res) => {
 flashcardRouter.get('/archive/:learnerId', async (req, res) => {
   try {
     const { learnerId } = req.params;
-    const flashcards = await learnercard.find({learnerId: learnerId})
+    const flashcards = await learnercard.find({learnerId: learnerId}).sort('mapId');
     return res.status(200).json({ data: flashcards });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });

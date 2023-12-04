@@ -156,6 +156,7 @@ class PronunciationAssess extends Component {
       sampleRate: 16000,
       channels: 1,
       bitsPerSample: 16,
+      audioSource: 1,
       wavFile: 'test.wav'
     };
 

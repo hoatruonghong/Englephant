@@ -57,6 +57,7 @@ import {HeaderBar} from './components/HeaderBar';
 import LRLesson from './screens/Exercise/LRLesson';
 import PLesson from './screens/Exercise/PLesson';
 import PronunciationQuiz from './screens/Quiz/PronunciationQuiz';
+import ArchiveScreen from './screens/Archive/ArchiveScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -172,7 +173,7 @@ function ArchiveScreens() {
   return (
     <Stack.Navigator      
       screenOptions={{ headerShown: false }} >
-      <Stack.Screen name="ExerciseMain" component={ExerciseMain} />
+      <Stack.Screen name="Archive" component={ArchiveScreen} />
 
     </Stack.Navigator>    
   )

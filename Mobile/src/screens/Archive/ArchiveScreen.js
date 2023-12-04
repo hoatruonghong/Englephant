@@ -1,13 +1,14 @@
 import React, { useState, useEffect }  from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, SafeAreaView, ScrollView, SafeAreaView } from "react-native";
-import colors from './../../../assets/colors';
+import { Text, View, StyleSheet, Image, TouchableOpacity, ScrollView, SafeAreaView } from "react-native";
+import FlashcardBox from '../../components/FlashcardBox';
+import colors from '../../../assets/colors';
 
 export default function Archive({navigation}) {
 
     return (
     <SafeAreaView>
         <ScrollView style={styles.container}>
-
+            <FlashcardBox/>
         </ScrollView>
     </SafeAreaView>
   )
