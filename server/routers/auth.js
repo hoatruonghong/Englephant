@@ -5,44 +5,32 @@ import argon2 from "argon2"
 import Learner from "../models/learner.js"
 import { sendError, sendServerError, sendSuccess} from "../helper/client.js"
 import { learnerRegisterValidate, userLoginValidate } from "../validation/auth.js"
-import { verifyToken} from '../middleware/index.js'
+import { verifyToken } from '../middleware/index.js'
 import { TOKEN_LIST, TOKEN_BLACKLIST } from './../index.js';
 
 const authRouter = express.Router()
 
 /**
- * @route POST /api/auth/register
- * @description learner registers
+ * @route GET /api/auth
+ * @description check if learner is logged or not
  * @access public
  */
-authRouter.post('/register-old', async (req, res) => {
-    const errors = learnerRegisterValidate(req.body)
-    if (errors) return sendError(res, errors)
-    let {username, email, phone, password} = req.body 
-
+authRouter.get('/', verifyToken, async (req, res) => {
     try {
-        const isExistLearner = await Learner.exists({
-            $or: [
-                { email, phone},
-                { email, phone: null },
-                { phone, email: null }
-            ]
-        })
-        if (isExistLearner) return sendError(res, "Learner already exists!")
-
-        // const otp = generateOTP()
-
-        password = await argon2.hash(password)
-
-        const leaner = await Learner.create({username, email, phone, password})
-        return sendSuccess(res, "Register successfully")
-
+        const user = await Learner.findById(req.user.id);
+        if (!user) return res.status(400).json({success: false, message: 'user not found'})
+        res.json({success: true, user})
     } catch (error) {
         console.log(error);
         return sendServerError(res);   
     }
 })
 
+/**
+ * @route POST /api/auth/register
+ * @description learner registers
+ * @access public
+ */
 authRouter.post('/register', async (req, res) => {
     const errors = learnerRegisterValidate(req.body)
     if (errors) return sendError(res, errors)
@@ -91,21 +79,12 @@ authRouter.post('/login', async (req, res) => {
         const accessToken = jwt.sign(
             {user: learnerData},
             process.env.JWT_SECRET_KEY,
-            {expiresIn: '5m'}
-        )
-
-        const refreshToken = jwt.sign(
-            {user: learnerData},
-            process.env.JWT_REFRESH_SECRET_KEY,
-            {expiresIn: '1h'}
+            // {expiresIn: '5m'}
         )
 
         const response = {
             accessToken,
-            refreshToken
         }
-
-        TOKEN_LIST['refreshToken'] = response
 
         return sendSuccess(res, 'Login successfully.', {
             response,

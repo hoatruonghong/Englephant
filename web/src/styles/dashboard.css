@@ -1,0 +1,42 @@
+
+:root {
+    --main-green: #9FC55A;
+    --black-green: #10401B;
+    --dark-green: #397624;
+    --bright-green: #D2EC81;
+    --brightest-green: #E6FAA7;
+    --dark-brown: #885928;
+    --bright-gray-brown: #BFB785;
+    --yellow: #F2CB40;
+    --blue: #5BB4DE;
+    --red: #EE6037;
+    --orange: #F1B03E;
+    --green-2: #C6D172;
+    --green-3: #D4CF61;
+    --black: #1A1A1A;
+    --white: #FFFFFF;
+    --shadow-gray-brown: #875826;
+}
+  
+.dashboardContainer{
+    position: relative;
+    background: url('./../assets/images/forest-background.svg') no-repeat center center/cover;    
+    height: 85vh;
+    width: 100%;
+    border-radius: 10px;
+    background-color: var(--white);
+}
+.imgWrap {
+    justify-items: center;
+    justify-content: center;
+    padding-top: 10%;
+}
+.imgWrap .avatarImage{
+    object-fit: cover;
+    width: 65%;
+    border-radius: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}

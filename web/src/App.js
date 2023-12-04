@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./components/icon/fontawesome.js";
+import Landing from "./components/layout/Landing";
+import Auth from "./views/Auth";
+import Tutor from './views/Tutor';
+import TalkRoom from './views/TalkRoom';
+import Admin from './views/Admin';
+
+import AuthContextProvider from './contexts/AuthContext';
+import ProtectedRoute from './components/routing/ProtectedRoute';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthContextProvider>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Landing />} />
+          <Route path='/login' element={<Auth authRoute="login" />} />
+          <Route path='/forget-password' element={<Auth authRoute="forget-password" />} />
+          <Route path='/verify-otp' element={<Auth authRoute="verify-otp" />} />
+          <Route path='/change-password' element={<Auth authRoute="change-password" />} />
+          {/* Tutor */}
+          <Route path='/tutor' element={<ProtectedRoute directTo={<Tutor />} />} />
+          <Route path='/tutor/talkroom' element={<TalkRoom />} />
+          {/* Admin */}
+          <Route path='/admin' element={<Admin adminRoute="main" />} />
+          <Route path='/admin/manage-tutor' element={<Admin adminRoute="manage-tutor" />} />
+          <Route path='/admin/manage-quiz' element={<Admin adminRoute="manage-quiz" />} />
+          <Route path='/admin/manage-exercise' element={<Admin adminRoute="manage-exercise" />} />
+          <Route path='/admin/manage-map' element={<Admin adminRoute="manage-map" />} />
+        </Routes>
+    </Router>
+    </AuthContextProvider>
   );
 }
 

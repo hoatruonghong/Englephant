@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+.authContainer {
+    background: url('./../assets/images/forest-background.svg') no-repeat center center/cover;    
+    width: 100vw;
+    height: 100vh;
+}
+.container-fluid {
+    padding: 0;
+}
+.row {
+    padding: 0;
+    margin: 0;
+    flex-direction: row;
+}
+.logo-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.col-sm-4 {
+    padding: 0;
+}

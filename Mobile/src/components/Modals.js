@@ -2,36 +2,85 @@ import React, { useState }  from 'react';
 import { Text, View, StyleSheet, Modal, TouchableOpacity } from "react-native";
 import colors from './../../assets/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import ModalItems from './ModalItems';
 
-function ChooseModal(props) {
-  const { onPress, title, visible, setModalVisible } = props;
+const modalTitle = (title) => {
+  switch (title) {
+    case 'ChooseRoom':
+      return "Chọn phòng"
+    case 'BuyPeanut':
+      return "Mua đậu"
+    case 'MoreTime':
+      return "Đổi đậu";
+    case 'MoreBud':
+      return "Đổi mầm"
+    default:
+      return "Modal";
+  }
+}
 
+const modalItem = (item, title, id) => {
+  switch (title) {
+    case 'ChooseRoom':
+      return <ModalItems.TimeItem time={item} key={id}/>
+    case 'BuyPeanut':
+      return <ModalItems.BuyPeanutItem peanut={item.peanut} price={item.price} key={id}/>
+    case 'MoreTime':
+      return (
+        <ModalItems.MoreTimeItem peanut={item.peanut} time={item.time} key={id}/>
+      )
+    case 'MoreBud':
+      break;
+    default:
+      break;
+  }
+}
+
+const modalBtn = (title) => {
+  switch (title) {
+    case 'MoreTime':
+      return <ModalItems.BuyPeanutButton />
+    case 'MoreBud':
+      return <ModalItems.BuyPeanutButton />
+    default:
+      break;
+  }
+}
+
+//ChooseRoom, Buy peanut
+function MultipleSelectModal(props) {
+  const { onPress, visible, setModalVisible, title, data } = props;
   return (
-    <View style={styles.container}>
+    <View>
       <Modal
         animationType="slide"
-        transparent={true}
         visible={visible}
+        transparent={true}        
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
             <View style={styles.modalTitle}>
-              <Text style={styles.modalTitleText}>Chọn phòng</Text>
+              <Text style={styles.modalTitleText}>{modalTitle(title)}</Text>
             </View>
             <TouchableOpacity onPress={()=>setModalVisible(false)}>
               <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.white} style={styles.modalTitleIcon}/>
             </TouchableOpacity>
           </View>
           <View style={styles.modalContent}>
-            <TouchableOpacity style={styles.modalTimeItem}>
-              <Text style={styles.modalTimeTitle}>15 phút</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalTimeItem}>
-              <Text style={styles.modalTimeTitle}>20 phút</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalTimeItem}>
-              <Text style={styles.modalTimeTitle}>30 phút</Text>
-            </TouchableOpacity>
+            {/* {modalItem(data[0], title)} */}
+            {
+              data.map((item, id) => {
+                return (
+                  modalItem(item, title, id)
+                )
+              })
+            }
+            {/* <ModalItems.TimeItem time={10} />
+            <ModalItems.BuyPeanutItem peanut={10} price={10000} />
+            <ModalItems.MoreTimeItem peanut={10} time={15} />
+            <ModalItems.ChangeBudItem bud={1} heart={1} />
+            <ModalItems.BuyPeanutButton /> */}
+            {modalBtn(title)}
           </View>                        
         </View>
       </Modal>
@@ -41,13 +90,14 @@ function ChooseModal(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.blue,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
     width: '83%',
     backgroundColor: colors.shadow_gray_brown,
     alignSelf: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 20,
     borderWidth: 2,
     borderColor: colors.shadow_gray_brown,
@@ -83,22 +133,8 @@ const styles = StyleSheet.create({
     padding: '4%',
     paddingBottom: '2%',
   },
-  modalTimeItem: {
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: colors.bright_gray_brown,
-    marginBottom: '2%',
-    alignItems: 'center',
-    padding: '6%',
-  },
-  modalTimeTitle: {
-    color: colors.black_green,
-    fontSize: 20,
-    fontWeight: 'regular',
-  }
 });
 
 module.exports = {
-  ChooseModal
+  MultipleSelectModal
 }

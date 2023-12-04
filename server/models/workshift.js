@@ -7,9 +7,9 @@ const WorkshiftSchema = new Schema(
       type: mongoose.Types.ObjectId, 
       ref: 'tutor' ,
     },
-    date: String,
-    startTime: String,
-    endTime: String
+    date: { type: Date, required: true },
+    startTime: { type: Date, required: true },
+    endTime: { type: Date, required: true },
   },
   { timestamps: true }
 );

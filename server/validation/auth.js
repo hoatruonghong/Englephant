@@ -10,6 +10,19 @@ export const learnerRegisterValidate = data => {
     return error.get()
 }
 
+export const tutorRegisterValidate = data => {
+    const error = new Error()
+
+    error.isRequired(data.username, "username")
+    .isRequired(data.password, "password")
+    .isRequired(data.password, "email")
+    .isRequired(data.password, "phone")
+    .isRequired(data.password, "fullname")
+    .isRequired(data.password, "bornyear")
+
+    return error.get()
+}
+
 export const userLoginValidate = data => {
     const error = new Error()
 

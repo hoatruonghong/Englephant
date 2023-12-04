@@ -34,8 +34,14 @@ const TutorSchema = new Schema(
     nationality: String,
     introduction: String,
     avatar: String,
-    numofrating: Number,
-    rating: Number,
+    numofrating: {
+      type: Number,
+      default: 0,
+    },
+    rating: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

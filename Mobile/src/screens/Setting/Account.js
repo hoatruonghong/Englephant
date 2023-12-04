@@ -13,12 +13,13 @@ import { faBell } from '@fortawesome/free-solid-svg-icons/faBell';
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
 import Learner from './../../api/Learner';
 import axios from 'axios';
+import MyCalendar from './../../components/Calendar';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 library.add(faBell, faGear);
 
 var dataUser = {
-  avatar: "./../../../assets/images/avatar-default.png",
+  avatar: "./../../../assets/images/avatar.jpg",
   name: "Hong Hoa",
   hearts: 1,
   peanuts: 10,
@@ -87,22 +88,21 @@ var historyProgress = [
 ];
 
 export default function Account({navigation}) {
-  const { setIsLoggedIn, learnerId, setProfile } = useLogin();
-  const [learner, setLearner] = useState('');
+  const { setIsLoggedIn, learnerId, setProfile, profile } = useLogin();
+  const [learner, setLearner] = useState(profile);
   const [refreshing, setRefreshing] = React.useState(false);
 
-  useEffect(()=>{
-    uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
-    axios.get(uri)
-    .then(function (res) {
-      setLearner(res.data.data);
-      setProfile(res.data.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  })
-
+  // useEffect(()=>{
+  //   uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
+  //   axios.get(uri)
+  //   .then(function (res) {
+  //     setLearner(res.data.data);
+  //     setProfile(res.data.data);
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error);
+  //   });
+  // })
   var totalTime = 0, totalWord = 0;
   historyProgress.forEach(element => {
     totalTime += element.learnedTime;
@@ -122,10 +122,10 @@ export default function Account({navigation}) {
           {/* User info */}
           <View style={styles.wrapUserInfo}>
               <View style={styles.infoWrap}>
-                <TouchableOpacity style={styles.avatar}>
+                <TouchableOpacity style={styles.avatar} onPress={()=>navigation.navigate('Wardrobe')}>
                   <Image
                     style={styles.avatarImage}
-                    source={require("./../../../assets/images/avatar-default.png")}
+                    source={require("./../../../assets/images/avatar.jpg")}
                   />
                 </TouchableOpacity>
                 <View style={styles.info}>
@@ -162,9 +162,8 @@ export default function Account({navigation}) {
               </View>
             </View>
             <View style={styles.trackingCalendar}>
-              <Text>Calendar</Text>
+              <MyCalendar />
             </View>
-            {/* <MyCalendar /> */}
           </View>
           {/* Learning Detail */}
           <View style={styles.wrapLearningDetail}>
@@ -260,9 +259,17 @@ const styles = StyleSheet.create({
   },
   avatar: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarImage: {
+    resizeMode: 'contain',
+    borderRadius: 50,
+    width: '100%',
   },
   info: {
     flex: 2,
+    paddingLeft: 5,
   },
   infoUserName: {
     textAlign: 'left',

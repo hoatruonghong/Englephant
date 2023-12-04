@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import type {PropsWithChildren} from 'react';
 import { View, StyleSheet, useWindowDimensions, Text } from 'react-native';
 import axios from 'axios';
@@ -58,6 +58,10 @@ import LRLesson from './screens/Exercise/LRLesson';
 import PLesson from './screens/Exercise/PLesson';
 import PronunciationQuiz from './screens/Quiz/PronunciationQuiz';
 import ArchiveScreen from './screens/Archive/ArchiveScreen';
+import ChatRoom from './screens/Exercise/ChatRoom';
+import Archive from './screens/Archive/Archive';
+import TutorRoom from './screens/Exercise/TutorRoom';
+import Wardrobe from './screens/Setting/Wardrobe';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -93,7 +97,7 @@ function MyTabs() {
           )
         }}/>
       <Tab.Screen 
-        name="Archive" 
+        name="ArchiveCollection" 
         component={ArchiveScreens} 
         options={{
           tabBarIcon: ({ color }) => (
@@ -113,29 +117,47 @@ function MyTabs() {
 }
 
 function LearningScreens() {
+  const {profile, learnerId} = useLogin();
+  // const [learner, setLearner] = useState(null);
+  const [heart, setHeart] = useState(profile.heart);
+  const [peanut, setPeanut] = useState(profile.peanut);
+
+  // useEffect(() => {
+  //   uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
+  //   axios.get(uri)
+  //   .then(function (res) {
+  //     setLearner(res.data.data);
+  //     if (learner.heart) setHeart(learner.heart);
+  //     if (learner.peanut) setPeanut(learner.peanut);
+  //   })
+  //   .catch(function (error) {
+  //       console.log(error);
+  //   });
+  // })
+
   return (
     <Stack.Navigator screenOptions={styles.headerWrap} initialRouteName='MapSelecting'>
       <Stack.Screen name="MapSelecting" component={MapSelecting}
         options={{
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
         }}
       />
       <Stack.Screen name="2" component={FamilyMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
         }}
       />
       <Stack.Screen name="1" component={FruitMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
         }}
       />
       <Stack.Screen name="3" component={SchoolMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
         }}      
       />
     </Stack.Navigator>    
@@ -143,11 +165,15 @@ function LearningScreens() {
 }
 
 function ExerciseScreens() {
+  const {profile} = useLogin();
+  const [heart, setHeart] = useState(profile.heart);
+  const [peanut, setPeanut] = useState(profile.peanut);
+
   return (
     <Stack.Navigator screenOptions={styles.headerWrap}>
       <Stack.Screen name="ExerciseMain" component={ExerciseMain}
         options={{
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:3}, {name:"peanut", num:100, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
         }}
       />
       <Stack.Screen name="ListenRead" component={ListenRead} 
@@ -165,15 +191,27 @@ function ExerciseScreens() {
           headerTitle: 'Phòng giao tiếp',
         }}
       />
+      <Stack.Screen name="ChatRoom" component={ChatRoom}
+        options={{
+          headerTitle: 'Vào phòng',
+        }}
+      />      
     </Stack.Navigator>    
   )
 }
 
 function ArchiveScreens() {
+  const {profile} = useLogin();
+  const [heart, setHeart] = useState(profile.heart);
+  const [card, setCard] = useState(0);
+  const [total, setTotal] = useState(0);
+
   return (
-    <Stack.Navigator      
-      screenOptions={{ headerShown: false }} >
-      <Stack.Screen name="Archive" component={ArchiveScreen} />
+    <Stack.Navigator screenOptions={styles.headerWrap}>
+      <Stack.Screen name="Archive" component={Archive} 
+      options={{
+        headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"card", num:card, total: total}]}/>)},
+      }}/>
 
     </Stack.Navigator>    
   )
@@ -228,8 +266,11 @@ function StackNavigator(){
       <Stack.Screen name="UserInfo" component={UserInfo} 
         options={{ headerTitle: 'Cập nhật thông tin' }} />
       <Stack.Screen name="Notification" component={Notification} 
-         options={{ headerTitle: 'Thông báo' }} />
-
+        options={{ headerTitle: 'Thông báo' }} />
+      <Stack.Screen name="Wardrobe" component={Wardrobe} 
+        options={{ headerTitle: 'Tủ đồ' }} />
+      <Stack.Screen name="TutorRoom" component={TutorRoom}
+        options={{  headerTitle: 'Vào phòng' }} />
       
       <Stack.Screen name="LRLesson" component={LRLesson}
         options={({ route }) => ({ title: route.params.name })}
