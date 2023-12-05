@@ -63,7 +63,10 @@ const LearnerSchema = new Schema(
         type: Number,
         default: 0,
     },
-    currentMap: Number
+    currentMap: {
+        type: Number,
+        default: 2,
+    }
 },
 { timestamps: true}
 );
