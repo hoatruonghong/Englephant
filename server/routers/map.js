@@ -250,13 +250,16 @@ router.get('/check-node/:mapId/:learnerId', async (req, res) => {
   try {
     const {mapId, learnerId} = req.params;
     const nodes = await node.find({mapId: mapId});
-    let ret = [];
+    let stateRet = [];
+    let starRet = [];
     for (let i in nodes){
       let nodestate = await learnernode.findOne({learnerId: learnerId, nodeId: nodes[i]._id});
-      ret.push(nodestate? "Unlock" : "Lock");
-      if (i>=1 && ret[i-1] == "Unlock" && ret[i] == "Lock") ret[i]="Next";
+      stateRet.push(nodestate? "Unlock" : "Lock");
+      let result = nodestate.totalnumofquiz>0? nodestate.point/nodestate.totalnumofquiz: 0;
+      starRet.push(result>=0.6? result>=0.8? result==1? 3 : 2 : 1 : 0);
+      if (i>=1 && stateRet[i-1] == "Unlock" && stateRet[i] == "Lock") stateRet[i]="Next";
     }
-    return res.status(200).json({ data: ret });
+    return res.status(200).json({ state: stateRet, star: starRet });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
   }

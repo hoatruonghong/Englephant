@@ -1,5 +1,5 @@
 import React, { useState, createRef, useEffect }  from 'react';
-import { Text, View, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
+import { Text, View, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
 import Sound from 'react-native-sound';
 import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';

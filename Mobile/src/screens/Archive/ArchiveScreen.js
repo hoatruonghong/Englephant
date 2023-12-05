@@ -15,86 +15,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { useLogin } from '../../context/LoginProvider';
 import Collection from './../../components/Collection';
 
-const data = [
-  {
-    _id: "1",
-    name: 'Family',
-    flashcards: [
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '1',
-        archived: true,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '2',
-        archived: true,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '3',
-        archived: false,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '4',
-        archived: false,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '5',
-        archived: true,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '6',
-        archived: true,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '7',
-        archived: true,
-      },
-    ],
-  },
-  {
-    name: 'Fruit',
-    _id: "2",
-    flashcards: [
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '652e32f2695ef1cfb71fc33c',
-        archived: true,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '652e32f2695ef1cfb71fc33d',
-        archived: true,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '652e32f2695ef1cfb71fc33b',
-        archived: false,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '652e32f2695ef1cfb71fc33e',
-        archived: true,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '652e32f2695ef1cfb71fc33d',
-        archived: true,
-      },
-      {
-        image: './../../assets/images/archive-flashcard.png',
-        _id: '652e32f2695ef1cfb71fc33b',
-        archived: true,
-      }
-    ],
-  },
-];
-
 export default function Archive({navigation}) {
     const {profile} = useLogin();
     const learnerId = profile.id;
@@ -104,10 +24,8 @@ export default function Archive({navigation}) {
     useEffect(()=>{
         if (loadData){
             uri = 'http://10.0.2.2:5000/api/card/archive/'+learnerId;
-            console.log(uri);
             axios.get(uri)
             .then(function (res) {
-                console.log(res.data.data);
                 setData(res.data.data);
                 setLoadData(false);
             })

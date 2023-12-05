@@ -2,10 +2,13 @@ import React from 'react';
 import {Text, View, StyleSheet, ImageBackground, TouchableOpacity} from 'react-native';
 import colors from './../../assets/colors';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const numofcardspermap = 9;
 
 function renderCollection(flashcards) {
+  const navigation = useNavigation();
   // console.log('========key==========');
   while (flashcards.length!=numofcardspermap){
     flashcards.push({status: "Empty"});
@@ -14,23 +17,35 @@ function renderCollection(flashcards) {
   var count = 0;
   var listRow = [];
   for (let i = 0; i < numRow; i++) {
-    listRow.push(renderRow(flashcards.slice(count, count + 3), i));
+    listRow.push(renderRow(flashcards.slice(count, count + 3), i, navigation));
     count += 3;
   }
   return listRow;
 }
 
-function renderRow(flashcards, rowId) {
+function renderRow(flashcards, rowId, navigation) {
   return (
     <View style={styles.row} key={rowId}>
       {flashcards.map((flashcard, index) => {
-        return renderFlashcard(flashcard, index, rowId * 3 + index);
+        return renderFlashcard(flashcard, index, rowId * 3 + index, navigation);
       })}
     </View>
   );
 }
+//get flashcard
+const getFlashcard = (cardId, navigation) => {
+  uri = 'http://10.0.2.2:5000/api/card/'+cardId;
+  console.log(uri)
+  axios.get(uri)
+  .then(function (res) {
+    console.log(res);
+    navigation.navigate("Flashcard", {cards: [res.data.data], onGoBack: ()=>{}})})
+  .catch(function (error) {
+      console.log(error);
+  });
+}
 
-function renderFlashcard(flashcard, position, id) {
+function renderFlashcard(flashcard, position, id, navigation) {
   var customStyle = styles.image1;
   switch (position) {
     case 1:
@@ -46,7 +61,7 @@ function renderFlashcard(flashcard, position, id) {
       overflow: "hidden"}]}
       key={id}
       onPress={() => {
-        console.log(flashcard._id, 'id');
+        flashcard.status != "Empty" && getFlashcard(flashcard.cardId, navigation);
       }}>
       {flashcard.status != "Empty" ? (
         <ImageBackground
@@ -56,7 +71,7 @@ function renderFlashcard(flashcard, position, id) {
       ) : (
         <FontAwesomeIcon
           icon="fa-solid fa-question"
-          size={80}
+          size={60}
           color={colors.shadow_gray_brown}
         />
       )}

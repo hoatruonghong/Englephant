@@ -326,6 +326,8 @@ export default function PracticeQuiz({route, navigation}) {
                             onChangeText={text=>onChangeText(text.toLowerCase().trim())}
                             value={text}
                             placeholder='Điền vào đây'
+                            color={colors.bright_gray_brown}
+                            placeholderTextColor={colors.bright_gray_brown}
                         />
                     </View>
                 )

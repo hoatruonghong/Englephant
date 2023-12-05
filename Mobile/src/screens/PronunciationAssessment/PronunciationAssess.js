@@ -6,7 +6,8 @@ import {
   StyleSheet,
   Text,
   View,
-  PermissionsAndroid
+  PermissionsAndroid,
+  Modal
 } from 'react-native';
 
 
@@ -16,6 +17,9 @@ import AudioRecord from 'react-native-audio-record';
 
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {PronunciationChart} from '../../components/Charts';
+import style from '../styles';
+import qstyles from "../Quiz/QuizStyle";
+import MascotCry from '../../../assets/svg/mascot_cry.svg';
 
 import colors from '../../../assets/colors';
 
@@ -148,7 +152,7 @@ class PronunciationAssess extends Component {
     paused: true,
     showResult: false,
     result: 0,
-    error: false
+    rerecord: false
   };
   async componentDidMount() {
     await this.checkPermission();
@@ -156,7 +160,7 @@ class PronunciationAssess extends Component {
       sampleRate: 16000,
       channels: 1,
       bitsPerSample: 16,
-      audioSource: 1,
+      audioSource: 6,
       wavFile: 'test.wav'
     };
 
@@ -192,7 +196,7 @@ class PronunciationAssess extends Component {
       doEval(userId, audioType, audioSampleRate, {coreType: coreType, refText: this.refText}, audioFilePath)
       .then(data=>{
         const jsondata = JSON.parse(data); 
-        jsondata.error? this.setState({error: true}): this.setState({result: jsondata.result.overall})})
+        jsondata.error || jsondata.result.overall==0? this.setState({rerecord: true}): this.setState({result: jsondata.result.overall})})
       .then(()=>this.setState({showResult: true}))
       .catch(e=>{console.log(e)});
     } catch(error){
@@ -272,6 +276,28 @@ class PronunciationAssess extends Component {
     return (
         <View style={styles.view}>
           <View style={{top:"20%", width: "100%", height: 200}}>
+          <Modal 
+            transparent={true}
+            visible={this.state.rerecord}
+            onRequestClose={() => {
+              this.setState({rerecord: false});
+            }}
+          >  
+            <View style={qstyles.wrapper}>
+              <View style={qstyles.modalView}>
+                <View style={{flexDirection:'row', width: "100%"}}>
+                  <TouchableOpacity style={[style.close, {right: "4%"}]} onPress={()=>this.setState({rerecord: false})}>
+                    <FontAwesomeIcon icon="xmark"  color={colors.black_green} size={30}/>
+                  </TouchableOpacity>
+                  <Text style={qstyles.titleStyle}>Englephant chưa nghe được</Text>
+                </View>
+                <View style={{width: 90, height: 68, marginTop: "5%"}}>
+                  <MascotCry viewBox='0 0 68 90'/>
+                </View>
+                <Text style={[qstyles.textStyle, {textAlign: 'center'}]}>Bạn có thể phát âm lại được không?</Text>
+               </View>
+            </View>
+          </Modal>
           {this.state.showResult &&
           <PronunciationChart size={150} color={colors.blue} textSize={32} percentage={this.state.result}/>}
           </View>

@@ -79,6 +79,11 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: colors.black_green,
     },
+    textStyle: {
+        fontSize: 16,
+        fontWeight: "normal",
+        color: colors.black_green,
+    },
     wordStyle: {
         width: "100%",
         fontSize: 32,
