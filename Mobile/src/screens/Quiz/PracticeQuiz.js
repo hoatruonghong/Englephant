@@ -21,7 +21,7 @@ library.add(faXmark, faVolumeUp);
 export default function PracticeQuiz({route, navigation}) {
 
     const {profile} = useLogin();
-    const learnerId = profile.id;
+    const learnerId = profile._id;
     const {nodeId, quizzes} = route.params;
     const numofquiz = quizzes.length;
     const [answers, setAnswers] = useState([]);

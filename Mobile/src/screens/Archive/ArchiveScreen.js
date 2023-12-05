@@ -17,7 +17,7 @@ import Collection from './../../components/Collection';
 
 export default function Archive({navigation}) {
     const {profile} = useLogin();
-    const learnerId = profile.id;
+    const learnerId = profile._id;
     const [data, setData] = useState();
     const [loadData, setLoadData] = useState(true);
     //get archive

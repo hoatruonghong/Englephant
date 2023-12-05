@@ -21,7 +21,7 @@ library.add(faXmark, faVolumeUp);
 export default function PronunciationQuiz({route, navigation}) {
 
     const {profile} = useLogin();
-    const learnerId = profile.id;
+    const learnerId = profile._id;
     const {lessonId, quizzes, sound1, sound2} = route.params;
     const numofquiz = quizzes.length;
     const [answers, setAnswers] = useState([]);

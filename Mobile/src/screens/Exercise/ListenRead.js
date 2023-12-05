@@ -9,7 +9,7 @@ import { useLogin } from '../../context/LoginProvider';
 export default function ListenRead({navigation}) {
     
     const {profile} = useLogin();
-    const learnerId = profile.id;
+    const learnerId = profile._id;
     const [data, setData] = useState();
     //get lessons
     useEffect(()=>{

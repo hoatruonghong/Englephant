@@ -23,7 +23,7 @@ library.add(fas);
 export default function Sum({route, navigation}) {
   const {result, flashcard, map, time} = route.params;
   const {profile} = useLogin();
-  const learnerId = profile.id;
+  const learnerId = profile._id;
   const resultlength = result.length;
   const numofhearts = result[resultlength-1].point;
   const totalnumofquiz = result[resultlength-1].totalnumofquiz;

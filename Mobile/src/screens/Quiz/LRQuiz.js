@@ -19,7 +19,7 @@ library.add(faXmark);
 export default function LRQuiz({route, navigation}) {
 
     const {profile} = useLogin();
-    const learnerId = profile.id;
+    const learnerId = profile._id;
     const {lessonId, quizzes, image} = route.params;
     const numofquiz = quizzes.length;
     const [answers, setAnswers] = useState([]);

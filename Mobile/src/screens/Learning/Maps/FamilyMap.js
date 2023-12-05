@@ -11,7 +11,7 @@ const mapId=2;
 
 export default function FamilyMap({navigation}){
     const {profile} = useLogin();
-    const learnerId = profile.id;
+    const learnerId = profile._id;
     const [nodeState, setNodeState] = useState(["Unlock","Next","Lock","Lock","Lock"]);
     const [numStars, setNumStars] = useState([0,0,0,0,0]);
 

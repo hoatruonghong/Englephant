@@ -58,7 +58,7 @@ export default function MapSelecting({navigation}) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
   const {profile} = useLogin();
-  const learnerId = profile.id;
+  const learnerId = profile._id;
   const currentMap = profile.currentMap;
   const {height, width} = useWindowDimensions();
   const slider = createRef();
@@ -220,7 +220,7 @@ export default function MapSelecting({navigation}) {
               width={width}
               index={index}
               navigation={navigation}
-              learnerId={profile.id}
+              learnerId={profile._id}
               onPressLockedMap={()=>onPressLockedMap({index: index})}
               onPressUnlockedMap={()=>onPressUnlockedMap({index: index})}
             />

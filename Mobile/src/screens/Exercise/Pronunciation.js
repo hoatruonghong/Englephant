@@ -20,7 +20,7 @@ export default function Pronunciation({navigation}) {
   //get answers
 
   const {profile} = useLogin();
-  const learnerId = profile.id;
+  const learnerId = profile._id;
   const [data, setData] = useState([]);
 
   //get all pronunciation lessons

@@ -26,7 +26,7 @@ function reducer(score, currentId){
 export default function LearningQuiz({route, navigation}) {
 
     const {profile} = useLogin();
-    const learnerId = profile.id;
+    const learnerId = profile._id;
     const {nodeId, lessons, quizzes, flashcards} = route.params;
     const numofquiz = quizzes.length;
     const numofcard = flashcards.length;
