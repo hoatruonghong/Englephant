@@ -40,7 +40,7 @@ class TutorRoom extends React.Component {
   }
 
   componentDidMount = () => {
-    this.socket = io("https://64ce-27-71-109-14.ngrok-free.app/webrtcPeer", {
+    this.socket = io.connect("https://1a0b-27-71-109-14.ngrok-free.app/webrtcPeer", {
       path: "/io/webrtc",
       query: {},
     });
@@ -49,14 +49,17 @@ class TutorRoom extends React.Component {
       console.log(success);
     });
 
-    this.socket.on('offerOrAnswer', sdp => {
-      this.sdp = JSON.stringify(sdp);
+    this.socket.on('offerOrAnswer', (sdp) => {
+      console.log("has this.sdp ? ", this.sdp==null);
+      if (this.sdp==null && sdp.type==="offer") {
+        this.sdp = JSON.stringify(sdp)
 
-      // set sdp as remote description
-      this.pc.setRemoteDescription(new RTCSessionDescription(sdp));
-    });
+        // set sdp as remote description
+        this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
+      }
+    })
 
-    this.socket.on('candidate', candidate => {
+    this.socket.on('candidate', (candidate) => {
       // console.log('From Peer... ', JSON.stringify(candidate))
       // this.candidates = [...this.candidates, candidate]
       this.pc.addIceCandidate(new RTCIceCandidate(candidate));
@@ -77,7 +80,7 @@ class TutorRoom extends React.Component {
 
     this.pc = new RTCPeerConnection(pc_config);
 
-    this.pc.onicecandidate = e => {
+    this.pc.onicecandidate = (e) => {
       // send the candidates to the remote peer
       // see addCandidate below to be triggered on the remote peer
       if (e.candidate) {
@@ -90,25 +93,28 @@ class TutorRoom extends React.Component {
     this.pc.oniceconnectionstatechange = e => {
       console.log(e);
     };
-
-    this.pc.onaddstream = e => {
+    
+    this.pc.ontrack = (e) => {
       // this.remoteVideoref.current.srcObject = e.streams[0]
-      setTimeout(() => {
-        this.setState({
-          remoteStream: e.stream,
-        });
-      }, 3000);
-    };
+      this.setState({
+        remoteStream: e.streams[0]
+      })
+      // setTimeout(() => {
+      //   this.setState({
+      //     remoteStream: e.streams[0]
+      //   })
+      // }, 3000);
+    }
 
-    const success = stream => {
+    const success = (stream)=> {
       console.log("success", stream.toURL());
       this.setState({
         localStream: stream,
       });
-      this.pc.addTrack(stream);
+      stream.getTracks().forEach( (track) => this.pc.addTrack( track, stream ) );
     };
 
-    const failure = e => {
+    const failure = (e) => {
       console.log('getUserMedia Error: ', e);
     };
 
@@ -160,7 +166,7 @@ class TutorRoom extends React.Component {
 
       // set offer sdp as local description
       this.pc.setLocalDescription(sdp);
-
+      
       this.sendToPeer('offerOrAnswer', sdp);
     });
   };
@@ -169,35 +175,35 @@ class TutorRoom extends React.Component {
     console.log('Answer');
     this.pc.createAnswer({offerToReceiveVideo: 1}).then(sdp => {
       // console.log(JSON.stringify(sdp))
-
+      
       // set answer sdp as local description
       this.pc.setLocalDescription(sdp);
 
-      this.sendToPeer('offerOrAnswer', sdp);
+      this.sendToPeer('offerOrAnswer', sdp);      
     });
   };
 
-  setRemoteDescription = () => {
-    // retrieve and parse the SDP copied from the remote peer
-    const desc = JSON.parse(this.sdp);
+  // setRemoteDescription = () => {
+  //   // retrieve and parse the SDP copied from the remote peer
+  //   const desc = JSON.parse(this.sdp);
 
-    // set sdp as remote description
-    this.pc.setRemoteDescription(new RTCSessionDescription(desc));
-  };
+  //   // set sdp as remote description
+  //   this.pc.setRemoteDescription(new RTCSessionDescription(desc));
+  // };
 
-  addCandidate = () => {
-    // retrieve and parse the Candidate copied from the remote peer
-    // const candidate = JSON.parse(this.textref.value)
-    // console.log('Adding candidate:', candidate)
+  // addCandidate = () => {
+  //   // retrieve and parse the Candidate copied from the remote peer
+  //   // const candidate = JSON.parse(this.textref.value)
+  //   // console.log('Adding candidate:', candidate)
 
-    // add the candidate to the peer connection
-    // this.pc.addIceCandidate(new RTCIceCandidate(candidate))
+  //   // add the candidate to the peer connection
+  //   // this.pc.addIceCandidate(new RTCIceCandidate(candidate))
 
-    this.candidates.forEach(candidate => {
-      console.log(JSON.stringify(candidate));
-      this.pc.addIceCandidate(new RTCIceCandidate(candidate));
-    });
-  };
+  //   this.candidates.forEach(candidate => {
+  //     console.log(JSON.stringify(candidate));
+  //     this.pc.addIceCandidate(new RTCIceCandidate(candidate));
+  //   });
+  // };
 
   render() {
     const {localStream, remoteStream} = this.state;
@@ -211,11 +217,11 @@ class TutorRoom extends React.Component {
         style={{...styles.rtcViewRemote}}
         objectFit="contain"
         streamURL={remoteStream && remoteStream.toURL()}
-      />
+      />      
     ) : (
       <View style={{padding: 15}}>
         <Text style={{fontSize: 22, textAlign: 'center', color: 'white'}}>
-          Waiting for Peer connection ...
+          Waiting for peer connection ...
         </Text>
       </View>
     );
@@ -228,8 +234,7 @@ class TutorRoom extends React.Component {
               style={{
                 flex: 1,
                 width: '100%',
-                height: '90%',
-                backgroundColor: 'black',
+                height: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
@@ -319,9 +324,11 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   rtcViewRemote: {
-    width: "80%",
-    height: "80%",
-    backgroundColor: 'black',
+    // width: "80%",
+    // height: "80%",
+    width: 500, //dimensions.width,
+    height: 400, //dimensions.height / 2,
+    backgroundColor: colors.blue,
   },
   btnWrap: {
     flexDirection: 'row',

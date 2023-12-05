@@ -9,6 +9,52 @@ import { tutorRegisterValidate } from "../../validation/auth.js"
 
 import Tutor from "../../models/tutor.js";
 
+
+/**
+ * @route POST /api/tutor/account/login
+ * @description tutor login on web
+ * @access public
+ */
+router.post('/login', async (req, res) => {
+    let {username, password} = req.body 
+    try {
+        let tutor = await Tutor.findOne({
+            username
+        })
+        let successLogin = true 
+        if (tutor) {
+            const passwordValid = await argon2.verify(tutor.password, password)
+            if (!passwordValid) successLogin = false
+        }
+        else return sendError(res, 'tutor not exists')
+        if (!successLogin) return sendError(res, 'password is wrong')
+        const tutorData = {
+            id: tutor._id,
+            username: username,
+            email: tutor.email,
+            phone: tutor.phone,
+        }
+        const accessToken = jwt.sign(
+            {user: tutorData},
+            process.env.JWT_SECRET_KEY,
+            // {expiresIn: '5m'}
+        )
+
+        const response = {
+            accessToken,
+        }
+
+        return sendSuccess(res, 'Login successfully.', {
+            response,
+            user: tutorData
+        })
+
+    } catch (error) {
+        console.log(error);
+        return sendServerError(res);  
+    }
+})
+
 /**
  * @route GET /api/tutor/account/
  * @description tutor load their account information (use payload in header without tutorid)

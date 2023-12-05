@@ -14,7 +14,7 @@ class TalkRoom extends Component {
   }
 
   componentDidMount = () => {
-    this.socket = io("https://64ce-27-71-109-14.ngrok-free.app/webrtcPeer", {
+    this.socket = io.connect("https://1a0b-27-71-109-14.ngrok-free.app/webrtcPeer", {
       path: "/io/webrtc",
       query: {},
     });
@@ -83,7 +83,8 @@ class TalkRoom extends Component {
     const success = (stream) => {
       window.localStream = stream;
       this.localVideoref.current.srcObject = stream;
-      this.pc.addStream(stream);
+      stream.getTracks().forEach( (track) => this.pc.addTrack( track, stream ) );
+      // this.pc.addTrack(stream);
     };
 
     // called when getUserMedia() fails - see below
@@ -94,7 +95,7 @@ class TalkRoom extends Component {
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
     // see the above link for more constraint options
     const constraints = {
-      audio: false,
+      audio: true,
       video: true,
       // video: {
       //   width: 1280,

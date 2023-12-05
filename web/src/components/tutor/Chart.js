@@ -10,7 +10,6 @@ function Chart(props) {
   const strokeOffset = props.strokeWidth / 2;
   const svgSize = halfCircle + strokeOffset*2;
 
-  console.log("halfCircle", halfCircle);
   return (
     <svg
       width={halfCircle}
