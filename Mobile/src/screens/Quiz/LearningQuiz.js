@@ -2,7 +2,6 @@ import React, { useReducer, useState, createRef, useEffect }  from 'react';
 import { Text, View, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
 import {Vimeo} from 'react-native-vimeo-iframe';
-import SoundPlayer from 'react-native-sound-player';
 import Sound from 'react-native-sound';
 import PronunciationAssess from '../PronunciationAssessment/PronunciationAssess';
 import Buttons from "./../../components/Buttons";
@@ -44,8 +43,6 @@ export default function LearningQuiz({route, navigation}) {
     const [progress, setProgress] = useState(new Animated.Value(0));
     const [text, onChangeText] = useState('');
     const [pass, setPass] = useState(false);
-    const [rerecord, setRerecord] = useState(false);
-    const [isPlaying, setIsPlaying] = useState(false);
 
     //timer
     const [timer, count] = useState(0);
@@ -198,8 +195,6 @@ export default function LearningQuiz({route, navigation}) {
                     dispatch(currentCardIndex);
                 if(recorder.current.state.recording == true)
                     recorder.current.changeRecordEvent();
-                if(recorder.current.state.error)
-                    setRerecord(true)
             }
             if(currentQuestionIndex==numofquiz-1){
                 //last question
@@ -341,29 +336,6 @@ export default function LearningQuiz({route, navigation}) {
                                 } 
                                 size={50}/>
                         </TouchableOpacity>
-                        <Modal 
-                        transparent={true}
-                        visible={rerecord}
-                        onRequestClose={() => {
-                            setRerecord(false);
-                        }}
-                    >  
-                        <View style={styles.wrapper}>
-                        <View style={styles.modalView}>
-                            <View style={{flexDirection:'row', width: "100%"}}>
-                            <TouchableOpacity style={[style.close, {right: "4%"}]} onPress={()=>setRerecord(false)}>
-                                <FontAwesomeIcon icon="xmark"  color={colors.black_green} size={30}/>
-                            </TouchableOpacity>
-                            <Text style={styles.titleStyle}>Englephant chưa nghe được</Text>
-                            </View>
-                            <View style={{width: 90, height: 68, marginTop: "5%"}}>
-                            <MascotCry 
-                                viewBox='0 0 68 90'/>
-                            </View>
-                            <Text style={[styles.textStyle, {textAlign: 'center'}]}>Bạn có thể phát âm lại được không?</Text>
-                        </View>
-                        </View>
-                    </Modal>
                     </View>
                 )
             case "image":
@@ -440,6 +412,8 @@ export default function LearningQuiz({route, navigation}) {
                                 onChangeText={text=>onChangeText(text.toLowerCase().trim())}
                                 value={text}
                                 placeholder='Điền vào đây'
+                                color={colors.bright_gray_brown}
+                                placeholderTextColor={colors.bright_gray_brown}
                             />
                         </View>
                     )

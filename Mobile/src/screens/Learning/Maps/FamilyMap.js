@@ -3,6 +3,9 @@ import axios from "axios";
 import { Text, StyleSheet, TouchableOpacity, ImageBackground, SafeAreaView, View, Image } from "react-native";
 import colors from '../../../../assets/colors';
 import { useLogin } from '../../../context/LoginProvider';
+import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons/faStar';
+import { faStar as farStar} from '@fortawesome/free-regular-svg-icons/faStar';
 
 const mapId=2;
 
@@ -10,13 +13,15 @@ export default function FamilyMap({navigation}){
     const {profile} = useLogin();
     const learnerId = profile.id;
     const [nodeState, setNodeState] = useState(["Unlock","Next","Lock","Lock","Lock"]);
+    const [numStars, setNumStars] = useState([0,0,0,0,0]);
 
     //check node state
     function checkNodeState() {
       uri = 'http://10.0.2.2:5000/api/map/check-node/'+mapId+'/'+learnerId;
       axios.get(uri)
       .then(function (res) {
-        setNodeState(res.data.data)
+        setNodeState(res.data.state);
+        setNumStars(res.data.star);
       })
       .catch(function (error) {
         console.log(error);
@@ -32,10 +37,9 @@ export default function FamilyMap({navigation}){
       uri = 'http://10.0.2.2:5000/api/quiz/node/'+mapId+'/'+position;
       axios.get(uri)
       .then(function (res) {
-        if (nodeState[position-1] == "Unlock")
-          if (position % 2 ==1)
-            navigation.navigate("LearningQuiz", {nodeId: res.data.nodeId, lessons: res.data.lesson, quizzes: res.data.quiz, flashcards: res.data.flashcard});
-          else navigation.navigate("PracticeQuiz", {nodeId: res.data.nodeId, quizzes: res.data.quiz});
+        if (position % 2 ==1)
+          navigation.navigate("LearningQuiz", {nodeId: res.data.nodeId, lessons: res.data.lesson, quizzes: res.data.quiz, flashcards: res.data.flashcard});
+        else navigation.navigate("PracticeQuiz", {nodeId: res.data.nodeId, quizzes: res.data.quiz});
       })
       .catch(function (error) {
         console.log(error);
@@ -54,80 +58,71 @@ export default function FamilyMap({navigation}){
         console.log(error);
       });
     }
+
+    function renderNode(position){
+      let opacity = getNodeOpacity(nodeState[position-1]);
+      let text = "Learn 1";
+      let nodeposition = styles.node1position;
+      let img = "https://i.imgur.com/pNJmCXo.png";
+      let onPress=()=>{if (opacity == 0) onPressQuiz({navigation: navigation, position: position})};
+      let star = numStars[position-1];
+      switch (position){
+        case 2:
+          text = "Practice 1";
+          nodeposition = styles.node2position;
+          img = "https://i.imgur.com/tvdEUra.png";
+          break;
+        case 3:
+          text = "Learn 2";
+          nodeposition = styles.node3position;
+          img = "https://i.imgur.com/msAdpeg.png";
+          break;
+        case 4:
+          text = "Practice 2";
+          nodeposition = styles.node4position;
+          img = "https://i.imgur.com/UdFrJKc.png";
+          break;
+        case 5:
+          text = "Review";
+          nodeposition = styles.node5position;
+          img = "https://i.imgur.com/KJqTdar.png";
+          onPress=()=>{if (opacity == 0) onPressSum({navigation: navigation})};
+          break;
+      }
+      return (
+        <View style={[styles.nodewrapper, nodeposition]}>
+          {position !=5 && (
+            <View style={{top: "5%"}}>
+              <FontAwesomeIcon icon={star>0? faStar : farStar} style={[styles.star,{left: "69%"}]}/>
+              <FontAwesomeIcon icon={star>1? faStar : farStar} style={[styles.star,{left: "77%"}]}/>
+              <FontAwesomeIcon icon={star>2? faStar : farStar} style={[styles.star,{left: "85%"}]}/>
+            </View>
+          )}
+          <Text style={[styles.position, {color: opacity==0? colors.red : colors.bright_gray_brown}]}>{text}</Text>
+          <View style={styles.pin}>
+            <View style={[styles.pinwrapper, {opacity: opacity}]}/>
+          </View>
+          <Image 
+            style={[styles.node,{resizeMode: "cover"}]} 
+            source={{uri: img}}/>
+          <TouchableOpacity 
+            style={[styles.node, {
+              backgroundColor: colors.bright_gray_brown,
+              opacity: opacity
+            }]} 
+            onPress={()=>onPress()}/>
+        </View>
+      )
+    }
+
     return (
         <SafeAreaView style={{flex:1}}>
             <ImageBackground source={require("./../../../../assets/images/learningbg.png")} resizeMode="cover" style={{flex:1}}/>
-            <View style={[styles.nodewrapper, styles.node5position]}>
-              <View style={styles.pin}>
-                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[4])}]}/>
-                <Text style={styles.position}>5</Text>
-              </View>
-              <Image 
-                style={[styles.node,{resizeMode: "cover"}]} 
-                source={{uri: "https://i.imgur.com/KJqTdar.png"}}/>
-              <TouchableOpacity 
-                style={[styles.node, {
-                  backgroundColor: colors.bright_gray_brown,
-                  opacity: getNodeOpacity(nodeState[4])
-                }]} 
-                onPress={()=>{if (nodeState[4] == "Unlock") onPressSum({navigation: navigation})}}/>
-            </View>
-            <View style={[styles.nodewrapper, styles.node4position]}>
-              <View style={styles.pin}>
-                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[3])}]}/>
-                <Text style={styles.position}>4</Text>
-              </View>
-              <Image 
-                style={[styles.node,{resizeMode: "cover"}]} 
-                source={{uri: "https://i.imgur.com/UdFrJKc.png"}}/>
-              <TouchableOpacity 
-                style={[styles.node, {
-                  backgroundColor: colors.bright_gray_brown,
-                  opacity: getNodeOpacity(nodeState[3])
-                }]} 
-                onPress={()=>onPressQuiz({navigation: navigation, position:4})}/>
-            </View>
-            <View style={[styles.nodewrapper, styles.node3position]}>
-              <View style={styles.pin}>
-                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[2])}]}/>
-                <Text style={styles.position}>3</Text>
-              </View>
-              <Image 
-                style={[styles.node,{resizeMode: "cover"}]} 
-                source={{uri: "https://i.imgur.com/msAdpeg.png"}}/>
-              <TouchableOpacity 
-                style={[styles.node, {
-                  backgroundColor: colors.bright_gray_brown,
-                  opacity: getNodeOpacity(nodeState[2])
-                }]} 
-                onPress={()=>onPressQuiz({navigation: navigation, position:3})}/>
-            </View>
-            <View style={[styles.nodewrapper, styles.node2position]}>
-              <View style={styles.pin}>
-                <View style={[styles.pinwrapper, {opacity: getNodeOpacity(nodeState[1])}]}/>
-                <Text style={styles.position}>2</Text>
-              </View>
-              <Image 
-                style={[styles.node,{resizeMode: "cover"}]} 
-                source={{uri: "https://i.imgur.com/tvdEUra.png"}}/>
-              <TouchableOpacity 
-                style={[styles.node, {
-                  backgroundColor: colors.bright_gray_brown,
-                  opacity: getNodeOpacity(nodeState[1])
-                }]} 
-                onPress={()=>onPressQuiz({navigation: navigation, position:2})}/>
-            </View>
-            <View style={[styles.nodewrapper, styles.node1position]}>
-              <View style={styles.pin}>
-                <Text style={styles.position}>1</Text>
-              </View>
-              <Image 
-                style={[styles.node,{resizeMode: "cover"}]} 
-                source={{uri: "https://i.imgur.com/pNJmCXo.png"}}/>
-              <TouchableOpacity 
-                style={styles.node} 
-                onPress={()=>onPressQuiz({navigation: navigation, position:1})}/>
-            </View>
+            {renderNode(5)}
+            {renderNode(4)}
+            {renderNode(3)}
+            {renderNode(2)}
+            {renderNode(1)}
         </SafeAreaView>
     ) 
 }
@@ -223,12 +218,19 @@ const styles = StyleSheet.create({
       transform: [{ rotate: '-10deg'}]
     },
     position: {
-      width: 10,
-      fontSize: 16,
-      lineHeight: 18,
+      left: "5%",
+      top: "5%",
+      width: 70,
+      fontSize: 13,
+      lineHeight: 16,
       fontWeight: "900",
       letterSpacing: 0.25,
-      color: "white",
     },
+    star: {
+      color: colors.yellow,
+      height: 13,
+      size: 13,
+      position: "absolute",
+    }
 
   });

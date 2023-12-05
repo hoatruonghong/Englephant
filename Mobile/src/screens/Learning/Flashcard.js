@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Text, StyleSheet, TouchableOpacity, View, SafeAreaView, Image} from "react-native";
+import Sound from 'react-native-sound';
 import colors from "../../../assets/colors";
 import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -24,6 +25,11 @@ export default function Flashcard({route, navigation}) {
     }
   }
 
+  let sound = new Sound(content.audio,'',
+  error => {
+    if (error) 
+      console.log('play error: ',error)
+  })
   let color = content.star==3? colors.red : (content.star==2? colors.yellow : colors.blue);
   const renderStars = () => {
     if (content.star==3)
@@ -58,11 +64,19 @@ export default function Flashcard({route, navigation}) {
         {renderStars()}
         <Text style={styles.word}>{content.word}</Text>
         <View style={styles.subsubContainer}>
-          <TouchableOpacity onPress={()=>{}}>
+          {/* <TouchableOpacity onPress={()=>{}}>
             <FontAwesomeIcon icon={faDumbbell}  color={color} size={32}/>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.text}>{'    /'+content.pronunciation+'/    '}</Text>
-          <TouchableOpacity onPress={()=>{}}>
+          <TouchableOpacity onPress={()=>{
+            ()=>{
+              sound.play(() => {
+                  console.log('playing');
+                  // Release when it's done so we're not using up resources
+                  sound.release();
+              }); 
+            }
+          }}>
             <FontAwesomeIcon icon={faVolumeUp}  color={color} size={32}/>
           </TouchableOpacity>
         </View>
