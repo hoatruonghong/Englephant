@@ -34,7 +34,7 @@ function renderRow(flashcards, rowId, navigation) {
 }
 //get flashcard
 const getFlashcard = (cardId, navigation) => {
-  uri = 'http://10.0.2.2:5000/api/card/'+cardId;
+  uri = 'https://englephant.vercel.app/api/card/'+cardId;
   console.log(uri)
   axios.get(uri)
   .then(function (res) {

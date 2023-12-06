@@ -122,7 +122,7 @@ function LearningScreens() {
   const [peanut, setPeanut] = useState(profile.peanut);
 
   // useEffect(() => {
-  //   uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
+  //   uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
   //   axios.get(uri)
   //   .then(function (res) {
   //     setLearner(res.data.data);

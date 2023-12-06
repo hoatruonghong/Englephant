@@ -33,7 +33,7 @@ export default function Sum({route, navigation}) {
   const {height, width} = useWindowDimensions();
 
   useEffect(()=>{
-    uri = 'http://10.0.2.2:5000/api/map/unlock/'+learnerId+'/'+(map+1);
+    uri = 'https://englephant.vercel.app/api/map/unlock/'+learnerId+'/'+(map+1);
     console.log(uri)
     axios.post(uri)
     .then(function (res) {
