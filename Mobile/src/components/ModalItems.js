@@ -43,7 +43,7 @@ function MoreTimeItem(props) {
     );
 }
 const handleMoreTime = (time, peanut, setModalVisible) => {
-  if (peanut < 30) {
+  if (peanut > 20) {
     setModalVisible("buyPeanut");
   } 
   else {

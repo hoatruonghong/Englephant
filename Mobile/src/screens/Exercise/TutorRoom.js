@@ -205,6 +205,20 @@ class TutorRoom extends React.Component {
   //   });
   // };
 
+  /** HANDLE CAM & MIC */
+  toggleCamera = () => {
+    localWebcamOn ? setlocalWebcamOn(false) : setlocalWebcamOn(true);
+    localStream.getVideoTracks().forEach((track) => {
+      localWebcamOn ? (track.enabled = false) : (track.enabled = true);
+    });
+  }
+  toggleMic = () => {
+    localMicOn ? setlocalMicOn(false) : setlocalMicOn(true);
+    localStream.getAudioTracks().forEach((track) => {
+      localMicOn ? (track.enabled = false) : (track.enabled = true);
+    });
+  }
+
   render() {
     const {localStream, remoteStream} = this.state;
     console.log("==============");

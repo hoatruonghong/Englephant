@@ -196,7 +196,7 @@ class TalkRoom extends Component {
             </Row>
           </Container>
         </div>        
-        {/* <div className="otherWrap">      
+        <div className="otherWrap">      
           <br />
           <button onClick={this.createOffer}>Offer</button>
           <button onClick={this.createAnswer}>Answer</button>
@@ -207,7 +207,7 @@ class TalkRoom extends Component {
             }}
           />
           
-        </div> */}
+        </div>
         {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>
           <button onClick={this.addCandidate}>Add Candidate</button> */}
       </div>

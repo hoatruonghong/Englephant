@@ -61,6 +61,7 @@ import ArchiveScreen from './screens/Archive/ArchiveScreen';
 import ChatRoom from './screens/Exercise/ChatRoom';
 import TutorRoom from './screens/Exercise/TutorRoom';
 import Wardrobe from './screens/Setting/Wardrobe';
+import TimeCounter from './components/TimeCounter';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -189,12 +190,7 @@ function ExerciseScreens() {
         options={{
           headerTitle: 'Phòng giao tiếp',
         }}
-      />
-      <Stack.Screen name="ChatRoom" component={ChatRoom}
-        options={{
-          headerTitle: 'Vào phòng',
-        }}
-      />      
+      />           
     </Stack.Navigator>    
   )
 }
@@ -269,8 +265,9 @@ function StackNavigator(){
       <Stack.Screen name="Wardrobe" component={Wardrobe} 
         options={{ headerTitle: 'Tủ đồ' }} />
       <Stack.Screen name="TutorRoom" component={TutorRoom}
-        options={{  headerTitle: 'Vào phòng' }} />
-      
+        options={{
+          headerTitle : () => {return (<TimeCounter time={600} />)},
+        }} />
       <Stack.Screen name="LRLesson" component={LRLesson}
         options={({ route }) => ({ title: route.params.name })}
       />
