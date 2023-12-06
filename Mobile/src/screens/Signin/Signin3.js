@@ -1,4 +1,4 @@
-import React, { useContext, useState }  from 'react';
+import React, { useContext, useState, useEffect }  from 'react';
 import { Text, SafeAreaView, View, StyleSheet, ImageBackground, Image, TextInput, Picker, TouchableOpacity } from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
@@ -9,6 +9,7 @@ import { useLogin } from '../../context/LoginProvider';
 
 import Auth from './../../api/Auth';
 import Learner from './../../api/Learner';
+import Map from './../../api/Map';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 const minutes = ["10", "15", "20", "30"];
@@ -22,16 +23,23 @@ const SetGoal = ({route, navigation}) => {
         try {
             console.log(route.params);
             const res = await Auth.register(route.params);
-            // console.log("res", res.data);
-            const learnerInfo = await Learner.getInfo({id: res.data.data.learner_id});
-            // console.log("learner", learnerInfo);
-            setLearnerId(res.data.data.learner_id);
+            const learner_id = res.data.data.learner_id;
+            const map = await Map.unlockMapDefault({learnerId: learner_id})
+            console.log("learner idddd: ", learner_id);
+
+            const learnerInfo = await Learner.getInfo({id: learner_id});
+            setLearnerId(learner_id);
             setProfile(learnerInfo);
             setIsLoggedIn(true);
         } catch (error) {
             console.log(error);
         }
     }
+    // useEffect(()=>{
+    //     if (mapUnlocked) {
+    //         setIsLoggedIn(true);
+    //     }
+    // })
     return (
     <SafeAreaView style={styles.container}>
         <View style = {styles.backgroundContainer}>

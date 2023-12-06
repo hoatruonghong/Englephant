@@ -14,6 +14,7 @@ import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
 import Learner from './../../api/Learner';
 import axios from 'axios';
 import MyCalendar from './../../components/Calendar';
+import Modals from './../../components/Modals';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 library.add(faBell, faGear);
@@ -86,11 +87,23 @@ var historyProgress = [
     learnedTime: 15, learnedWord: 3 
   },
 ];
-
+const buyPeanutModalData = [
+  {
+      peanut: 10, price: 10000
+  },
+  {
+      peanut: 15, price: 15000
+  },
+  {
+      peanut: 20, price: 20000
+  }
+];
 export default function Account({navigation}) {
   const { setIsLoggedIn, learnerId, setProfile, profile } = useLogin();
   const [learner, setLearner] = useState(profile);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [modalState, setModalState] = useState("none"); //[none, buyPeanut]
+  const [buyPeanutModalVisible, setBuyPeanutModalVisible] = useState(false);
 
   // useEffect(()=>{
   //   uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
@@ -103,12 +116,29 @@ export default function Account({navigation}) {
   //     console.log(error);
   //   });
   // })
+  useEffect(() => {
+    if (modalState ==="buyPeanut") setBuyPeanutModalVisible(true);
+    else setBuyPeanutModalVisible(false);    
+  }, [modalState])
+
   var totalTime = 0, totalWord = 0;
   historyProgress.forEach(element => {
     totalTime += element.learnedTime;
     totalWord += element.learnedWord;
   });
 
+  const BuyPeanutModal = () => {
+    return (
+        <View>                
+            <Modals.MultipleSelectModal 
+            visible={buyPeanutModalVisible} 
+            setModalVisible={setModalState}
+            title='BuyPeanut'
+            data={buyPeanutModalData}
+            />
+        </View>
+    );
+  };
   return (    
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
@@ -135,7 +165,7 @@ export default function Account({navigation}) {
                       <IconWrap name="heart" num={learner.heart}/>
                     </View>
                     <View style={styles.iconPeanut}>
-                      <IconWrap name="peanut" num={learner.peanut} hasPlus={true}/>
+                      <IconWrap name="peanut" num={learner.peanut} hasPlus={true} setModalState={setModalState}/>
                     </View>
                   </View>
                 </View>
@@ -226,6 +256,7 @@ export default function Account({navigation}) {
           </TouchableOpacity>
         </View>
         </SafeAreaView>
+        {BuyPeanutModal()}
       </ScrollView>
     </ImageBackground>
 
