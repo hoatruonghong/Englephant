@@ -17,7 +17,7 @@ export default function LRLesson({route, navigation}) {
     const {height} = useWindowDimensions();
 
     const onPress = () => {
-        uri = 'http://10.0.2.2:5000/api/lr/quiz/'+lessonId;
+        uri = 'http://192.168.1.81:5000/api/lr/quiz/'+lessonId;
         axios.get(uri)
         .then(function (res) {
           navigation.navigate("LRQuiz",{lessonId: lessonId, quizzes: quizzes, image: image});

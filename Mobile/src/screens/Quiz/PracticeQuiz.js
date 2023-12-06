@@ -39,7 +39,7 @@ export default function PracticeQuiz({route, navigation}) {
 
     //get answers
     const getAnswers = (index)=>{
-        uri = 'http://10.0.2.2:5000/api/quiz/answer/'+quizzes[index]._id;
+        uri = 'http://192.168.1.81:5000/api/quiz/answer/'+quizzes[index]._id;
         axios.get(uri)
         .then(function (res) {
             setAnswers(res.data.data);
@@ -96,7 +96,7 @@ export default function PracticeQuiz({route, navigation}) {
     };
 
     const unlockNewNode = (nodeId) => {
-        uri = 'http://10.0.2.2:5000/api/map/node/'+nodeId;
+        uri = 'http://192.168.1.81:5000/api/map/node/'+nodeId;
         axios.post(uri,{
             learnerId: learnerId
         })
@@ -115,7 +115,7 @@ export default function PracticeQuiz({route, navigation}) {
 
     //Send Node result to backend
     const sendResult = () => {
-        uri = 'http://10.0.2.2:5000/api/map/node-result/'+nodeId;
+        uri = 'http://192.168.1.81:5000/api/map/node-result/'+nodeId;
         console.log(uri)
         axios.put(uri,{
             learnerId: learnerId,

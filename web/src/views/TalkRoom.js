@@ -14,7 +14,7 @@ class TalkRoom extends Component {
   }
 
   componentDidMount = () => {
-    this.socket = io.connect("https://1a0b-27-71-109-14.ngrok-free.app/webrtcPeer", {
+    this.socket = io.connect("https://4c3a-101-99-33-24.ngrok-free.app/webrtcPeer", {
       path: "/io/webrtc",
       query: {},
     });

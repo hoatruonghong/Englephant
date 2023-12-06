@@ -40,7 +40,7 @@ class TutorRoom extends React.Component {
   }
 
   componentDidMount = () => {
-    this.socket = io.connect("https://1a0b-27-71-109-14.ngrok-free.app/webrtcPeer", {
+    this.socket = io.connect("https://4c3a-101-99-33-24.ngrok-free.app/webrtcPeer", {
       path: "/io/webrtc",
       query: {},
     });
@@ -96,14 +96,14 @@ class TutorRoom extends React.Component {
     
     this.pc.ontrack = (e) => {
       // this.remoteVideoref.current.srcObject = e.streams[0]
-      this.setState({
-        remoteStream: e.streams[0]
-      })
-      // setTimeout(() => {
-      //   this.setState({
-      //     remoteStream: e.streams[0]
-      //   })
-      // }, 3000);
+      // this.setState({
+      //   remoteStream: e.streams[0]
+      // })
+      setTimeout(() => {
+        this.setState({
+          remoteStream: e.streams[0]
+        })
+      }, 3000);
     }
 
     const success = (stream)=> {

@@ -71,7 +71,7 @@ export default function MapSelecting({navigation}) {
 
   //get maps
   useEffect(()=>{
-    uri = 'http://10.0.2.2:5000/api/map/learner/'+learnerId+'/'+profile.mode;
+    uri = 'http://192.168.1.81:5000/api/map/learner/'+learnerId+'/'+profile.mode;
     axios.get(uri)
     .then(function (res) {
       newData = res.data.data.concat({name:"None", image: "", active: true, status:0});
@@ -85,11 +85,11 @@ export default function MapSelecting({navigation}) {
 
   //onPress functions
   const onPressLockedMap = ({index})=>{
-    uri = 'http://10.0.2.2:5000/api/map/lock/'+learnerId+'/'+index;
+    uri = 'http://192.168.1.81:5000/api/map/lock/'+learnerId+'/'+index;
     axios.get(uri)
     .then(function (res) {
       if (res.action === "Mở map")
-        axios.post('http://10.0.2.2:5000/api/map/unlock/'+learnerId+'/'+index)
+        axios.post('http://192.168.1.81:5000/api/map/unlock/'+learnerId+'/'+index)
         .then(
           navigation.navigate(index.toString)
         )
@@ -111,7 +111,7 @@ export default function MapSelecting({navigation}) {
   };
 
   const onPressUnlockedMap = ({index})=>{
-    uri = 'http://10.0.2.2:5000/api/map/learn/'+learnerId+'/'+index;
+    uri = 'http://192.168.1.81:5000/api/map/learn/'+learnerId+'/'+index;
     axios.get(uri)
     .then(function (res) {
       setData(res.data.data);

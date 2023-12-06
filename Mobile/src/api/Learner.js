@@ -3,7 +3,7 @@ import axios from 'axios';
 const update = async (params) => {
     try {
         console.log('heeee',params);
-        const result = await axios.put('http://10.0.2.2:5000/api/learner/'+params.id, {
+        const result = await axios.put('http://192.168.1.81:5000/api/learner/'+params.id, {
             fullname: params.fullname,
             phone: params.password,
             email: params.email,
@@ -18,7 +18,7 @@ const update = async (params) => {
 
 const getInfo = async (params) => {
     try {
-        const result = await axios.get('http://10.0.2.2:5000/api/learner/'+params.id);
+        const result = await axios.get('http://192.168.1.81:5000/api/learner/'+params.id);
         return result;
     } catch (error) {
         return error.response;        

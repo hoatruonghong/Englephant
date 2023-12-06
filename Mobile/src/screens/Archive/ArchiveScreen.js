@@ -23,7 +23,7 @@ export default function Archive({navigation}) {
     //get archive
     useEffect(()=>{
         if (loadData){
-            uri = 'http://10.0.2.2:5000/api/card/archive/'+learnerId;
+            uri = 'http://192.168.1.81:5000/api/card/archive/'+learnerId;
             axios.get(uri)
             .then(function (res) {
                 setData(res.data.data);

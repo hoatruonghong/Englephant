@@ -17,7 +17,7 @@ export default function FamilyMap({navigation}){
 
     //check node state
     function checkNodeState() {
-      uri = 'http://10.0.2.2:5000/api/map/check-node/'+mapId+'/'+learnerId;
+      uri = 'http://192.168.1.81:5000/api/map/check-node/'+mapId+'/'+learnerId;
       axios.get(uri)
       .then(function (res) {
         setNodeState(res.data.state);
@@ -34,7 +34,7 @@ export default function FamilyMap({navigation}){
     }
 
     function onPressQuiz({navigation, position}){
-      uri = 'http://10.0.2.2:5000/api/quiz/node/'+mapId+'/'+position;
+      uri = 'http://192.168.1.81:5000/api/quiz/node/'+mapId+'/'+position;
       axios.get(uri)
       .then(function (res) {
         if (position % 2 ==1)
@@ -47,7 +47,7 @@ export default function FamilyMap({navigation}){
     }
 
     function onPressSum({navigation}){
-      uri = 'http://10.0.2.2:5000/api/map/sum/'+mapId+'/'+learnerId;
+      uri = 'http://192.168.1.81:5000/api/map/sum/'+mapId+'/'+learnerId;
       console.log(uri)
       axios.get(uri)
       .then(function (res) {

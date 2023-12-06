@@ -122,7 +122,7 @@ function LearningScreens() {
   const [peanut, setPeanut] = useState(profile.peanut);
 
   // useEffect(() => {
-  //   uri = 'http://10.0.2.2:5000/api/learner/'+learnerId;
+  //   uri = 'http://192.168.1.81:5000/api/learner/'+learnerId;
   //   axios.get(uri)
   //   .then(function (res) {
   //     setLearner(res.data.data);

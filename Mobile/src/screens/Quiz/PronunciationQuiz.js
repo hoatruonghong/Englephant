@@ -39,7 +39,7 @@ export default function PronunciationQuiz({route, navigation}) {
 
     //get answers
     const getAnswers = (index)=>{
-        uri = 'http://10.0.2.2:5000/api/pronunciation/answer/'+quizzes[index]._id;
+        uri = 'http://192.168.1.81:5000/api/pronunciation/answer/'+quizzes[index]._id;
         axios.get(uri)
         .then(function (res) {
             setAnswers(res.data.data);
@@ -75,7 +75,7 @@ export default function PronunciationQuiz({route, navigation}) {
     };
 
     const unlockExercise = (lessonId) => {
-        uri = 'http://10.0.2.2:5000/api/pronunciation/'+lessonId;
+        uri = 'http://192.168.1.81:5000/api/pronunciation/'+lessonId;
         axios.post(uri,{
             learnerId: learnerId
         })
@@ -94,7 +94,7 @@ export default function PronunciationQuiz({route, navigation}) {
 
     //Send Node result to backend
     const sendResult = () => {
-        uri = 'http://10.0.2.2:5000/api/pronunciation/result/'+lessonId;
+        uri = 'http://192.168.1.81:5000/api/pronunciation/result/'+lessonId;
         axios.put(uri,{
             learnerId: learnerId,
             sound1: sound1,
