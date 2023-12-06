@@ -33,7 +33,7 @@ export default function LRQuiz({route, navigation}) {
 
     //get answers
     const getAnswers = (index)=>{
-        uri = 'http://192.168.1.81:5000/api/lr/answer/'+quizzes[index]._id;
+        uri = 'https://englephant.vercel.app/api/lr/answer/'+quizzes[index]._id;
         axios.get(uri)
         .then(function (res) {
             setAnswers(res.data.data);
@@ -61,7 +61,7 @@ export default function LRQuiz({route, navigation}) {
     };
 
     const unlockNewLesson = (lessonId) => {
-        uri = 'http://192.168.1.81:5000/api/lr/'+lessonId;
+        uri = 'https://englephant.vercel.app/api/lr/'+lessonId;
         axios.post(uri,{
             learnerId: learnerId
         })
@@ -80,7 +80,7 @@ export default function LRQuiz({route, navigation}) {
 
     //Send Node result to backend
     const sendResult = () => {
-        uri = 'http://192.168.1.81:5000/api/lr/result/'+lessonId;
+        uri = 'https://englephant.vercel.app/api/lr/result/'+lessonId;
         axios.put(uri,{
             learnerId: learnerId,
             point: score,

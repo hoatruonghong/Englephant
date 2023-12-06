@@ -13,7 +13,7 @@ export default function ListenRead({navigation}) {
     const [data, setData] = useState();
     //get lessons
     useEffect(()=>{
-        uri = 'http://192.168.1.81:5000/api/lr/learner/'+learnerId;
+        uri = 'https://englephant.vercel.app/api/lr/learner/'+learnerId;
         axios.get(uri)
         .then(function (res) {setData(res.data.data);})
         .catch(function (error) {

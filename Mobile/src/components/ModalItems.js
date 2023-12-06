@@ -7,38 +7,30 @@ import PeanutPurchase from './../../assets/svg/peanut_purchase.svg';
 
 //Choose talkroom: timeItem
 function TimeItem(props) {
-  const { onPress, time } = props;
+  const { onPress, time, navigation, setModalVisible } = props;
 
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={()=> {handleChooseRoom(time, setModalVisible, navigation)}}>
         <Text style={styles.text}>{time} phút</Text>
     </TouchableOpacity>
   );
 }
 
-//Buy peanuts: peanutItem
-function BuyPeanutItem(props) {
-    const { onPress, peanut, price } = props;
-  
-    return (
-      <TouchableOpacity style={styles.container}>
-        <View style={styles.buyPeanutWrap}>
-            <View style={styles.rowWrap}>
-                <Text style={styles.text}>{peanut}</Text>
-                <PeanutIcon />
-            </View>
-            <Text style={styles.text}>{price} đ</Text>
-        </View>
-      </TouchableOpacity>
-    );
+const handleChooseRoom = (choosingTime, setModalVisible, navigation) => {
+  if (choosingTime != 0 && choosingTime <= 20) {
+    setModalVisible("none");
+    navigation.navigate('TutorRoom');
+  }
+  else {
+    setModalVisible("moreTime");
+  }
 }
 
 //Change peanuts to get time: peanutItem
 function MoreTimeItem(props) {
-    const { onPress, peanut, time } = props;
-  
+    const { onPress, peanut, time, setModalVisible } = props;
     return (
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity style={[styles.container, {flex: 0.49}]} onPress={()=>{handleMoreTime(time, peanut, setModalVisible)}}>
         <View style={styles.buyPeanutWrap}>
             <Text style={styles.text}>{time} phút</Text>
 
@@ -50,14 +42,22 @@ function MoreTimeItem(props) {
       </TouchableOpacity>
     );
 }
+const handleMoreTime = (time, peanut, setModalVisible) => {
+  if (peanut < 30) {
+    setModalVisible("buyPeanut");
+  } 
+  else {
+    // call api change peanut to time
+    console.log("success");
+    setModalVisible(false)
+  }
+}
 
-//Change peanuts to get time: buyPeanutButton
+//buy peanut: buyPeanutButton
 function BuyPeanutButton(props) {
-    const { onPress } = props;
-    const {width, height} = useWindowDimensions();
-
+    const { onPress, setModalVisible } = props;
     return (
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity style={styles.container} onPress={() => {setModalVisible("buyPeanut")}}>
         <View style={styles.btnWrap}>
             <Text style={styles.text}>Mua đậu</Text>
             <PeanutPurchase/>
@@ -66,7 +66,29 @@ function BuyPeanutButton(props) {
     );
 }
 
-//Change peanuts to get time: peanutItem
+//Buy peanuts: peanutItem
+function BuyPeanutItem(props) {
+  const { onPress, peanut, price, setModalVisible } = props;
+
+  return (
+    <TouchableOpacity style={styles.container} onPress={()=>{handleBuyPeanut(peanut, price, setModalVisible)}}>
+      <View style={styles.buyPeanutWrap}>
+          <View style={styles.rowWrap}>
+              <Text style={styles.text}>{peanut}</Text>
+              <PeanutIcon />
+          </View>
+          <Text style={styles.text}>{price} đ</Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
+const handleBuyPeanut = (peanut, price, setModalVisible) => {
+  //call payment api if possible
+  //or call buyPeanut api
+  setModalVisible("none");
+}
+
+//Change hearts to get buds: moreBudItem
 function MoreBudItem(props) {
     const { onPress, bud, heart } = props;
   

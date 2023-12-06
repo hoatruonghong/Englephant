@@ -1,5 +1,5 @@
 import React, { useState }  from 'react';
-import { Text, View, StyleSheet, Modal, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, Modal, TouchableOpacity, FlatList } from "react-native";
 import colors from './../../assets/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import ModalItems from './ModalItems';
@@ -19,16 +19,14 @@ const modalTitle = (title) => {
   }
 }
 
-const modalItem = (item, title, id) => {
+const modalItem = (item, title, id, setModalVisible, navigation) => {
   switch (title) {
     case 'ChooseRoom':
-      return <ModalItems.TimeItem time={item} key={id}/>
+      return <ModalItems.TimeItem time={item} key={id} setModalVisible={setModalVisible} navigation={navigation} />
     case 'BuyPeanut':
-      return <ModalItems.BuyPeanutItem peanut={item.peanut} price={item.price} key={id}/>
+      return <ModalItems.BuyPeanutItem peanut={item.peanut} price={item.price} key={id} setModalVisible={setModalVisible} />
     case 'MoreTime':
-      return (
-        <ModalItems.MoreTimeItem peanut={item.peanut} time={item.time} key={id}/>
-      )
+      return <ModalItems.MoreTimeItem peanut={item.peanut} time={item.time} key={id} setModalVisible={setModalVisible} />
     case 'MoreBud':
       break;
     default:
@@ -36,10 +34,10 @@ const modalItem = (item, title, id) => {
   }
 }
 
-const modalBtn = (title) => {
+const modalBtn = (title, setModalVisible) => {
   switch (title) {
     case 'MoreTime':
-      return <ModalItems.BuyPeanutButton />
+      return <ModalItems.BuyPeanutButton setModalVisible={setModalVisible}/>
     case 'MoreBud':
       return <ModalItems.BuyPeanutButton />
     default:
@@ -49,7 +47,7 @@ const modalBtn = (title) => {
 
 //ChooseRoom, Buy peanut
 function MultipleSelectModal(props) {
-  const { onPress, visible, setModalVisible, title, data } = props;
+  const { onPress, visible, setModalVisible, title, data, navigation } = props;
   return (
     <View>
       <Modal
@@ -62,25 +60,55 @@ function MultipleSelectModal(props) {
             <View style={styles.modalTitle}>
               <Text style={styles.modalTitleText}>{modalTitle(title)}</Text>
             </View>
-            <TouchableOpacity onPress={()=>setModalVisible(false)}>
+            <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
               <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.white} style={styles.modalTitleIcon}/>
             </TouchableOpacity>
           </View>
           <View style={styles.modalContent}>
-            {/* {modalItem(data[0], title)} */}
             {
               data.map((item, id) => {
                 return (
-                  modalItem(item, title, id)
+                  modalItem(item, title, id, setModalVisible, navigation)
                 )
               })
             }
-            {/* <ModalItems.TimeItem time={10} />
-            <ModalItems.BuyPeanutItem peanut={10} price={10000} />
-            <ModalItems.MoreTimeItem peanut={10} time={15} />
-            <ModalItems.ChangeBudItem bud={1} heart={1} />
-            <ModalItems.BuyPeanutButton /> */}
-            {modalBtn(title)}
+            {modalBtn(title, setModalVisible)}
+          </View>                        
+        </View>
+      </Modal>
+    </View>
+  );
+}
+
+//More time
+function MoreTimeModal(props) {
+  const { onPress, visible, setModalVisible, title, data, navigation } = props;
+  return (
+    <View>
+      <Modal
+        animationType="slide"
+        visible={visible}
+        transparent={true}        
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <View style={styles.modalTitle}>
+              <Text style={styles.modalTitleText}>{modalTitle(title)}</Text>
+            </View>
+            <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
+              <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.white} style={styles.modalTitleIcon}/>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.modalContent}>
+            <FlatList              
+              data={data}
+              renderItem={(item, index)=> modalItem(item.item, title, index, setModalVisible, navigation)}
+              keyExtractor={(item, index) => index}
+              horizontal={false}
+              numColumns={2}
+              columnWrapperStyle={{justifyContent: 'space-between'}}
+            />
+            {modalBtn(title, setModalVisible)}
           </View>                        
         </View>
       </Modal>
@@ -136,5 +164,5 @@ const styles = StyleSheet.create({
 });
 
 module.exports = {
-  MultipleSelectModal
+  MultipleSelectModal, MoreTimeModal
 }

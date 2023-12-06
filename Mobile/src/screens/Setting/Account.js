@@ -93,7 +93,7 @@ export default function Account({navigation}) {
   const [refreshing, setRefreshing] = React.useState(false);
 
   // useEffect(()=>{
-  //   uri = 'http://192.168.1.81:5000/api/learner/'+learnerId;
+  //   uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
   //   axios.get(uri)
   //   .then(function (res) {
   //     setLearner(res.data.data);

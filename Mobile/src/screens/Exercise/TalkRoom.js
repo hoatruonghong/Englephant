@@ -90,11 +90,39 @@ const moreTimeModalData = [
 
 export default function TalkRoom({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
+    const [chooseRoomModalVisible, setChooseRoomModalVisible] = useState(false);
+    const [buyPeanutModalVisible, setBuyPeanutModalVisible] = useState(false);
+    const [moreTimeModalVisible, setMoreTimeModalVisible] = useState(false);
     const {height, width} = useWindowDimensions();
     const {profile, learnerId} = useLogin();
     const [peanut, setPeanut] = useState(profile.peanut);
     const [talkroomTime, setTalkroomTime] = useState(profile.talkroomTime);
+    const [modalState, setModalState] = useState("none"); //[none, chooseRoom, moreTime, buyPeanut]
 
+    useEffect(() => {
+        switch (modalState) {
+            case "chooseRoom":
+                setMoreTimeModalVisible(false);
+                setBuyPeanutModalVisible(false);
+                setChooseRoomModalVisible(true);
+                break;
+            case "buyPeanut":
+                setMoreTimeModalVisible(false);
+                setChooseRoomModalVisible(false);
+                setBuyPeanutModalVisible(true);
+                break;
+            case "moreTime":
+                setBuyPeanutModalVisible(false);
+                setChooseRoomModalVisible(false);
+                setMoreTimeModalVisible(true);
+                break;
+            default:
+                setBuyPeanutModalVisible(false);
+                setChooseRoomModalVisible(false);
+                setMoreTimeModalVisible(false);
+                break;
+        }
+    }, [modalState])
 
     const renderWrapInfo = () => {
         return (
@@ -125,31 +153,45 @@ export default function TalkRoom({navigation}) {
     };
     
     const handleGoButton = () => {
-        // setModalVisible(true);
-        navigation.navigate('TutorRoom');
-    };
+        setModalState("chooseRoom");
+        // setChooseRoomModalVisible(true);
+        // navigation.navigate('TutorRoom');
+    };    
 
     const ChooseRoomModal = () => {
         return (
             <View>
                 <Modals.MultipleSelectModal 
-                visible={modalVisible} 
-                setModalVisible={setModalVisible}
+                visible={chooseRoomModalVisible} 
+                setModalVisible={setModalState}
                 title='ChooseRoom'
+                navigation={navigation}
                 data={timeModalData}
-                />
-                {/* <Modals.MultipleSelectModal 
-                visible={modalVisible} 
-                setModalVisible={setModalVisible}
-                title='BuyPeanut'
-                data={buyPeanutModalData}
-                /> */}
-                {/* <Modals.MultipleSelectModal 
-                visible={modalVisible} 
-                setModalVisible={setModalVisible}
+                />                
+            </View>
+        );
+    };
+    const MoreTimeModal = () => {
+        return (
+            <View>                
+                <Modals.MoreTimeModal 
+                visible={moreTimeModalVisible} 
+                setModalVisible={setModalState}
                 title='MoreTime'
                 data={moreTimeModalData}
-                /> */}
+                />
+            </View>
+        );
+    };
+    const BuyPeanutModal = () => {
+        return (
+            <View>                
+                <Modals.MultipleSelectModal 
+                visible={buyPeanutModalVisible} 
+                setModalVisible={setModalState}
+                title='BuyPeanut'
+                data={buyPeanutModalData}
+                />
             </View>
         );
     };
@@ -174,6 +216,8 @@ export default function TalkRoom({navigation}) {
             />
         </View>
         {ChooseRoomModal()}
+        {BuyPeanutModal()}
+        {MoreTimeModal()}
     </View>
 
   )

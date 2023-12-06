@@ -48,7 +48,7 @@ export default function ListenReadItem({ item, navigation }) {
   }
 
   const onPress = () => {
-    uri = 'http://192.168.1.81:5000/api/lr/quiz/'+item._id;
+    uri = 'https://englephant.vercel.app/api/lr/quiz/'+item._id;
     axios.get(uri)
     .then(function (res) {
       navigation.navigate("LRLesson",{name: item.name, lessonId: item._id, lesson: item.description, quizzes: res.data.quiz, image: item.image});

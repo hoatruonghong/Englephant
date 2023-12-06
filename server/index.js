@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
 
 //Connect to mongoose
 mongoose
-  .connect(process.env.MONGO_URL, {
+  .connect('mongodb+srv://hoa:Rc0Y3bSpoyaEkqrn@cluster0.mm7ujky.mongodb.net/?retryWrites=true&w=majority', {
     dbName: "Englephant",
   })
   .then(() => {

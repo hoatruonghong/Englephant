@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const login = async (params) => {
     try {
-        const result = await axios.post('http://192.168.1.81:5000/api/auth/login', {
+        const result = await axios.post('https://englephant.vercel.app/api/auth/login', {
             username: params.username,
             password: params.password
         });
@@ -14,7 +14,7 @@ const login = async (params) => {
 
 const register = async (params) => {
     try {
-        const result = await axios.post('http://192.168.1.81:5000/api/auth/register', {
+        const result = await axios.post('https://englephant.vercel.app/api/auth/register', {
             username: params.username,
             password: params.password,
             phone: params.phone,

@@ -25,7 +25,7 @@ export default function Pronunciation({navigation}) {
 
   //get all pronunciation lessons
   useEffect(() => {
-    const uri = 'http://192.168.1.81:5000/api/pronunciation/learner/' + learnerId;
+    const uri = 'https://englephant.vercel.app/api/pronunciation/learner/' + learnerId;
     axios
       .get(uri)
       .then(function (res) {

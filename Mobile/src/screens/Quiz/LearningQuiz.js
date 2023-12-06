@@ -62,7 +62,7 @@ export default function LearningQuiz({route, navigation}) {
 
     //get answers
     const getAnswers = (index)=>{
-        uri = 'http://192.168.1.81:5000/api/quiz/answer/'+quizzes[index]._id;
+        uri = 'https://englephant.vercel.app/api/quiz/answer/'+quizzes[index]._id;
         axios.get(uri)
         .then(function (res) {
             setAnswers(res.data.data);
@@ -105,7 +105,7 @@ export default function LearningQuiz({route, navigation}) {
 
     //get flashcards
     const getFlashcards = () => {
-        uri = 'http://192.168.1.81:5000/api/card/node/'+nodeId+'/'+learnerId;
+        uri = 'https://englephant.vercel.app/api/card/node/'+nodeId+'/'+learnerId;
         axios.get(uri)
         .then(function (res) {
             let havingFlashcards = res.data.data;
@@ -123,7 +123,7 @@ export default function LearningQuiz({route, navigation}) {
                 setPass(true);
                 unlockNewNode(nodeId);
             }
-            uri = 'http://192.168.1.81:5000/api/card/learner/'+learnerId;
+            uri = 'https://englephant.vercel.app/api/card/learner/'+learnerId;
             axios.post(uri,{
                 cards: cards_id,
                 nodeId: nodeId
@@ -143,7 +143,7 @@ export default function LearningQuiz({route, navigation}) {
     }
 
     const unlockNewNode = (nodeId) => {
-        uri = 'http://192.168.1.81:5000/api/map/node/'+nodeId;
+        uri = 'https://englephant.vercel.app/api/map/node/'+nodeId;
         axios.post(uri,{
             learnerId: learnerId
         })
@@ -162,7 +162,7 @@ export default function LearningQuiz({route, navigation}) {
 
     //Send Node result to backend
     const sendResult = () => {
-        uri = 'http://192.168.1.81:5000/api/map/node-result/'+nodeId;
+        uri = 'https://englephant.vercel.app/api/map/node-result/'+nodeId;
         axios.put(uri,{
             learnerId: learnerId,
             point: score.reduce((s, i) => s + i, 0),

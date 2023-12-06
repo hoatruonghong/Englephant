@@ -20,7 +20,7 @@ function LessonItem(props) {
             icon = faChalkboardUser;
             color = colors.blue;
             onPress=()=>{
-              uri = 'http://192.168.1.81:5000/api/pronunciation/video/'+item.sound1+'/'+item.sound2;
+              uri = 'https://englephant.vercel.app/api/pronunciation/video/'+item.sound1+'/'+item.sound2;
               axios.get(uri)
               .then(function (res) {
                 navigation.navigate("PLesson",{lessons: [res.data.data.sound1.video, res.data.data.sound2.video]});
@@ -34,7 +34,7 @@ function LessonItem(props) {
             icon = faDice;
             color= colors.yellow;
             onPress=()=>{
-              uri = 'http://192.168.1.81:5000/api/pronunciation/quiz/2/'+item.sound1+'/'+item.sound2;
+              uri = 'https://englephant.vercel.app/api/pronunciation/quiz/2/'+item.sound1+'/'+item.sound2;
               axios.get(uri)
               .then(function (res) {
                 const quizzes = res.data.quiz.map((q,i)=>{return {...q, sound: q.sound==item.sound1? 1: 2}})
@@ -50,7 +50,7 @@ function LessonItem(props) {
             color = colors.red;
             if (item.progress!=3) visible = false;
             onPress=()=>{
-              uri = 'http://192.168.1.81:5000/api/pronunciation/quiz/3/'+item.sound1+'/'+item.sound2;
+              uri = 'https://englephant.vercel.app/api/pronunciation/quiz/3/'+item.sound1+'/'+item.sound2;
               axios.get(uri)
               .then(function (res) {
                 navigation.navigate("PronunciationQuiz",{lessonId: item._id, quizzes: res.data.quiz});
