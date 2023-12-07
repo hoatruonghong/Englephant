@@ -1,7 +1,6 @@
 
 import React, {Component} from 'react';
 import {
-  SafeAreaView,
   TouchableOpacity,
   StyleSheet,
   Text,
@@ -40,6 +39,10 @@ const baseHOST = "https://api.speechsuper.com";
 const coreType = "word.eval"; // Change the coreType according to your needs.
 const audioType = "wav"; // Change the audio type corresponding to the audio file.
 const audioSampleRate = "16000";
+
+function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
 
 async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
     const coreType = requestParams['coreType'];
@@ -104,11 +107,13 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
       }
     };
     return new Promise((resolve, reject) => {
-        fs.readFile(audioPath, 'base64')
+      console.log('send path', audioPath)
+        fs.readFile('/data/user/0/com.mobile/files/test.wav', 'base64')
         .then(audioData=> {
           let fd = new FormData();
           fd.append("text", JSON.stringify(params));
           fd.append("audio", audioData);
+          console.log(fd)
           var xhr = new XMLHttpRequest();
           var url = baseHOST + "/"+coreType;
           try {
@@ -193,12 +198,13 @@ class PronunciationAssess extends Component {
       console.log('Stop record');
       console.log('audioFile', audioFilePath);
       this.setState({ audioFile: audioFilePath, recording: false });
+      delay(1000).then(() => {console.log('ran after 1 second1 passed')
       doEval(userId, audioType, audioSampleRate, {coreType: coreType, refText: this.refText}, audioFilePath)
       .then(data=>{
         const jsondata = JSON.parse(data); 
         jsondata.error || jsondata.result.overall==0? this.setState({rerecord: true}): this.setState({result: jsondata.result.overall})})
       .then(()=>this.setState({showResult: true}))
-      .catch(e=>{console.log(e)});
+      .catch(e=>{console.log(e)});});
     } catch(error){
       console.log(error);
     }
@@ -303,6 +309,10 @@ class PronunciationAssess extends Component {
           </View>
           <TouchableOpacity style={styles.touchOpContainer} onPress={this.changeRecordEvent}>
             <FontAwesomeIcon icon="microphone"  color={colors.main_green} size={50}/>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.touchOpContainer} onPress={this.changePlayEvent}>
+            <FontAwesomeIcon icon="microphone"  color={colors.yellow} size={50}/>
           </TouchableOpacity>
         </View>
     );

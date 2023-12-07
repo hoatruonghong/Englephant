@@ -210,7 +210,7 @@ export default function MapSelecting({navigation}) {
           decelerationRate="fast"
           bounces={false}
           data={data}
-          renderItem={({item, index}) => 
+          renderItem={({item, index}) =>
             <Map 
               name={item.name} 
               image ={item.image} 

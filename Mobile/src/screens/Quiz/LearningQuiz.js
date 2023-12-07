@@ -63,8 +63,10 @@ export default function LearningQuiz({route, navigation}) {
     //get answers
     const getAnswers = (index)=>{
         uri = 'https://englephant.vercel.app/api/quiz/answer/'+quizzes[index]._id;
+        console.log(uri);
         axios.get(uri)
         .then(function (res) {
+            console.log(res.config);
             setAnswers(res.data.data);
         })
         .catch(function (error) {
@@ -478,4 +480,4 @@ export default function LearningQuiz({route, navigation}) {
             
         </SafeAreaView>
     )
-};
+}

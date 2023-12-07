@@ -72,9 +72,10 @@ router.delete('/delete/:quizId', async (req, res) => {
 //Admin, Learner: Get all answers of a quiz
 router.get('/answer/:quizId', async (req, res) => {
   try {
-    const { quizId } = req.params;
+    const { quizId, numOptions } = req.params;
     const answers = await answer.find({quizId: quizId});  
-    return res.status(200).json({ data: answers });
+    console.log(answers)
+    res.status(200).json({ data: answers });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
   }
@@ -131,6 +132,7 @@ router.delete('/answer/delete/:answerId', async (req, res) => {
 //Learner: Get quiz and flashcard of a node
 router.get('/node/:mapId/:position', async (req, res) => {
   try {
+    console.log(1)
     const { mapId, position } = req.params;
     const quizzesPerCard = 3;
     const numofquiz = 5;
@@ -154,6 +156,7 @@ router.get('/node/:mapId/:position', async (req, res) => {
           quizzes.push(newquiz);
         }
       }
+      console.log(2)
       return res.status(200).json({ nodeId: anode._id, lesson: lessons, quiz: quizzes, flashcard: flashcards});
     }
     else {
