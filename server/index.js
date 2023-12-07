@@ -21,8 +21,8 @@ import tutorWorkshiftRouter from "./routers/tutor/workshift.js";
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 5000;
-export const TOKEN_LIST = {};
-export const TOKEN_BLACKLIST = {};
+// export const TOKEN_LIST = {};
+// export const TOKEN_BLACKLIST = {};
 
 //Middleware
 app.use(bodyParser.json({ limit: "30mb" }));
@@ -70,6 +70,7 @@ app.listen(PORT, () => {
   console.log("Server started at PORT ", PORT);
 });
 
+export default app;
 // //Socket.io
 // import { createServer } from "http";
 // const httpServer = createServer(app);

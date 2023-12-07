@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import { sendError, sendServerError, sendSuccess } from "../helper/client.js";
-import { TOKEN_LIST, TOKEN_BLACKLIST } from "./../index.js";
 
 /**
  * header contain
