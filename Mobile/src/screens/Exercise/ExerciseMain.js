@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import colors from './../../../assets/colors';
 import MascotExcited from '../../../assets/svg/mascot_more_excited.svg';
 import Idiom from './../../api/Idiom';
+import TimeCounter from './../../components/TimeCounter';
 
 export default function ExerciseMain({navigation}) {
     const [sentence, setSentence] = useState('');
@@ -20,7 +21,7 @@ export default function ExerciseMain({navigation}) {
     })
 
     return (
-    <View style={styles.container}>
+    <View style={styles.container}>        
         <View style={styles.wrapFeatures}>
             {/* Idioms */}
             <View style={styles.wrapIdioms}>

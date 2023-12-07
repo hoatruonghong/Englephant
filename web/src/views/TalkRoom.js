@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import io from "socket.io-client";
 import "./../styles/tutorPage.css";
+import TimeCounter from './../components/tutor/TimeCounter';
+import { CamButton, MicButton, EndButton }  from './../components/tutor/RoomButton';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
 class TalkRoom extends Component {
   constructor(props) {
@@ -181,9 +186,18 @@ class TalkRoom extends Component {
           <video className="localVideo"
             ref={this.localVideoref}
             autoPlay
-        ></video>
-        </div>
-        <div className="buttonWrap">
+          ></video>
+          <div className="timeWrap"><TimeCounter time={900}/></div> 
+          <Container className="buttonWrap">
+            <Row>
+            <Col className="buttonArea"><CamButton/></Col>
+            <Col className="buttonArea"><EndButton /></Col>
+            <Col className="buttonArea"><MicButton /></Col>
+            </Row>
+          </Container>
+        </div>        
+        <div className="otherWrap">      
+          <br />
           <button onClick={this.createOffer}>Offer</button>
           <button onClick={this.createAnswer}>Answer</button>
           <br />
@@ -192,10 +206,10 @@ class TalkRoom extends Component {
               this.textref = ref;
             }}
           />
-
-          {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>
-          <button onClick={this.addCandidate}>Add Candidate</button> */}
+          
         </div>
+        {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>
+          <button onClick={this.addCandidate}>Add Candidate</button> */}
       </div>
     );
   }

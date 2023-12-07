@@ -43,7 +43,7 @@ router.post('/add/', async (req, res) => {
 router.get('/learner/:learnerId/:mode', async (req, res) => {
   try {
     const { learnerId, mode } = req.params;
-    const maps = await map.find({mode: mode});    
+    const maps = await map.find();
     const data = await Promise.all(maps.map(async map => {
       const activemap = await learnermap.findOne({learnerId: learnerId, mapId: map._id});
       if (activemap){

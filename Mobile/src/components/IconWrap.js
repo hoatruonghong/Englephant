@@ -19,15 +19,28 @@ const fontawesomeIcon = (name) => {
           return <FontAwesomeIcon icon="fa-solid fa-fire-flame-curved" size={20} color={colors.red} />
       }
 }
-function plusIcon(plus) {
+function plusIcon(plus, name, setModalState) {
     if (plus) {
         return (
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>handlePlus(name, setModalState)}>
                 <FontAwesomeIcon icon="fa-solid fa-circle-plus" size={20} color={colors.shadow_gray_brown} />
             </TouchableOpacity>
         );
     }
 }
+function handlePlus(name, setModalState) {
+    switch (name) {
+        case 'peanut':
+            setModalState("buyPeanut");
+            break;
+        case 'time':
+            setModalState("moreTime")
+            break;    
+        default:
+            break;
+    }
+}
+
 function cardTotal(name, total) {
     if (name=="card" && total) {
         return (
@@ -36,14 +49,14 @@ function cardTotal(name, total) {
     }
 }
 export default function IconWrap(props) {
-    const { onPress, name, hasPlus, num, total } = props;
+    const { onPress, name, hasPlus, num, total, setModalState } = props;
     return (
         <View style={styles.container}>
             {fontawesomeIcon(name)}            
             <View style={styles.rightSide}>
                 <Text style={styles.smallText}>{num}</Text>
                 {cardTotal(name, total)}
-                {plusIcon(hasPlus)}
+                {plusIcon(hasPlus, name, setModalState)}
             </View>
         </View>
     );

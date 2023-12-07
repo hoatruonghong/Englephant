@@ -22,28 +22,28 @@ const talkRoomData = [
     {
         id: "2",
         avatar: require("./../../../assets/images/avatar.jpg"),
-        fullname: "Kole Ferdy",
-        age: 25,
+        fullname: "Asto Hugo",
+        age: 30,
         nationality: require("./../../../assets/images/flag.png"),
-        session: "16h00-16h30",
+        session: "15h30-16h30",
         introduction: "Nice to see you guy. I'll help you improve speaking skill.",
 
     },
     {
         id: "3",
         avatar: require("./../../../assets/images/mascot.png"),
-        fullname: "Kole Ferdy",
-        age: 25,
+        fullname: "Kelly Bella",
+        age: 32,
         nationality: require("./../../../assets/images/flag.png"),
-        session: "16h00-16h30",
+        session: "16h00-17h30",
         introduction: "Nice to see you guy. I'll help you improve speaking skill.",
 
     }, 
     {
         id: "4",
         avatar: require("./../../../assets/images/mascot.png"),
-        fullname: "Kole Ferdy",
-        age: 25,
+        fullname: "Antony Robert",
+        age: 28,
         nationality: require("./../../../assets/images/flag.png"),
         session: "16h00-16h30",
         introduction: "Nice to see you guy. I'll help you improve speaking skill.",
@@ -52,10 +52,10 @@ const talkRoomData = [
     {
         id: "5",
         avatar: require("./../../../assets/images/mascot.png"),
-        fullname: "Kole Ferdy",
+        fullname: "Ann Sally",
         age: 25,
         nationality: require("./../../../assets/images/flag.png"),
-        session: "16h00-16h30",
+        session: "15h00-16h30",
         introduction: "Nice to see you guy. I'll help you improve speaking skill.",
 
     }, 
@@ -138,10 +138,10 @@ export default function TalkRoom({navigation}) {
                 <View style={styles.infoLeftContent}>                    
                     <Text style={styles.smallText}>Hiện bạn đang có</Text>
                     <View style={styles.wrapIcon}>
-                        <IconWrap name="peanut" num={peanut} hasPlus={true}/>
+                        <IconWrap name="peanut" num={peanut} hasPlus={true} setModalState={setModalState} />
                     </View>
                     <View style={styles.wrapIcon}>
-                        <IconWrap name="time" num={talkroomTime} hasPlus={true}/>
+                        <IconWrap name="time" num={talkroomTime} hasPlus={true} setModalState={setModalState}/>
                     </View>
                 </View>
                 <View style={styles.infoRightContent}>
