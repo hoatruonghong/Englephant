@@ -24,12 +24,11 @@ const SetGoal = ({route, navigation}) => {
             console.log(route.params);
             const res = await Auth.register(route.params);
             const learner_id = res.data.data.learner_id;
+            console.log("learner id: ", learner_id);
             const map = await Map.unlockMapDefault({learnerId: learner_id})
-            console.log("learner idddd: ", learner_id);
-
             const learnerInfo = await Learner.getInfo({id: learner_id});
-            setLearnerId(learner_id);
-            setProfile(learnerInfo);
+            await setLearnerId(learner_id);
+            await setProfile(learnerInfo.data.data);
             setIsLoggedIn(true);
         } catch (error) {
             console.log(error);

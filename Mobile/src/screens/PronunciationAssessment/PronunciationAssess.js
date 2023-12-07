@@ -108,12 +108,12 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
     };
     return new Promise((resolve, reject) => {
       console.log('send path', audioPath)
-        fs.readFile('/data/user/0/com.mobile/files/test.wav', 'base64')
+        fs.readFile(fs.DocumentDirectoryPath+'/test.wav', 'base64')
         .then(audioData=> {
           let fd = new FormData();
           fd.append("text", JSON.stringify(params));
           fd.append("audio", audioData);
-          console.log(fd)
+          console.log("audio", audioData);
           var xhr = new XMLHttpRequest();
           var url = baseHOST + "/"+coreType;
           try {
@@ -198,13 +198,14 @@ class PronunciationAssess extends Component {
       console.log('Stop record');
       console.log('audioFile', audioFilePath);
       this.setState({ audioFile: audioFilePath, recording: false });
-      delay(1000).then(() => {console.log('ran after 1 second1 passed')
+      console.log(this.state)
+      this.play();
       doEval(userId, audioType, audioSampleRate, {coreType: coreType, refText: this.refText}, audioFilePath)
       .then(data=>{
         const jsondata = JSON.parse(data); 
         jsondata.error || jsondata.result.overall==0? this.setState({rerecord: true}): this.setState({result: jsondata.result.overall})})
       .then(()=>this.setState({showResult: true}))
-      .catch(e=>{console.log(e)});});
+      .catch(e=>{console.log(e)});
     } catch(error){
       console.log(error);
     }
@@ -213,11 +214,11 @@ class PronunciationAssess extends Component {
   load = async(url) => {
     return new Promise((resolve, reject) => {
       console.log(this.state.audioFile);
-      if (url === '' && this.state.audioFile === '') {
+      if (this.state.audioFile === '') {
         return reject('File path is empty');
       }
       
-      let path = (url === ''? this.state.audioFile : url);
+      let path = this.state.audioFile;
 
       this.sound = new Sound(path, '', error => {
         if (error) {
@@ -233,21 +234,23 @@ class PronunciationAssess extends Component {
   play = async() => {
     try {
       await this.load('');
+      console.log(this.sound)
+      console.log('duration in seconds: ' + this.sound.getDuration() + 'number of channels: ' + this.sound.getNumberOfChannels());
+      this.setState({ paused: false });
+      Sound.setCategory('Playback');
+
+      this.sound.play(success => {
+        if (success) {
+          console.log('Successfully finished playing');
+        } else {
+          console.log('Playback failed due to audio decoding errors');
+        }
+        this.setState({ paused: true });
+        this.sound.release();
+      });
     } catch (error) {
       console.log(error);
     }
-    this.setState({ paused: false });
-    Sound.setCategory('Playback');
-
-    this.sound.play(success => {
-      if (success) {
-        console.log('Successfully finished playing');
-      } else {
-        console.log('Playback failed due to audio decoding errors');
-      }
-      this.setState({ paused: true });
-      this.sound.release();
-    });
   };
 
   pause = () => {

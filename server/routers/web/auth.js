@@ -7,7 +7,7 @@ import Admin from "../../models/admin.js"
 import { sendError, sendServerError, sendSuccess} from "../../helper/client.js"
 import { learnerRegisterValidate, userLoginValidate } from "../../validation/auth.js"
 import { verifyToken} from '../../middleware/index.js'
-import { TOKEN_LIST, TOKEN_BLACKLIST } from './../../index.js';
+// import { TOKEN_LIST, TOKEN_BLACKLIST } from './../../index.js';
 
 const authRouter = express.Router()
 
@@ -64,19 +64,19 @@ authRouter.post('/login', async (req, res) => {
  * @description tutor/admin log out
  * @access private
  */
-authRouter.post('/logout', verifyToken, async (req, res) => {
-    const { refreshToken } = req.body
-    if (refreshToken in TOKEN_LIST)
-        delete TOKEN_LIST[refreshToken]
-    else return sendError(res, 'refresh token is invalid.', 401)
-    try {
-        jwt.verify(req.verifyToken, process.env.JWT_SECRET_KEY, {
-            complete: true
-        })
-        TOKEN_BLACKLIST[req.verifyToken] = req.verifyToken
-        clearTokenList(TOKEN_BLACKLIST)
-    } catch (error) { }
-    return sendSuccess(res, 'log out successfully.')
-})
+// authRouter.post('/logout', verifyToken, async (req, res) => {
+//     const { refreshToken } = req.body
+//     if (refreshToken in TOKEN_LIST)
+//         delete TOKEN_LIST[refreshToken]
+//     else return sendError(res, 'refresh token is invalid.', 401)
+//     try {
+//         jwt.verify(req.verifyToken, process.env.JWT_SECRET_KEY, {
+//             complete: true
+//         })
+//         TOKEN_BLACKLIST[req.verifyToken] = req.verifyToken
+//         clearTokenList(TOKEN_BLACKLIST)
+//     } catch (error) { }
+//     return sendSuccess(res, 'log out successfully.')
+// })
 
 export default authRouter

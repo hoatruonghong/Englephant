@@ -62,6 +62,7 @@ import ChatRoom from './screens/Exercise/ChatRoom';
 import TutorRoom from './screens/Exercise/TutorRoom';
 import Wardrobe from './screens/Setting/Wardrobe';
 import TimeCounter from './components/TimeCounter';
+import Auth from './api/Auth';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -118,22 +119,20 @@ function MyTabs() {
 
 function LearningScreens() {
   const {profile, learnerId} = useLogin();
-  // const [learner, setLearner] = useState(null);
   const [heart, setHeart] = useState(profile.heart);
   const [peanut, setPeanut] = useState(profile.peanut);
 
-  // useEffect(() => {
-  //   uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
-  //   axios.get(uri)
-  //   .then(function (res) {
-  //     setLearner(res.data.data);
-  //     if (learner.heart) setHeart(learner.heart);
-  //     if (learner.peanut) setPeanut(learner.peanut);
-  //   })
-  //   .catch(function (error) {
-  //       console.log(error);
-  //   });
-  // })
+  useEffect(() => {
+    uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
+    const learner = axios.get(uri)
+    .then(function (res) {
+      setHeart(res.data.data.heart);
+      setPeanut(res.data.data.peanut);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  })
 
   return (
     <Stack.Navigator screenOptions={styles.headerWrap} initialRouteName='MapSelecting'>
@@ -165,9 +164,21 @@ function LearningScreens() {
 }
 
 function ExerciseScreens() {
-  const {profile} = useLogin();
+  const {profile, learnerId} = useLogin();
   const [heart, setHeart] = useState(profile.heart);
   const [peanut, setPeanut] = useState(profile.peanut);
+
+  useEffect(() => {
+    uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
+    const learner = axios.get(uri)
+    .then(function (res) {
+      setHeart(res.data.data.heart);
+      setPeanut(res.data.data.peanut);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  })
 
   return (
     <Stack.Navigator screenOptions={styles.headerWrap}>
@@ -196,10 +207,28 @@ function ExerciseScreens() {
 }
 
 function ArchiveScreens() {
-  const {profile} = useLogin();
+  const {profile, learnerId} = useLogin();
   const [heart, setHeart] = useState(profile.heart);
   const [card, setCard] = useState(0);
   const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    axios.get('https://englephant.vercel.app/api/learner/'+learnerId)
+    .then(function (res) {
+      setHeart(res.data.data.heart);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+    axios.get('https://englephant.vercel.app/api/card/learner/'+learnerId)
+    .then(function (res) {
+      // console.log(res.data.data);
+      setCard(res.data.data);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  })
 
   return (
     <Stack.Navigator screenOptions={styles.headerWrap}>

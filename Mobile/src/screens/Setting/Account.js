@@ -105,17 +105,17 @@ export default function Account({navigation}) {
   const [modalState, setModalState] = useState("none"); //[none, buyPeanut]
   const [buyPeanutModalVisible, setBuyPeanutModalVisible] = useState(false);
 
-  // useEffect(()=>{
-  //   uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
-  //   axios.get(uri)
-  //   .then(function (res) {
-  //     setLearner(res.data.data);
-  //     setProfile(res.data.data);
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error);
-  //   });
-  // })
+  useEffect(()=>{
+    uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
+    axios.get(uri)
+    .then(function (res) {
+      setLearner(res.data.data);
+      setProfile(res.data.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }, [])
   useEffect(() => {
     if (modalState ==="buyPeanut") setBuyPeanutModalVisible(true);
     else setBuyPeanutModalVisible(false);    

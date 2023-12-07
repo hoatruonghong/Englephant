@@ -14,7 +14,7 @@ import node from "../models/node.js";
 flashcardRouter.get('/learner/:learnerId', async (req, res) => {
     try {
       const { learnerId } = req.params;
-      const flashcards = await learnercard.find({learnerId: learnerId})
+      const flashcards = await learnercard.find({learnerId: learnerId}).count()
       return res.status(200).json({ data: flashcards });
     } catch (err) {
       return res.status(500).json({ message: JSON.stringify(err) });
