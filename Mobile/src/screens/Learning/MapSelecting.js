@@ -71,7 +71,8 @@ export default function MapSelecting({navigation}) {
 
   //get maps
   useEffect(()=>{
-    uri = 'https://englephant.vercel.app/api/map/learner/'+learnerId+'/'+profile.mode;
+    if(typeof learnerId !== 'undefined' && typeof profile.defaultmode !== 'undefined' && data.length == 0) {
+    uri = 'https://englephant.vercel.app/api/map/learner/'+learnerId+'/'+profile.defaultmode;
     axios.get(uri)
     .then(function (res) {
       newData = res.data.data.concat({name:"None", image: "", active: true, status:0});
@@ -81,6 +82,7 @@ export default function MapSelecting({navigation}) {
     .catch(function (error) {
       console.log(error);
     });
+    }
   })
 
   //onPress functions

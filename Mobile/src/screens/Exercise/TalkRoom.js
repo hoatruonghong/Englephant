@@ -123,7 +123,7 @@ export default function TalkRoom({navigation}) {
                 break;
         }
     }, [modalState])
-
+    
     const renderWrapInfo = () => {
         return (
         <View style={styles.wrapInfo}>
