@@ -7,6 +7,7 @@ import { sendError, sendServerError, sendSuccess} from "../helper/client.js"
 import { learnerRegisterValidate, userLoginValidate } from "../validation/auth.js"
 import { verifyToken } from '../middleware/index.js'
 import { TOKEN_LIST, TOKEN_BLACKLIST } from './../index.js';
+import { JWT_SECRET_KEY } from './../constant.js';
 
 const authRouter = express.Router()
 
@@ -78,7 +79,8 @@ authRouter.post('/login', async (req, res) => {
         }
         const accessToken = jwt.sign(
             {user: learnerData},
-            process.env.JWT_SECRET_KEY,
+            JWT_SECRET_KEY
+            // process.env.JWT_SECRET_KEY,
             // {expiresIn: '5m'}
         )
 
@@ -108,7 +110,10 @@ authRouter.post('/logout', verifyToken, async (req, res) => {
         delete TOKEN_LIST[refreshToken]
     else return sendError(res, 'refresh token is invalid.', 401)
     try {
-        jwt.verify(req.verifyToken, process.env.JWT_SECRET_KEY, {
+        jwt.verify(req.verifyToken
+            // , process.env.JWT_SECRET_KEY
+            , JWT_SECRET_KEY
+            , {
             complete: true
         })
         TOKEN_BLACKLIST[req.verifyToken] = req.verifyToken
