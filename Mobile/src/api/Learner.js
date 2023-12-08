@@ -25,6 +25,35 @@ const getInfo = async (params) => {
     }
 }
 
+const getMoreTime = async (params) => {
+    try {
+        console.log("parrr", params);
+        const result = await axios.put('https://englephant.vercel.app/api/exchangetable/exchange-item', {
+            type: 'peanut2time',
+            from: params.peanut,
+            to: params.time,
+            learnerId: params.id,
+        });
+        return result;        
+    } catch (error) {
+        console.log(error);
+        return error.response;
+    }
+}
+const getMorePeanut = async (params) => {
+    try {
+        const result = await axios.put('https://englephant.vercel.app/api/exchangetable/exchange-item', {
+            type: 'price2peanut',
+            from: params.price,
+            to: params.peanut,
+            learnerId: params.learnerId,
+        });
+        return result;        
+    } catch (error) {
+        console.log(error);
+        return error.response;
+    }
+}
 module.exports = {
-    getInfo, update
+    getInfo, update, getMorePeanut, getMoreTime
 }

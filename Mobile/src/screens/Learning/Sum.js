@@ -107,7 +107,7 @@ export default function Sum({route, navigation}) {
   const renderNodeResult = () => {
     let temp = result.slice(0,resultlength-2);
     return temp.map((node, index) =>(
-        <View style={{flex: 1, flexDirection: "row", width: "80%", height: "5%", top: "2%"}}>
+        <View style={{flex: 1, flexDirection: "row", width: "80%", height: "5%", top: "2%"}} key={index}>
             <View style={{flex: 1}}>
                 <Text style={style.textleft}>{'   Node '+(index+1)}</Text> 
             </View>

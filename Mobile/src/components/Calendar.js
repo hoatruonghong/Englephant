@@ -22,7 +22,7 @@ export default function MyCalendar() {
 
       <CalendarProvider 
         date={new Date().toISOString()}
-        showTodayButton
+        // showTodayButton
         >
         <WeekCalendar
           style={styles.dateList}

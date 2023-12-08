@@ -60,7 +60,7 @@ const talkRoomData = [
 
     }, 
 ];
-const timeModalData = [15,20,30];
+const timeModalData = [20,30,40];
 
 const buyPeanutModalData = [
     {
@@ -78,10 +78,10 @@ const moreTimeModalData = [
         time: 10, peanut: 10
     },
     {
-        time: 15, peanut: 10
+        time: 15, peanut: 15
     },
     {
-        time: 20, peanut: 10
+        time: 20, peanut: 20
     },
     {
         time: 40, peanut: 40
@@ -93,33 +93,58 @@ export default function TalkRoom({navigation}) {
     const [chooseRoomModalVisible, setChooseRoomModalVisible] = useState(false);
     const [buyPeanutModalVisible, setBuyPeanutModalVisible] = useState(false);
     const [moreTimeModalVisible, setMoreTimeModalVisible] = useState(false);
+    const [confirmJoinModalVisible, setConfirmJoinModalVisible] = useState(false);
+    const [notEnoughTimeModalVisible, setNotEnoughTimeModalVisible] = useState(false);
     const {height, width} = useWindowDimensions();
     const {profile, learnerId} = useLogin();
     const [peanut, setPeanut] = useState(profile.peanut);
     const [talkroomTime, setTalkroomTime] = useState(profile.talkroomTime);
-    const [modalState, setModalState] = useState("none"); //[none, chooseRoom, moreTime, buyPeanut]
+    const [modalState, setModalState] = useState("none"); //[none, chooseRoom, moreTime, buyPeanut, confirmJoin, notEnoughTime]
 
     useEffect(() => {
         switch (modalState) {
             case "chooseRoom":
+                setChooseRoomModalVisible(true);
                 setMoreTimeModalVisible(false);
                 setBuyPeanutModalVisible(false);
-                setChooseRoomModalVisible(true);
+                setConfirmJoinModalVisible(false);
+                setNotEnoughTimeModalVisible(false);
                 break;
             case "buyPeanut":
+                setBuyPeanutModalVisible(true);
                 setMoreTimeModalVisible(false);
                 setChooseRoomModalVisible(false);
-                setBuyPeanutModalVisible(true);
+                setConfirmJoinModalVisible(false);
+                setNotEnoughTimeModalVisible(false);
                 break;
             case "moreTime":
+                setMoreTimeModalVisible(true);
                 setBuyPeanutModalVisible(false);
                 setChooseRoomModalVisible(false);
-                setMoreTimeModalVisible(true);
+                setConfirmJoinModalVisible(false);
+                setNotEnoughTimeModalVisible(false);
                 break;
-            default:
+            case "confirmJoin":
+                setConfirmJoinModalVisible(true);
                 setBuyPeanutModalVisible(false);
                 setChooseRoomModalVisible(false);
                 setMoreTimeModalVisible(false);
+                setConfirmJoinModalVisible(false);
+                setNotEnoughTimeModalVisible(false);
+                break;
+            case "notEnoughTime":
+                setNotEnoughTimeModalVisible(true);
+                setBuyPeanutModalVisible(false);
+                setChooseRoomModalVisible(false);
+                setMoreTimeModalVisible(false);
+                setConfirmJoinModalVisible(false);
+                break;
+            default:
+                setNotEnoughTimeModalVisible(false);
+                setBuyPeanutModalVisible(false);
+                setChooseRoomModalVisible(false);
+                setMoreTimeModalVisible(false);
+                setConfirmJoinModalVisible(false);
                 break;
         }
     }, [modalState])
@@ -154,8 +179,6 @@ export default function TalkRoom({navigation}) {
     
     const handleGoButton = () => {
         setModalState("chooseRoom");
-        // setChooseRoomModalVisible(true);
-        // navigation.navigate('TutorRoom');
     };    
 
     const ChooseRoomModal = () => {
@@ -195,9 +218,32 @@ export default function TalkRoom({navigation}) {
             </View>
         );
     };
+    const ConfirmJoinModal = () => {
+        return (
+            <View>
+                <Modals.ConfirmJoinModal 
+                visible={confirmJoinModalVisible} 
+                setModalVisible={setModalState}
+                title='ConfirmJoin'
+                data={{time: 15}}
+                />
+            </View>
+        )
+    }
+    const NotEnoughTimeModal = () => {
+        return (
+            <View>
+                <Modals.NotEnoughTimeModal 
+                visible={notEnoughTimeModalVisible} 
+                setModalVisible={setModalState}
+                title='NotEnoughTime'
+                />
+            </View>
+        )
+    }
 
     return (
-    <View style={styles.container}>        
+    <View style={ (modalState == false || modalState === "none" ) ? styles.container : styles.containerModal} > 
         <View style={styles.wrapTalkRooms}>
             <FlatList
                 nestedScrollEnabled={true} 
@@ -218,6 +264,8 @@ export default function TalkRoom({navigation}) {
         {ChooseRoomModal()}
         {BuyPeanutModal()}
         {MoreTimeModal()}
+        {ConfirmJoinModal()}
+        {NotEnoughTimeModal()}
     </View>
 
   )
@@ -228,6 +276,13 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: colors.brightest_green,
+    },
+    containerModal:{
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: colors.brightest_green,
+
+        opacity: 0.4,
     },
     wrapInfo: {
         backgroundColor: colors.white,

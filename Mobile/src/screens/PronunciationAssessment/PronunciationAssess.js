@@ -322,10 +322,6 @@ class PronunciationAssess extends Component {
           <TouchableOpacity style={styles.touchOpContainer} onPress={this.changeRecordEvent}>
             <FontAwesomeIcon icon="microphone"  color={colors.main_green} size={50}/>
           </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.touchOpContainer} onPress={this.changePlayEvent}>
-            <FontAwesomeIcon icon="microphone"  color={colors.yellow} size={50}/>
-          </TouchableOpacity>
         </View>
     );
   }

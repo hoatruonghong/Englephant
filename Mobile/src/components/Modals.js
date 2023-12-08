@@ -3,6 +3,9 @@ import { Text, View, StyleSheet, Modal, TouchableOpacity, FlatList } from "react
 import colors from './../../assets/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import ModalItems from './ModalItems';
+import MascotDef from '../../assets/svg/mascot_default.svg';
+import MascotCry from '../../assets/svg/mascot_cry.svg';
+import { RedButton, BlueButton } from "./Buttons.js";
 
 const modalTitle = (title) => {
   switch (title) {
@@ -53,7 +56,7 @@ function MultipleSelectModal(props) {
       <Modal
         animationType="slide"
         visible={visible}
-        transparent={true}        
+        transparent={true}   
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
@@ -116,6 +119,77 @@ function MoreTimeModal(props) {
   );
 }
 
+//Not enough time
+function NotEnoughTimeModal(props) {
+  const { onPress, visible, setModalVisible, title, data, navigation } = props;
+  return (
+    <View>
+      <Modal
+        animationType="slide"
+        visible={visible}
+        transparent={true}        
+      >
+        <View style={styles.infoModalContainer}>
+          <View style={styles.infoModalHeader}>
+            <View style={styles.infoModalTitle}>
+              <Text style={styles.infoModalTitleText}>Không đủ thời gian</Text>
+            </View>
+            <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
+              <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.bright_gray_brown} style={styles.modalTitleIcon}/>
+            </TouchableOpacity>
+          </View>
+          <MascotCry viewBox='0 0 68 90'/>
+          <Text style={styles.infoModalText}>Bạn có muốn đổi thêm thời gian?</Text>
+          <View style={styles.infoModalContent}>
+            <View style={styles.infoModalBtn}>
+              <RedButton title="Thoát" onPress={()=>{setModalVisible(false)}} />
+            </View>
+            <View style={styles.infoModalBtn}>
+              <BlueButton title="Đổi" onPress={()=>{setModalVisible('moreTime')}} />
+            </View>    
+          </View>                        
+        </View>
+      </Modal>
+    </View>
+  );
+}
+//Use peanut to get time
+
+//Confirm join tutorroom
+function ConfirmJoinModal(props) {
+  const { onPress, visible, setModalVisible, title, data, navigation } = props;
+  return (
+    <View>
+      <Modal
+        animationType="slide"
+        visible={visible}
+        transparent={true}        
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalHeader}>
+            <View style={styles.modalTitle}>
+              <Text style={styles.modalTitleText}>{modalTitle(title)}</Text>
+            </View>
+            <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
+              <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.white} style={styles.modalTitleIcon}/>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.modalContent}>
+            <FlatList              
+              data={data}
+              renderItem={(item, index)=> modalItem(item.item, title, index, setModalVisible, navigation)}
+              keyExtractor={(item, index) => index}
+              horizontal={false}
+              numColumns={2}
+              columnWrapperStyle={{justifyContent: 'space-between'}}
+            />
+            {modalBtn(title, setModalVisible)}
+          </View>                        
+        </View>
+      </Modal>
+    </View>
+  );
+}
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -161,8 +235,52 @@ const styles = StyleSheet.create({
     padding: '4%',
     paddingBottom: '2%',
   },
+
+  /**Infor modal */
+  infoModalContainer: {
+    width: '83%',
+    backgroundColor: colors.white,
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: colors.bright_gray_brown,
+    marginTop: '50%',
+    paddingLeft: '2%',
+    paddingRight: '2%',
+  }, 
+  infoModalHeader: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 8,
+  },
+  infoModalTitleText: {
+    color: colors.black_green,
+    alignSelf: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  infoModalContent: {
+    width: '100%',
+    borderRadius: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingBottom: '5%',
+    paddingTop: '5%'
+  },
+  infoModalBtn: {
+    flex: 0.45,
+  },
+  infoModalText: {
+    color: colors.black_green,
+    alignSelf: 'center',
+    fontSize: 16,
+    fontWeight: 'medium',
+  },
 });
 
 module.exports = {
-  MultipleSelectModal, MoreTimeModal
+  MultipleSelectModal, MoreTimeModal, ConfirmJoinModal, NotEnoughTimeModal
 }
