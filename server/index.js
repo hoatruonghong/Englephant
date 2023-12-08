@@ -66,10 +66,10 @@ app
   .use("/api/tutor/account", tutorAccountRouter)
   .use("/api/tutor/workshift", tutorWorkshiftRouter);
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log("Server started at PORT ", PORT);
 });
-
+server.timeout = 5 * 1000;
 export default app;
 // //Socket.io
 // import { createServer } from "http";

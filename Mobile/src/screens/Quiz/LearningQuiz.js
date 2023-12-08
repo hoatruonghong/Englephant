@@ -67,6 +67,8 @@ export default function LearningQuiz({route, navigation}) {
         axios.get(uri)
         .then(function (res) {
             console.log(res.config);
+            
+            console.log(res.data.data);
             setAnswers(res.data.data);
         })
         .catch(function (error) {

@@ -8,6 +8,7 @@ import {
   PermissionsAndroid,
   Modal
 } from 'react-native';
+import FormData from 'form-data';
 
 
 import {Buffer} from 'buffer';
@@ -39,10 +40,6 @@ const baseHOST = "https://api.speechsuper.com";
 const coreType = "word.eval"; // Change the coreType according to your needs.
 const audioType = "wav"; // Change the audio type corresponding to the audio file.
 const audioSampleRate = "16000";
-
-function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
-}
 
 async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
     const coreType = requestParams['coreType'];
@@ -108,12 +105,23 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
     };
     return new Promise((resolve, reject) => {
       console.log('send path', audioPath)
-        fs.readFile(fs.DocumentDirectoryPath+'/test.wav', 'base64')
-        .then(audioData=> {
+      fs.readFile(audioPath, 'base64')
+      .then(audioData=> {
           let fd = new FormData();
+          //console.log('b',audioData)
+          audioData = Buffer.from(audioData, 'base64')
+          //console.log('f',audioData)
+          // const buffer = Buffer.from(
+          //   audioData.split('base64,')[1],  // only use encoded data after "base64,"
+          //   'base64'
+          // ).toString('utf8')
+          //console.log('f',audioData)
           fd.append("text", JSON.stringify(params));
-          fd.append("audio", audioData);
-          console.log("audio", audioData);
+          fd.append("audio", {
+            uri: 'file://'+audioPath,
+            type: 'audio/wav',
+            name: 'test.wav'
+          });
           var xhr = new XMLHttpRequest();
           var url = baseHOST + "/"+coreType;
           try {
@@ -121,6 +129,7 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
             xhr.setRequestHeader("Request-Index", "0");
             xhr.send(fd);
             console.log('send');
+            console.log(xhr);
             var t1, t2;
             t1 = Math.round(new Date().getTime() / 1000);
             xhr.onreadystatechange = function () {
