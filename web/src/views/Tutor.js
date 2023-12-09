@@ -141,7 +141,7 @@ const Tutor = () => {
                 <h2 className="titleText">Communication Room</h2>
                 <Button
                   className="goBtn"
-                  variant="primary"
+                  // variant="primary"
                   onClick={goButtonHandle}
                 >
                   GO

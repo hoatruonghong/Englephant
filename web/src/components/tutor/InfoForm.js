@@ -37,7 +37,7 @@ const InfoForm = () => {
                 />
             </Form.Group>
             
-            <Button variant="primary" type="submit">
+            <Button variant="primary" className="updateBtn" type="submit">
                 Update
             </Button>
         </Form>

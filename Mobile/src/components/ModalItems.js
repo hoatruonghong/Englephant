@@ -49,8 +49,9 @@ function MoreTimeItem(props) {
 const handleMoreTime = async (time, peanut, setModalVisible, learnerId) => {
   try {
     const res = await Learner.getMoreTime({learnerId: learnerId, peanut: peanut, time: time})
-    console.log("success", res.data.status, res.data.data.success);
-    setModalVisible(false)
+    console.log("success", res.data.success);
+    if (!res.data.success) setModalVisible('buyPeanut');
+    else setModalVisible(false);
   } catch (error) {
     console.log(error);
   }
