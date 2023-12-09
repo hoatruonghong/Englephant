@@ -5,62 +5,62 @@ import "./../styles/tutorPage.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfoForm from "./../components/tutor/InfoForm";
 import Chart from "./../components/tutor/Chart";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import WorkCalendar from "./../components/tutor/WorkCalendar";
-import Modal from "react-bootstrap/Modal";
+// import Modal from "react-bootstrap/Modal";
 
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+// import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+// import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-function WorkTimeRegisterModal(props) {
-  const [value, setValue] = React.useState(null);
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Work Time</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={["DatePicker"]}>
-            <DemoItem label={"Date"}>
-              <DatePicker
-                value={value}
-                onChange={(newValue) => {
-                  setValue(newValue);
-                  console.log(newValue);
-                }}
-              />
-            </DemoItem>
-            <DemoItem label={"Begin at"}>
-              <TimePicker views={["hours", "minutes"]} />
-            </DemoItem>
-            <DemoItem label={"End at"}>
-              <TimePicker views={["hours", "minutes"]} />
-            </DemoItem>
-          </DemoContainer>          
-        </LocalizationProvider>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="primary">Save</Button>
-      </Modal.Footer>
-    </Modal>
-  );
-}
+// function WorkTimeRegisterModal(props) {
+//   const [value, setValue] = React.useState(null);
+//   return (
+//     <Modal
+//       {...props}
+//       size="lg"
+//       aria-labelledby="contained-modal-title-vcenter"
+//       centered
+//     >
+//       <Modal.Header closeButton>
+//         <Modal.Title id="contained-modal-title-vcenter">Work Time</Modal.Title>
+//       </Modal.Header>
+//       <Modal.Body>
+//         <LocalizationProvider dateAdapter={AdapterDayjs}>
+//           <DemoContainer components={["DatePicker"]}>
+//             <DemoItem label={"Date"}>
+//               <DatePicker
+//                 value={value}
+//                 onChange={(newValue) => {
+//                   setValue(newValue);
+//                   console.log(newValue);
+//                 }}
+//               />
+//             </DemoItem>
+//             <DemoItem label={"Begin at"}>
+//               <TimePicker views={["hours", "minutes"]} />
+//             </DemoItem>
+//             <DemoItem label={"End at"}>
+//               <TimePicker views={["hours", "minutes"]} />
+//             </DemoItem>
+//           </DemoContainer>          
+//         </LocalizationProvider>
+//       </Modal.Body>
+//       <Modal.Footer>
+//         <Button variant="primary">Save</Button>
+//       </Modal.Footer>
+//     </Modal>
+//   );
+// }
 
 const Tutor = () => {
-  const [modalShow, setModalShow] = React.useState(false);
+  // const [modalShow, setModalShow] = React.useState(false);
 
   let navigate = useNavigate();
   const goButtonHandle = () => {
@@ -126,11 +126,11 @@ const Tutor = () => {
                   <Col sm="10">
                     <h2 className="titleText">Work time registeration</h2>
                   </Col>
-                  <Col sm="2">
+                  {/* <Col sm="2">
                     <Button variant="link" onClick={() => setModalShow(true)}>
                       <FontAwesomeIcon icon="fa-solid fa-pen" color="#397624" />
                     </Button>
-                  </Col>
+                  </Col> */}
                 </Row>
                 <div className="infoWrap">
                   <WorkCalendar />
@@ -150,10 +150,10 @@ const Tutor = () => {
             </Row>
           </Col>
         </Row>
-        <WorkTimeRegisterModal
+        {/* <WorkTimeRegisterModal
           show={modalShow}
           onHide={() => setModalShow(false)}
-        />
+        /> */}
       </Container>
     </div>
   );
