@@ -19,7 +19,7 @@ const Auth = ({ authRoute }) => {
   let body;
 
 //   console.log("authLoad isAuthenticated",authLoading, isAuthenticated);
-  if (authLoading) {
+  if (/*authLoading*/ false) {
     body = (
       <div className="justify-content-center mt-2">
         <Spinner animation="border" />
