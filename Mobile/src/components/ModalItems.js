@@ -4,6 +4,8 @@ import colors from './../../assets/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import PeanutIcon from './../../assets/svg/peanut.svg';
 import PeanutPurchase from './../../assets/svg/peanut_purchase.svg';
+import Learner from './../api/Learner';
+import { useLogin } from '../context/LoginProvider';
 
 //Choose talkroom: timeItem
 function TimeItem(props) {
@@ -22,15 +24,17 @@ const handleChooseRoom = (choosingTime, setModalVisible, navigation) => {
     navigation.navigate('TutorRoom');
   }
   else {
-    setModalVisible("moreTime");
+    setModalVisible("notEnoughTime");
   }
 }
 
 //Change peanuts to get time: peanutItem
 function MoreTimeItem(props) {
     const { onPress, peanut, time, setModalVisible } = props;
+    const { learnerId } = useLogin();
+
     return (
-      <TouchableOpacity style={[styles.container, {flex: 0.49}]} onPress={()=>{handleMoreTime(time, peanut, setModalVisible)}}>
+      <TouchableOpacity style={[styles.container, {flex: 0.49, padding: '3%'}]} onPress={()=>{handleMoreTime(time, peanut, setModalVisible, learnerId)}}>
         <View style={styles.buyPeanutWrap}>
             <Text style={styles.text}>{time} phút</Text>
 
@@ -42,14 +46,14 @@ function MoreTimeItem(props) {
       </TouchableOpacity>
     );
 }
-const handleMoreTime = (time, peanut, setModalVisible) => {
-  if (peanut > 20) {
-    setModalVisible("buyPeanut");
-  } 
-  else {
-    // call api change peanut to time
-    console.log("success");
-    setModalVisible(false)
+const handleMoreTime = async (time, peanut, setModalVisible, learnerId) => {
+  try {
+    const res = await Learner.getMoreTime({learnerId: learnerId, peanut: peanut, time: time})
+    console.log("success", res.data.success);
+    if (!res.data.success) setModalVisible('buyPeanut');
+    else setModalVisible(false);
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -69,9 +73,10 @@ function BuyPeanutButton(props) {
 //Buy peanuts: peanutItem
 function BuyPeanutItem(props) {
   const { onPress, peanut, price, setModalVisible } = props;
+  const { learnerId } = useLogin();
 
   return (
-    <TouchableOpacity style={styles.container} onPress={()=>{handleBuyPeanut(peanut, price, setModalVisible)}}>
+    <TouchableOpacity style={styles.container} onPress={()=>{handleBuyPeanut(peanut, price, setModalVisible, learnerId)}}>
       <View style={styles.buyPeanutWrap}>
           <View style={styles.rowWrap}>
               <Text style={styles.text}>{peanut}</Text>
@@ -82,10 +87,17 @@ function BuyPeanutItem(props) {
     </TouchableOpacity>
   );
 }
-const handleBuyPeanut = (peanut, price, setModalVisible) => {
+const handleBuyPeanut = async (peanut, price, setModalVisible, learnerId) => {
+
   //call payment api if possible
   //or call buyPeanut api
-  setModalVisible("none");
+  try {
+    const res = await Learner.getMorePeanut({learnerId: learnerId, peanut: peanut, price: price})
+    setModalVisible("none");
+
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 //Change hearts to get buds: moreBudItem

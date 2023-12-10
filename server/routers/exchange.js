@@ -28,7 +28,7 @@ exchangeRouter.get('/', async (req, res) => {
  * @description update number of bud, heart, peanut, time
  * @access public
  */
-exchangeRouter.put('/:id', async (req, res) => {
+exchangeRouter.put('/exchange-item', async (req, res) => {
     try {
         const { type, from, to, learnerId } = req.body
 
@@ -42,7 +42,7 @@ exchangeRouter.put('/:id', async (req, res) => {
                 return sendSuccess(res, "Update successfully.", { peanut: newPeanut, price: from });
             case 'peanut2time':
                 var newPeanut = learner.peanut - from;
-                if (newPeanut < 0) return sendError(res, "Not enough peanuts");
+                if (newPeanut < 0) return sendSuccess(res, "Not enough peanuts");
 
                 var newTime = learner.talkroomTime + to;
                 const learner_t2 = await Learner.findByIdAndUpdate(learnerId, {peanut: newPeanut, talkroomTime: newTime})

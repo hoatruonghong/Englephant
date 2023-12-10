@@ -64,7 +64,9 @@
     letter-spacing: 2px;
     text-align: center;
 }
-
+.updateBtn {
+    width: 100%;
+}
 /* column table */
 .table-col {
 	display: table;

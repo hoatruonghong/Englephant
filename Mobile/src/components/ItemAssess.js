@@ -16,8 +16,8 @@ function PronunDetail(props) {
                     borderRadius: 10,
                     borderWidth: 1,
                     borderColor: color ? color : colors.main_green,
-                    marginTop: '6%',
-                    marginBottom: '6%',
+                    marginTop: '7.5%',
+                    marginBottom: '7.5%',
                 }}>
                 </View>
                 <View style={{

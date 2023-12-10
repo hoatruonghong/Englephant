@@ -8,18 +8,16 @@ import Admin from './views/Admin';
 
 import AuthContextProvider from './contexts/AuthContext';
 // import TutorContextProvider from './contexts/TutorContext';
-import ProtectedRoute from './components/routing/ProtectedRoute';
+// import ProtectedRoute from './components/routing/ProtectedRoute';
 
 function App() {
   return (
     <AuthContextProvider>
-      {/* <TutorContextProvider>
-        
-      </TutorContextProvider> */}
       <Router>
         <Routes>
           {/* Tutor */}
-          <Route path='/tutor' element={<ProtectedRoute directTo={<Tutor />} />} />
+          {/* <Route path='/tutor' element={<ProtectedRoute directTo={<Tutor />} />} /> */}
+          <Route path='/tutor' element={<Tutor />} />
           <Route path='/tutor/talkroom' element={<TalkRoom />} />
           {/* Auth */}
           <Route path='/' element={<Landing />} />

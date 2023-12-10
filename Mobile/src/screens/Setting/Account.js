@@ -193,7 +193,12 @@ export default function Account({navigation}) {
             </View>
             <View style={styles.trackingCalendar}>
               <MyCalendar />
+              <View style={styles.wrapTotalTime}>
+                <Text style={styles.trackingTitleText}>Thời gian học</Text>
+                <Text style={styles.trackingTitleText}>{totalTime} phút</Text>
+              </View>
             </View>
+
           </View>
           {/* Learning Detail */}
           <View style={styles.wrapLearningDetail}>
@@ -245,10 +250,7 @@ export default function Account({navigation}) {
             <View style={styles.wrapLearningChart}>
               <Charts.HistoryChart data={historyProgress}/>
             </View>
-            <View style={styles.wrapTotalNum}>
-              <Text style={styles.trackingTitleText}>Thời gian học</Text>
-              <Text style={styles.trackingTitleText}>{totalTime} phút</Text>
-            </View>
+            
           </View>
           {/* Game */}
           <TouchableOpacity style={styles.wrapGame}>
@@ -424,6 +426,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: '2.08%',
+    padding: '3%',
     paddingLeft: '5%',
     paddingRight: '5%',
   },
@@ -432,6 +435,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     margin: '2%',
+  },
+  wrapTotalTime: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '95%',
+    margin: '2%',
+    marginTop: 0,
   },
   wrapLearningChart: {
     width: '100%',

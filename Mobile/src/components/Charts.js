@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     historyBar: {
       backgroundColor: colors.brightest_green,
       borderRadius: 14,
-      width: 30,
+      width: '65%',
       height: 120,
       flexDirection: 'column',
       justifyContent: 'flex-end',
