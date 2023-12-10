@@ -108,14 +108,7 @@ async function doEval(userId, audioType, sampleRate, requestParams, audioPath) {
       fs.readFile(audioPath, 'base64')
       .then(audioData=> {
           let fd = new FormData();
-          //console.log('b',audioData)
           audioData = Buffer.from(audioData, 'base64')
-          //console.log('f',audioData)
-          // const buffer = Buffer.from(
-          //   audioData.split('base64,')[1],  // only use encoded data after "base64,"
-          //   'base64'
-          // ).toString('utf8')
-          //console.log('f',audioData)
           fd.append("text", JSON.stringify(params));
           fd.append("audio", {
             uri: 'file://'+audioPath,
@@ -321,10 +314,6 @@ class PronunciationAssess extends Component {
           </View>
           <TouchableOpacity style={styles.touchOpContainer} onPress={this.changeRecordEvent}>
             <FontAwesomeIcon icon="microphone"  color={colors.main_green} size={50}/>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.touchOpContainer} onPress={this.changePlayEvent}>
-            <FontAwesomeIcon icon="microphone"  color={colors.yellow} size={50}/>
           </TouchableOpacity>
         </View>
     );

@@ -73,8 +73,10 @@ export default function MapSelecting({navigation}) {
   useEffect(()=>{
     if(typeof learnerId !== 'undefined' && typeof profile.defaultmode !== 'undefined' && data.length == 0) {
     uri = 'https://englephant.vercel.app/api/map/learner/'+learnerId+'/'+profile.defaultmode;
+    console.log(uri)
     axios.get(uri)
     .then(function (res) {
+      console.log(res.data.data)
       newData = res.data.data.concat({name:"None", image: "", active: true, status:0});
       setData(newData);
       setItemCount(data.length);
@@ -114,6 +116,7 @@ export default function MapSelecting({navigation}) {
 
   const onPressUnlockedMap = ({index})=>{
     uri = 'https://englephant.vercel.app/api/map/learn/'+learnerId+'/'+index;
+    console.log(uri)
     axios.get(uri)
     .then(function (res) {
       setData(res.data.data);

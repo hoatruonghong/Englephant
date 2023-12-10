@@ -66,10 +66,10 @@ export default function LearningQuiz({route, navigation}) {
         console.log(uri);
         axios.get(uri)
         .then(function (res) {
-            console.log(res.config);
-            
-            console.log(res.data.data);
             setAnswers(res.data.data);
+        })
+        .then(()=>{
+            console.log(answers)
         })
         .catch(function (error) {
             console.log(error);
