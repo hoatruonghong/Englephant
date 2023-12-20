@@ -68,7 +68,7 @@ app
 
 //Socket.io
 import { Server } from 'socket.io';
-import { roomHandler } from "./room/index.js";
+// import { roomHandler } from "./room/index.js";
 
 import { createServer } from "http";
 const server = createServer(app)
@@ -80,38 +80,62 @@ const server = createServer(app)
 //   }
 // })
 const io = new Server(server, {
-	cors: {
-		origin: "*",
-		methods: [ "GET", "POST" ]
-	}
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  },
+  path: '/io/webrtc'  
 })
 
 // io.on("connection", (socket) => {
 //   console.log("user is connected");
-  
+
 //   roomHandler(socket);
 
 //   socket.on('disconnect', () => {
 //     console.log("user is disconnected");
 //   });
 // });
+const peers = io.of('/webrtcPeer')
 
-io.on("connection", (socket) => {
-  socket.emit("me", socket.id)
+// keep a reference of all socket connections
+let connectedPeers = new Map()
 
-	socket.on("disconnect", () => {
-		socket.broadcast.emit("callEnded")
-	})
+peers.on('connection', socket => {
 
-	socket.on("callUser", (data) => {
-		io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, name: data.name })
-	})
+  console.log(socket.id)
+  socket.emit('connection-success', { success: socket.id })
 
-	socket.on("answerCall", (data) => {
-		io.to(data.to).emit("callAccepted", data.signal)
-	})
+  connectedPeers.set(socket.id, socket)
 
-});
+  socket.on('disconnect', () => {
+    console.log('disconnected')
+    connectedPeers.delete(socket.id)
+  })
+
+  socket.on('offerOrAnswer', (data) => {
+    // send to the other peer(s) if any
+    for (const [socketID, socket] of connectedPeers.entries()) {
+      // don't send to self
+      if (socketID !== data.socketID) {
+        console.log(socketID, data.payload.type)
+        socket.emit('offerOrAnswer', data.payload)
+      }
+    }
+  })
+
+  socket.on('candidate', (data) => {
+    // send candidate to the other peer(s) if any
+    for (const [socketID, socket] of connectedPeers.entries()) {
+      // don't send to self
+      if (socketID !== data.socketID) {
+        console.log(socketID, data.payload)
+        socket.emit('candidate', data.payload)
+      }
+    }
+  })
+
+})
 
 server.listen(PORT, () => {
   console.log("Server started at PORT ", PORT);

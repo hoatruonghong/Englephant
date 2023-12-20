@@ -40,7 +40,7 @@ class TutorRoom extends React.Component {
   }
 
   componentDidMount = () => {
-    this.socket = io.connect("https://englephant-web.vercel.app/webrtcPeer", {
+    this.socket = io.connect("http://10.0.2.2:5000/webrtcPeer", {
       path: "/io/webrtc",
       query: {},
     });

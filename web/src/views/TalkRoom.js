@@ -14,12 +14,15 @@ class TalkRoom extends Component {
     this.localVideoref = React.createRef();
     this.remoteVideoref = React.createRef();
 
+    this.localSdp=null;
+    this.remoteSdp=null;
+    this.typ=null;
     this.socket = null;
     this.candidates = [];
   }
 
   componentDidMount = () => {
-    this.socket = io.connect("https://englephant-web.vercel.app/webrtcPeer", {
+    this.socket = io.connect("http://localhost:5000/webrtcPeer", {
       path: "/io/webrtc",
       query: {},
     });
@@ -28,15 +31,18 @@ class TalkRoom extends Component {
       console.log(success);
     });
 
-    this.socket.on("offerOrAnswer", (sdp) => {
-      this.textref.value = JSON.stringify(sdp);
+    this.socket.on("offerOrAnswer", (sdp) => {      
+      // this.textref.value = JSON.stringify(sdp)
+      console.log('tessst', this.typ);
+      if (this.localSdp == null) {
+        // set sdp as remote description
+        this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
+        this.remoteSdp = sdp
+      }
 
-      // set sdp as remote description
-      this.pc.setRemoteDescription(new RTCSessionDescription(sdp));
     });
 
     this.socket.on("candidate", (candidate) => {
-      // console.log('From Peer... ', JSON.stringify(candidate))
       // this.candidates = [...this.candidates, candidate]
       this.pc.addIceCandidate(new RTCIceCandidate(candidate));
     });
@@ -56,7 +62,6 @@ class TalkRoom extends Component {
       ]
     }
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection
     // create an instance of RTCPeerConnection
     this.pc = new RTCPeerConnection(pc_config);
 
@@ -84,7 +89,6 @@ class TalkRoom extends Component {
     };
 
     // called when getUserMedia() successfully returns - see below
-    // getUserMedia() returns a MediaStream object (https://developer.mozilla.org/en-US/docs/Web/API/MediaStream)
     const success = (stream) => {
       window.localStream = stream;
       this.localVideoref.current.srcObject = stream;
@@ -97,14 +101,11 @@ class TalkRoom extends Component {
       console.log("getUserMedia Error: ", e);
     };
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
-    // see the above link for more constraint options
     const constraints = {
       audio: true,
       video: true,
     };
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
     navigator.mediaDevices
       .getUserMedia(constraints)
       .then(success)
@@ -121,51 +122,35 @@ class TalkRoom extends Component {
   /* ACTION METHODS FROM THE BUTTONS ON SCREEN */
 
   createOffer = () => {
-    console.log("Offer");
+    console.log('Offer')
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createOffer
     // initiates the creation of SDP
-    this.pc.createOffer({ offerToReceiveVideo: 1 }).then((sdp) => {
-      // console.log(JSON.stringify(sdp))
+    this.pc.createOffer({ offerToReceiveVideo: 1 })
+      .then(sdp => {
+        // set offer sdp as local description
+        this.pc.setLocalDescription(sdp)
+        this.localSdp = sdp
+        this.typ = "offer"
+        console.log("offer:", this.localSdp, this.typ)
 
-      // set offer sdp as local description
-      this.pc.setLocalDescription(sdp);
-      this.sendToPeer("offerOrAnswer", sdp);
-    });
+        this.sendToPeer('offerOrAnswer', sdp)
+    })
   };
 
-  // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createAnswer
   // creates an SDP answer to an offer received from remote peer
   createAnswer = () => {
-    console.log("Answer");
-    this.pc.createAnswer({ offerToReceiveVideo: 1 }).then((sdp) => {
-      // console.log(JSON.stringify(sdp))
+    console.log('Answer')
+    this.pc.createAnswer({ offerToReceiveVideo: 1 })
+      .then(sdp => {
+        console.log("answer",JSON.stringify(sdp))
 
-      // set answer sdp as local description
-      this.pc.setLocalDescription(sdp);
-      this.sendToPeer("offerOrAnswer", sdp);
-    });
-  };
+        // set answer sdp as local description
+        this.pc.setLocalDescription(sdp)
+        this.localSdp = JSON.stringify(sdp)
+        this.typ = "answer"
 
-  setRemoteDescription = () => {
-    // retrieve and parse the SDP copied from the remote peer
-    const desc = JSON.parse(this.textref.value);
-
-    // set sdp as remote description
-    this.pc.setRemoteDescription(new RTCSessionDescription(desc));
-  };
-
-  addCandidate = () => {
-    // retrieve and parse the Candidate copied from the remote peer
-    // const candidate = JSON.parse(this.textref.value)
-    // console.log('Adding candidate:', candidate)
-
-    // add the candidate to the peer connection
-    // this.pc.addIceCandidate(new RTCIceCandidate(candidate))
-    this.candidates.forEach((candidate) => {
-      console.log(JSON.stringify(candidate));
-      this.pc.addIceCandidate(new RTCIceCandidate(candidate));
-    });
+        this.sendToPeer('offerOrAnswer', sdp)
+    })
   };
 
   render() {
@@ -194,11 +179,10 @@ class TalkRoom extends Component {
           <button onClick={this.createOffer}>Offer</button>
           <button onClick={this.createAnswer}>Answer</button>
           <br />
-          <textarea
-            ref={(ref) => {
-              this.textref = ref;
-            }}
-          />
+          {/* <textarea
+            ref={ref => { this.textref = ref }}
+          /> */}
+          <textarea>{this.sdp}</textarea>
           
         </div>
         {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>

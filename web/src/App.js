@@ -2,14 +2,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./components/icon/fontawesome.js";
 import Landing from "./components/layout/Landing";
 import Auth from "./views/Auth";
-import Tutor from './views/Tutor';
+// import Tutor from './views/Tutor';
 import TalkRoom from './views/TalkRoom';
 import Admin from './views/Admin';
 
 import AuthContextProvider from './contexts/AuthContext';
 // import Room from "./views/Room.js";
 // import RoomContextProvider from "./contexts/RoomContext.js";
-import TutorRoom from "./views/TutorRoom.js";
+// import TutorRoom from "./views/TutorRoom.js";
 // import TutorContextProvider from './contexts/TutorContext';
 // import ProtectedRoute from './components/routing/ProtectedRoute';
 
@@ -26,9 +26,9 @@ function App() {
 
           {/* <Route path='/tutor' element={<RoomContextProvider><Tutor /></RoomContextProvider>} /> */}
           {/* <Route path='/tutor/room/:id' element={<RoomContextProvider><Room /></RoomContextProvider>} /> */}
-
+          
+          {/* <Route path='/tutor' element={<Tutor />} /> */}
           <Route path='/tutor/talkroom' element={<TalkRoom />} />
-          <Route path='/tutor/tutorroom' element={<TutorRoom />} />
 
           <Route path='/admin' element={<Admin adminRoute="main" />} />
           <Route path='/admin/manage-tutor' element={<Admin adminRoute="manage-tutor" />} />
