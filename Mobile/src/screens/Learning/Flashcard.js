@@ -24,7 +24,7 @@ export default function Flashcard({route, navigation}) {
       navigation.goBack(null);
     }
   }
-
+  
   let sound = new Sound(content.audio,'',
   error => {
     if (error) 
@@ -68,15 +68,7 @@ export default function Flashcard({route, navigation}) {
             <FontAwesomeIcon icon={faDumbbell}  color={color} size={32}/>
           </TouchableOpacity> */}
           <Text style={styles.text}>{'    /'+content.pronunciation+'/    '}</Text>
-          <TouchableOpacity onPress={()=>{
-            ()=>{
-              sound.play(() => {
-                  console.log('playing');
-                  // Release when it's done so we're not using up resources
-                  sound.release();
-              }); 
-            }
-          }}>
+          <TouchableOpacity onPress={()=>{sound.play()}}>
             <FontAwesomeIcon icon={faVolumeUp}  color={color} size={32}/>
           </TouchableOpacity>
         </View>

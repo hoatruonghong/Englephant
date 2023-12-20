@@ -1,6 +1,6 @@
 import React from "react";
-import axios from "axios";
 import { Text, StyleSheet, TouchableOpacity, View, SafeAreaView, Image} from "react-native";
+import Sound from 'react-native-sound';
 import colors from "../../../assets/colors";
 import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -10,7 +10,12 @@ library.add(faXmark, faVolumeUp, faDumbbell);
 
 export default function FlashcardDetails({route, navigation}) {
   const { word, pronunciation, audio, color, synonym, antonym, prefix, postfix, familywords } = route.params;
-
+  
+  let sound = new Sound(audio,'',
+  error => {
+    if (error) 
+      console.log('play error: ',error)
+  })
   return (
     <SafeAreaView style={{backgroundColor: color, flex: 1}}>
       <View style={[styles.container, {borderColor: color}]}>
@@ -20,11 +25,11 @@ export default function FlashcardDetails({route, navigation}) {
       <View style={styles.subContainer}>
         <Text style={styles.word}>{word}</Text>
         <View style={styles.subsubContainer}>
-          <TouchableOpacity onPress={()=>{}}>
+          {/* <TouchableOpacity onPress={()=>{}}>
             <FontAwesomeIcon icon={faDumbbell}  color={color} size={32}/>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.text}>{'    /'+pronunciation+'/    '}</Text>
-          <TouchableOpacity onPress={()=>{}}>
+          <TouchableOpacity onPress={()=>{sound.play()}}>
             <FontAwesomeIcon icon={faVolumeUp}  color={color} size={32}/>
           </TouchableOpacity>
         </View>

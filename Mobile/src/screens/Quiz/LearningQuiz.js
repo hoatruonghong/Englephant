@@ -68,9 +68,6 @@ export default function LearningQuiz({route, navigation}) {
         .then(function (res) {
             setAnswers(res.data.data);
         })
-        .then(()=>{
-            console.log(answers)
-        })
         .catch(function (error) {
             console.log(error);
         });
@@ -322,15 +319,7 @@ export default function LearningQuiz({route, navigation}) {
                     <View>
                         <TouchableOpacity 
                             style={{width: "100%", height: "50%", alignItems: "center", justifyContent: "center"}} 
-                            onPress={
-                                ()=>{
-                                    sound.play(() => {
-                                        console.log('playing');
-                                        // Release when it's done so we're not using up resources
-                                        sound.release();
-                                    }); 
-                                }
-                            }>
+                            onPress={()=>{sound.play()}}>
                             <FontAwesomeIcon 
                                 icon={faVolumeUp}  
                                 color={
