@@ -20,7 +20,7 @@ const AuthContextProvider = ({children}) => {
 		}
 
 		try {
-			const response = await axios.get(`${apiUrl}/auth`)
+			const response = await axios.get(`${apiUrl}/tutor/account/auth`)
             console.log("response  ",response.data);
 			if (response.data.success) {
 				dispatch({
@@ -44,7 +44,7 @@ const AuthContextProvider = ({children}) => {
     // Login
     const loginUser = async loginForm => {
         try {
-            const res = await axios.post(`${apiUrl}/auth/login`, loginForm)
+            const res = await axios.post(`${apiUrl}/tutor/account/login`, loginForm)
             if (res.data.success) {
                 localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.data.response.accessToken)
                 await loadUser()

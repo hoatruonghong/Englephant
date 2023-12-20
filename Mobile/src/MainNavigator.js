@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import type {PropsWithChildren} from 'react';
 import { View, StyleSheet, useWindowDimensions, Text } from 'react-native';
 import axios from 'axios';
 
@@ -294,6 +293,10 @@ function StackNavigator(){
       <Stack.Screen name="Wardrobe" component={Wardrobe} 
         options={{ headerTitle: 'Tủ đồ' }} />
       <Stack.Screen name="TutorRoom" component={TutorRoom}
+        options={{
+          headerTitle : () => {return (<TimeCounter time={600} />)},
+        }} />
+      <Stack.Screen name="ChatRoom" component={ChatRoom}
         options={{
           headerTitle : () => {return (<TimeCounter time={600} />)},
         }} />

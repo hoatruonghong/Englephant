@@ -1,5 +1,4 @@
 import React from 'react'
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -16,14 +15,14 @@ const InfoForm = () => {
             </Form.Group>
             <Container fluid>
                 <Row>
-                    <Col><Form.Group className="mb-3" controlId="formBasicAge">
+                    <Col style={{padding:0, paddingRight: 5}}><Form.Group className="mb-3" controlId="formBasicAge">
                         <Form.Label>Age</Form.Label>
-                        <Form.Control type="email" placeholder="FullName" />
+                        <Form.Control type="number" placeholder="Age" />
                         <Form.Text className="text-muted"></Form.Text>
                     </Form.Group></Col>
-                    <Col><Form.Group className="mb-3" controlId="formBasicNation">
+                    <Col style={{padding:0, paddingLeft: 5}}><Form.Group className="mb-3" controlId="formBasicNation">
                         <Form.Label>Nationality</Form.Label>
-                        <Form.Control type="email" placeholder="FullName" />
+                        <Form.Control type="email" placeholder="Nationality" />
                         <Form.Text className="text-muted"></Form.Text>
                     </Form.Group></Col>
                 </Row>
@@ -36,10 +35,9 @@ const InfoForm = () => {
                     style={{ height: '100px' }}
                 />
             </Form.Group>
-            
-            <Button variant="primary" className="updateBtn" type="submit">
+            <button className="updateBtn" type="submit">
                 Update
-            </Button>
+            </button>            
         </Form>
     );
 }

@@ -7,25 +7,29 @@ import TalkRoom from './views/TalkRoom';
 import Admin from './views/Admin';
 
 import AuthContextProvider from './contexts/AuthContext';
+// import Room from "./views/Room.js";
+// import RoomContextProvider from "./contexts/RoomContext.js";
+import TutorRoom from "./views/TutorRoom.js";
 // import TutorContextProvider from './contexts/TutorContext';
 // import ProtectedRoute from './components/routing/ProtectedRoute';
 
 function App() {
   return (
-    <AuthContextProvider>
+    <AuthContextProvider>      
       <Router>
-        <Routes>
-          {/* Tutor */}
-          {/* <Route path='/tutor' element={<ProtectedRoute directTo={<Tutor />} />} /> */}
-          <Route path='/tutor' element={<Tutor />} />
-          <Route path='/tutor/talkroom' element={<TalkRoom />} />
-          {/* Auth */}
+        <Routes>          
           <Route path='/' element={<Landing />} />
           <Route path='/login' element={<Auth authRoute="login" />} />
           <Route path='/forget-password' element={<Auth authRoute="forget-password" />} />
           <Route path='/verify-otp' element={<Auth authRoute="verify-otp" />} />
           <Route path='/change-password' element={<Auth authRoute="change-password" />} />
-          {/* Admin */}
+
+          {/* <Route path='/tutor' element={<RoomContextProvider><Tutor /></RoomContextProvider>} /> */}
+          {/* <Route path='/tutor/room/:id' element={<RoomContextProvider><Room /></RoomContextProvider>} /> */}
+
+          <Route path='/tutor/talkroom' element={<TalkRoom />} />
+          <Route path='/tutor/tutorroom' element={<TutorRoom />} />
+
           <Route path='/admin' element={<Admin adminRoute="main" />} />
           <Route path='/admin/manage-tutor' element={<Admin adminRoute="manage-tutor" />} />
           <Route path='/admin/manage-quiz' element={<Admin adminRoute="manage-quiz" />} />

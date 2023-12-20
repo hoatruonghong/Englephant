@@ -56,6 +56,23 @@ router.post('/login', async (req, res) => {
 })
 
 /**
+ * @route GET /api/tutor/account/auth
+ * @description check if learner is logged or not
+ * @access public
+ */
+router.get('/auth', verifyToken, async (req, res) => {
+    try {
+        const user = await Tutor.findById(req.user.id);
+        if (!user) return res.status(400).json({success: false, message: 'user not found'})
+        res.json({success: true, user})
+    } catch (error) {
+        console.log(error);
+        return sendServerError(res);   
+    }
+})
+
+
+/**
  * @route GET /api/tutor/account/
  * @description tutor load their account information (use payload in header without tutorid)
  * @access public

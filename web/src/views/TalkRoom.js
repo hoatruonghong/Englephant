@@ -19,7 +19,7 @@ class TalkRoom extends Component {
   }
 
   componentDidMount = () => {
-    this.socket = io.connect("https://4c3a-101-99-33-24.ngrok-free.app/webrtcPeer", {
+    this.socket = io.connect("https://englephant-web.vercel.app/webrtcPeer", {
       path: "/io/webrtc",
       query: {},
     });
@@ -102,13 +102,6 @@ class TalkRoom extends Component {
     const constraints = {
       audio: true,
       video: true,
-      // video: {
-      //   width: 1280,
-      //   height: 720
-      // },
-      // video: {
-      //   width: { min: 1280 },
-      // }
     };
 
     // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia

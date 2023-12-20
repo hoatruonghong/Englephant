@@ -64,7 +64,7 @@ function MultipleSelectModal(props) {
               <Text style={styles.modalTitleText}>{modalTitle(title)}</Text>
             </View>
             <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
-              <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.white} style={styles.modalTitleIcon}/>
+              <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.white}/>
             </TouchableOpacity>
           </View>
           <View style={styles.modalContent}>
@@ -190,6 +190,7 @@ function ConfirmJoinModal(props) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

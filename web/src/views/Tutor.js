@@ -8,9 +8,8 @@ import Col from "react-bootstrap/Col";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InfoForm from "./../components/tutor/InfoForm";
 import Chart from "./../components/tutor/Chart";
-import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
 import WorkCalendar from "./../components/tutor/WorkCalendar";
+import { JoinButton } from "../components/tutor/JoinButton";
 // import Modal from "react-bootstrap/Modal";
 
 // import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
@@ -61,13 +60,7 @@ import WorkCalendar from "./../components/tutor/WorkCalendar";
 
 const Tutor = () => {
   // const [modalShow, setModalShow] = React.useState(false);
-
-  let navigate = useNavigate();
-  const goButtonHandle = () => {
-    const path = "talkroom";
-    navigate(path);
-  };
-
+  
   return (
     <div className="tutorContainer">
       <Header />
@@ -84,10 +77,7 @@ const Tutor = () => {
                 <Row>
                   <Col sm="12">
                     <h2 className="titleText">Personal information</h2>
-                  </Col>
-                  {/* <Col sm="4">
-                    <FontAwesomeIcon icon="fa-solid fa-pen" color="#397624" />
-                  </Col> */}
+                  </Col>                  
                 </Row>
                 <div className="infoWrap">
                   <InfoForm />
@@ -138,14 +128,8 @@ const Tutor = () => {
               </Col>
               {/* Go to talkroom */}
               <Col>
-                <h2 className="titleText">Communication Room</h2>
-                <Button
-                  className="goBtn"
-                  // variant="primary"
-                  onClick={goButtonHandle}
-                >
-                  GO
-                </Button>
+                <h2 className="titleText">Communication Room</h2>                
+                <JoinButton />
               </Col>
             </Row>
           </Col>

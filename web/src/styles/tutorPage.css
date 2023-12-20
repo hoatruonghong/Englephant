@@ -47,25 +47,34 @@
 }
 
 /* button */
-.goBtn {
-    background-color: var(--blue);
-    text-align: center;
-    width: 100%;
-    height: 40%;
-    border-radius: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
-.btnText {
-    text-decoration: none;
-    color: var(--white);
-    font-size: 50px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    text-align: center;
-}
 .updateBtn {
     width: 100%;
+    background-color: var(--main-green);
+    border: 0 solid var(--main-green);
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--white);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-align: center;
+}
+.updateBtn:hover {
+    background-color: var(--dark-green);
+    border: 0 solid var(--dark-green);
+}
+.joinButton {
+    width: 100%;
+    height: 35%;
+    border-radius: 16px;
+    background-color: var(--main-green);
+    border: 0 solid var(--main-green);
+    text-decoration: none;
+    color: var(--white);
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-align: center;
 }
 /* column table */
 .table-col {
@@ -73,6 +82,9 @@
     width: 100%;
 }
 .table-col tr {
+	display: table-cell;
+}
+.table-col thead {
 	display: table-cell;
 }
 .table-col tr td {

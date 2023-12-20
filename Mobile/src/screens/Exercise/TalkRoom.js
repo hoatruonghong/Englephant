@@ -7,6 +7,7 @@ import Modals from './../../components/Modals';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from './../../../assets/colors';
 import { useLogin } from '../../context/LoginProvider';
+import { RateRoomModal } from '../../components/RateModal';
 
 const talkRoomData = [
     {
@@ -99,7 +100,7 @@ export default function TalkRoom({navigation}) {
     const {profile, learnerId} = useLogin();
     const [peanut, setPeanut] = useState(profile.peanut);
     const [talkroomTime, setTalkroomTime] = useState(profile.talkroomTime);
-    const [modalState, setModalState] = useState("none"); //[none, chooseRoom, moreTime, buyPeanut, confirmJoin, notEnoughTime]
+    const [modalState, setModalState] = useState("none"); //[none, chooseRoom, moreTime, buyPeanut, confirmJoin, notEnoughTime, rateRoom]
 
     useEffect(() => {
         switch (modalState) {

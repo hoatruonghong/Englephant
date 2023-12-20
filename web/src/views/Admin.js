@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./../components/layout/Header";
-import Dashboard from "./../components/layout/tutor/Dashboard";
+import Dashboard from "./../components/layout/admin/Dashboard";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
