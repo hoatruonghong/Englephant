@@ -73,12 +73,6 @@ import { Server } from 'socket.io';
 import { createServer } from "http";
 const server = createServer(app)
 
-// const io = new Server(process.env.SOCKET_PORT, {
-//   cors: {
-//     origin: '*',
-//     methods: ["GET", "POST"],
-//   }
-// })
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -87,15 +81,11 @@ const io = new Server(server, {
   path: '/io/webrtc'  
 })
 
-// io.on("connection", (socket) => {
-//   console.log("user is connected");
+// default namespace
+io.on('connection', socket => {
+  console.log('connected')
+})
 
-//   roomHandler(socket);
-
-//   socket.on('disconnect', () => {
-//     console.log("user is disconnected");
-//   });
-// });
 const peers = io.of('/webrtcPeer')
 
 // keep a reference of all socket connections

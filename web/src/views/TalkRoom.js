@@ -9,45 +9,46 @@ import Row from 'react-bootstrap/Row';
 
 class TalkRoom extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.localVideoref = React.createRef();
-    this.remoteVideoref = React.createRef();
+    this.localVideoref = React.createRef()
+    this.remoteVideoref = React.createRef()
 
-    this.localSdp=null;
-    this.remoteSdp=null;
-    this.typ=null;
-    this.socket = null;
-    this.candidates = [];
+    this.socket = null
+    this.candidates = []
   }
 
   componentDidMount = () => {
-    this.socket = io.connect("http://localhost:5000/webrtcPeer", {
-      path: "/io/webrtc",
-      query: {},
-    });
 
-    this.socket.on("connection-success", (success) => {
-      console.log(success);
-    });
+    this.socket = io.connect(
+      'http://localhost:5000/webrtcPeer',
+      {
+        path: '/io/webrtc',
+        query: {}
+      }
+    )
 
-    this.socket.on("offerOrAnswer", (sdp) => {      
-      // this.textref.value = JSON.stringify(sdp)
-      console.log('tessst', this.typ);
-      if (this.localSdp == null) {
+    this.socket.on('connection-success', success => {
+      console.log(success)
+    })
+
+    //tutor always see notification first, there is an offer
+    //they will just answer
+    this.socket.on('offerOrAnswer', (sdp) => {  
+      this.textref.value = JSON.stringify(sdp)
+      if (sdp.type === "offer") {
         // set sdp as remote description
         this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
-        this.remoteSdp = sdp
       }
+    })
 
-    });
-
-    this.socket.on("candidate", (candidate) => {
+    this.socket.on('candidate', (candidate) => {
+      // console.log('From Peer... ', JSON.stringify(candidate))
       // this.candidates = [...this.candidates, candidate]
-      this.pc.addIceCandidate(new RTCIceCandidate(candidate));
-    });
+      this.pc.addIceCandidate(new RTCIceCandidate(candidate))
+    })
 
-    // const pc_config = null;
+    // const pc_config = null
 
     const pc_config = {
       "iceServers": [
@@ -63,61 +64,60 @@ class TalkRoom extends Component {
     }
 
     // create an instance of RTCPeerConnection
-    this.pc = new RTCPeerConnection(pc_config);
+    this.pc = new RTCPeerConnection(pc_config)
 
     // triggered when a new candidate is returned
     this.pc.onicecandidate = (e) => {
       // send the candidates to the remote peer
       // see addCandidate below to be triggered on the remote peer
-      if (e.candidate)
+      if (e.candidate) {
         // console.log(JSON.stringify(e.candidate))
-        this.sendToPeer("candidate", e.candidate);
-    };
+        this.sendToPeer('candidate', e.candidate)
+      }
+    }
 
     // triggered when there is a change in connection state
     this.pc.oniceconnectionstatechange = (e) => {
-      console.log(e);
-    };
+      console.log(e)
+    }
 
-    // triggered when a stream is added to pc, see below - this.pc.addStream(stream)
-    // this.pc.onaddstream = (e) => {
-    //   this.remoteVideoref.current.srcObject = e.stream
-    // }
 
     this.pc.ontrack = (e) => {
-      this.remoteVideoref.current.srcObject = e.streams[0];
-    };
+      this.remoteVideoref.current.srcObject = e.streams[0]
+    }
 
     // called when getUserMedia() successfully returns - see below
     const success = (stream) => {
-      window.localStream = stream;
-      this.localVideoref.current.srcObject = stream;
-      stream.getTracks().forEach( (track) => this.pc.addTrack( track, stream ) );
-      // this.pc.addTrack(stream);
-    };
+      window.localStream = stream
+      this.localVideoref.current.srcObject = stream
+      this.pc.addStream(stream)
+    }
 
     // called when getUserMedia() fails - see below
     const failure = (e) => {
-      console.log("getUserMedia Error: ", e);
-    };
+      console.log('getUserMedia Error: ', e)
+    }
 
+    // see the above link for more constraint options
     const constraints = {
-      audio: true,
-      video: true,
-    };
+      // audio: true,
+      video: true,      
+      options: {
+        mirror: true,
+      }
+    }
 
-    navigator.mediaDevices
-      .getUserMedia(constraints)
+    navigator.mediaDevices.getUserMedia(constraints)
       .then(success)
-      .catch(failure);
-  };
+      .catch(failure)
+  }
 
   sendToPeer = (messageType, payload) => {
     this.socket.emit(messageType, {
       socketID: this.socket.id,
-      payload,
-    });
-  };
+      payload
+    })
+  }
 
   /* ACTION METHODS FROM THE BUTTONS ON SCREEN */
 
@@ -127,33 +127,80 @@ class TalkRoom extends Component {
     // initiates the creation of SDP
     this.pc.createOffer({ offerToReceiveVideo: 1 })
       .then(sdp => {
+
         // set offer sdp as local description
         this.pc.setLocalDescription(sdp)
-        this.localSdp = sdp
-        this.typ = "offer"
-        console.log("offer:", this.localSdp, this.typ)
 
         this.sendToPeer('offerOrAnswer', sdp)
-    })
-  };
+      })
+  }
 
   // creates an SDP answer to an offer received from remote peer
   createAnswer = () => {
     console.log('Answer')
     this.pc.createAnswer({ offerToReceiveVideo: 1 })
       .then(sdp => {
-        console.log("answer",JSON.stringify(sdp))
 
         // set answer sdp as local description
         this.pc.setLocalDescription(sdp)
-        this.localSdp = JSON.stringify(sdp)
-        this.typ = "answer"
 
         this.sendToPeer('offerOrAnswer', sdp)
-    })
-  };
+      })
+  }
+
+  // setRemoteDescription = () => {
+  //   // retrieve and parse the SDP copied from the remote peer
+  //   const desc = JSON.parse(this.textref.value)
+
+  //   // set sdp as remote description
+  //   this.pc.setRemoteDescription(new RTCSessionDescription(desc))
+  // }
+
+  // addCandidate = () => {
+  //   // retrieve and parse the Candidate copied from the remote peer
+  //   this.candidates.forEach(candidate => {
+  //     console.log(JSON.stringify(candidate))
+  //     this.pc.addIceCandidate(new RTCIceCandidate(candidate))
+  //   });
+  // }
 
   render() {
+
+    // return (
+    //   <div>
+    //     <video
+    //       style={{
+    //         width: 240,
+    //         height: 240,
+    //         margin: 5,
+    //         backgroundColor: 'black'
+    //       }}
+    //       ref={this.localVideoref}
+    //       autoPlay muted>
+    //     </video>
+    //     <video
+    //       style={{
+    //         width: 240,
+    //         height: 240,
+    //         margin: 5,
+    //         backgroundColor: 'black'
+    //       }}
+    //       ref={this.remoteVideoref}
+    //       autoPlay>
+    //     </video>
+    //     <br />
+
+    //     <button onClick={this.createOffer}>Offer</button>
+    //     <button onClick={this.createAnswer}>Answer</button>
+
+    //     <br />
+    //     <textarea style={{ width: 450, height: 40 }} ref={ref => { this.textref = ref }} />
+
+    //     <br />
+    //     {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>
+    //     <button onClick={this.addCandidate}>Add Candidate</button> */}
+    //   </div>
+    // )
     return (
       <div className="talkroom">
         <div className="videoWrap">
@@ -179,10 +226,9 @@ class TalkRoom extends Component {
           <button onClick={this.createOffer}>Offer</button>
           <button onClick={this.createAnswer}>Answer</button>
           <br />
-          {/* <textarea
+          <textarea
             ref={ref => { this.textref = ref }}
-          /> */}
-          <textarea>{this.sdp}</textarea>
+          />
           
         </div>
         {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>

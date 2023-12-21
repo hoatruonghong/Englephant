@@ -34,7 +34,6 @@ class TutorRoom extends React.Component {
     };
 
     this.props.navigation;
-    this.sdp;
     this.socket = null;
     this.candidates = [];
   }
@@ -50,17 +49,14 @@ class TutorRoom extends React.Component {
     });
 
     this.socket.on('offerOrAnswer', (sdp) => {
-      console.log("has this.sdp ? ", this.sdp==null);
-      if (this.sdp==null && sdp.type==="offer") {
-        this.sdp = JSON.stringify(sdp)
-
+      // this.sdp = JSON.stringify(sdp)
+      if(sdp.type === "answer") {
         // set sdp as remote description
         this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
       }
     })
 
     this.socket.on('candidate', (candidate) => {
-      // console.log('From Peer... ', JSON.stringify(candidate))
       // this.candidates = [...this.candidates, candidate]
       this.pc.addIceCandidate(new RTCIceCandidate(candidate));
     });
@@ -96,14 +92,14 @@ class TutorRoom extends React.Component {
     
     this.pc.ontrack = (e) => {
       // this.remoteVideoref.current.srcObject = e.streams[0]
-      // this.setState({
-      //   remoteStream: e.streams[0]
-      // })
-      setTimeout(() => {
-        this.setState({
-          remoteStream: e.streams[0]
-        })
-      }, 3000);
+      this.setState({
+        remoteStream: e.streams[0]
+      })
+      // setTimeout(() => {
+      //   this.setState({
+      //     remoteStream: e.streams[0]
+      //   })
+      // }, 3000);
     }
 
     const success = (stream)=> {
@@ -159,10 +155,8 @@ class TutorRoom extends React.Component {
   createOffer = () => {
     console.log('Offer');
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createOffer
     // initiates the creation of SDP
     this.pc.createOffer({offerToReceiveVideo: 1}).then(sdp => {
-      // console.log(JSON.stringify(sdp))
 
       // set offer sdp as local description
       this.pc.setLocalDescription(sdp);
@@ -179,7 +173,7 @@ class TutorRoom extends React.Component {
       // set answer sdp as local description
       this.pc.setLocalDescription(sdp);
 
-      this.sendToPeer('offerOrAnswer', sdp);      
+      this.sendToPeer('offerOrAnswer', sdp);
     });
   };
 
@@ -193,12 +187,6 @@ class TutorRoom extends React.Component {
 
   // addCandidate = () => {
   //   // retrieve and parse the Candidate copied from the remote peer
-  //   // const candidate = JSON.parse(this.textref.value)
-  //   // console.log('Adding candidate:', candidate)
-
-  //   // add the candidate to the peer connection
-  //   // this.pc.addIceCandidate(new RTCIceCandidate(candidate))
-
   //   this.candidates.forEach(candidate => {
   //     console.log(JSON.stringify(candidate));
   //     this.pc.addIceCandidate(new RTCIceCandidate(candidate));
