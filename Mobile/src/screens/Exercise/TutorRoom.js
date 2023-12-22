@@ -39,7 +39,10 @@ class TutorRoom extends React.Component {
   }
 
   componentDidMount = () => {
-    this.socket = io.connect("http://10.0.2.2:5000/webrtcPeer", {
+    this.socket = io.connect(
+      "http://10.0.2.2:5000/webrtcPeer",
+      // 'https://englephant.vercel.app:5000/webrtcPeer', 
+    {
       path: "/io/webrtc",
       query: {},
     });
@@ -60,7 +63,10 @@ class TutorRoom extends React.Component {
       // this.candidates = [...this.candidates, candidate]
       this.pc.addIceCandidate(new RTCIceCandidate(candidate));
     });
-
+    this.socket.on('disconnected', () => {
+      console.log('disconnected')
+      this.pc.delete(this.socket)
+    });
     const pc_config = {
       iceServers: [
         // {
@@ -206,7 +212,11 @@ class TutorRoom extends React.Component {
       localMicOn ? (track.enabled = false) : (track.enabled = true);
     });
   }
-
+  endCall = () => {
+    this.props.navigation.goBack();
+    this.sendToPeer('disconnected');
+  }
+  
   render() {
     const {localStream, remoteStream} = this.state;
     console.log("==============");
@@ -277,17 +287,17 @@ class TutorRoom extends React.Component {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1}}>
+          {/* <View style={{flex: 1}}>
             <TouchableOpacity onPress={this.createAnswer}>
               <View style={styles.button}>
                 <Text style={{...styles.textContent}}>Answer</Text>
               </View>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
         <View style={styles.btnWrap}>
           <Buttons.MicroButton />
-          <Buttons.EndCallButton onPress={()=>this.props.navigation.goBack()} />
+          <Buttons.EndCallButton onPress={this.endCall} />
           <Buttons.CamButton />
         </View>
       </SafeAreaView>

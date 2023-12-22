@@ -9,7 +9,9 @@ import Col from "react-bootstrap/Col";
 import InfoForm from "./../components/tutor/InfoForm";
 import Chart from "./../components/tutor/Chart";
 import WorkCalendar from "./../components/tutor/WorkCalendar";
-import { JoinButton } from "../components/tutor/JoinButton";
+import { useNavigate } from "react-router-dom";
+
+// import { JoinButton } from "../components/tutor/JoinButton";
 // import Modal from "react-bootstrap/Modal";
 
 // import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
@@ -60,7 +62,11 @@ import { JoinButton } from "../components/tutor/JoinButton";
 
 const Tutor = () => {
   // const [modalShow, setModalShow] = React.useState(false);
-  
+  let navigate = useNavigate();
+  const goButtonHandle = () => {
+    const path = "talkroom";
+    navigate(path);
+  };
   return (
     <div className="tutorContainer">
       <Header />
@@ -129,7 +135,14 @@ const Tutor = () => {
               {/* Go to talkroom */}
               <Col>
                 <h2 className="titleText">Communication Room</h2>                
-                <JoinButton />
+                {/* <JoinButton /> */}
+                <button
+                  className="joinButton" 
+                  // variant="primary"
+                  onClick={goButtonHandle}
+                >
+                  GO
+                </button>
               </Col>
             </Row>
           </Col>

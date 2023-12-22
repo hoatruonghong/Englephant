@@ -294,11 +294,11 @@ function StackNavigator(){
         options={{ headerTitle: 'Tủ đồ' }} />
       <Stack.Screen name="TutorRoom" component={TutorRoom}
         options={{
-          headerTitle : () => {return (<TimeCounter time={600} />)},
+          headerTitle : () => {return (<TimeCounter time={1200} />)},
         }} />
       <Stack.Screen name="ChatRoom" component={ChatRoom}
         options={{
-          headerTitle : () => {return (<TimeCounter time={600} />)},
+          headerTitle : () => {return (<TimeCounter time={1200} />)},
         }} />
       <Stack.Screen name="LRLesson" component={LRLesson}
         options={({ route }) => ({ title: route.params.name })}

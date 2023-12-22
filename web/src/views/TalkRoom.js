@@ -22,6 +22,7 @@ class TalkRoom extends Component {
 
     this.socket = io.connect(
       'http://localhost:5000/webrtcPeer',
+      // 'https://englephant.vercel.app:5000/webrtcPeer',
       {
         path: '/io/webrtc',
         query: {}
@@ -163,6 +164,13 @@ class TalkRoom extends Component {
   //     this.pc.addIceCandidate(new RTCIceCandidate(candidate))
   //   });
   // }
+  renderTime = () => {
+    console.log("checcc", this.remoteVideoref);
+    if(this.remoteVideoref != null) {
+      return <div className="timeWrap"><TimeCounter time={1200}/></div> 
+    }
+    
+  }
 
   render() {
 
@@ -211,8 +219,8 @@ class TalkRoom extends Component {
           <video className="localVideo"
             ref={this.localVideoref}
             autoPlay
-          ></video>
-          <div className="timeWrap"><TimeCounter time={900}/></div> 
+          ></video>         
+          {this.renderTime()}
           <Container className="buttonWrap">
             <Row>
             <Col className="buttonArea"><CamButton/></Col>
@@ -223,7 +231,7 @@ class TalkRoom extends Component {
         </div>        
         <div className="otherWrap">      
           <br />
-          <button onClick={this.createOffer}>Offer</button>
+          {/* <button onClick={this.createOffer}>Offer</button> */}
           <button onClick={this.createAnswer}>Answer</button>
           <br />
           <textarea

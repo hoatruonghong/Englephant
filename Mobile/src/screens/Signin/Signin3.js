@@ -10,6 +10,7 @@ import { useLogin } from '../../context/LoginProvider';
 import Auth from './../../api/Auth';
 import Learner from './../../api/Learner';
 import Map from './../../api/Map';
+import Flashcard from './../../api/Flashcard';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 const minutes = ["10", "15", "20", "30"];
@@ -25,10 +26,12 @@ const SetGoal = ({route, navigation}) => {
             const res = await Auth.register(route.params);
             const learner_id = res.data.data.learner_id;
             console.log("learner id: ", learner_id);
-            const map = await Map.unlockMapDefault({learnerId: learner_id})
+            await Map.unlockMapDefault({learnerId: learner_id})
             const learnerInfo = await Learner.getInfo({id: learner_id});
             await setLearnerId(learner_id);
             await setProfile(learnerInfo.data.data);
+            await Flashcard.unlockCardDefault({learnerId: learner_id});
+
             setIsLoggedIn(true);
         } catch (error) {
             console.log(error);
@@ -43,9 +46,8 @@ const SetGoal = ({route, navigation}) => {
     <SafeAreaView style={styles.container}>
         <View style = {styles.backgroundContainer}>
             <Image
-                style={styles.logo}
                 source={require('./../../../assets/images/ellipse.png')}
-                resizeMode = 'cover' style = {styles.backdrop}
+                resizeMode = 'cover'
             />
         </View>
         <View style = {styles.nameContainer}>

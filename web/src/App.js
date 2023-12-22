@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./components/icon/fontawesome.js";
 import Landing from "./components/layout/Landing";
 import Auth from "./views/Auth";
-// import Tutor from './views/Tutor';
+import Tutor from './views/Tutor';
 import TalkRoom from './views/TalkRoom';
 import Admin from './views/Admin';
 
@@ -27,7 +27,7 @@ function App() {
           {/* <Route path='/tutor' element={<RoomContextProvider><Tutor /></RoomContextProvider>} /> */}
           {/* <Route path='/tutor/room/:id' element={<RoomContextProvider><Room /></RoomContextProvider>} /> */}
           
-          {/* <Route path='/tutor' element={<Tutor />} /> */}
+          <Route path='/tutor' element={<Tutor />} />
           <Route path='/tutor/talkroom' element={<TalkRoom />} />
 
           <Route path='/admin' element={<Admin adminRoute="main" />} />
