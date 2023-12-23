@@ -16,12 +16,14 @@ class TalkRoom extends Component {
 
     this.socket = null
     this.candidates = []
+    this.disconnected = false
   }
 
   componentDidMount = () => {
 
     this.socket = io.connect(
-      'http://localhost:5000/webrtcPeer',
+      // 'http://localhost:5000/webrtcPeer',
+      'https://englephant-server.adaptable.app/webrtcPeer',
       // 'https://englephant.vercel.app:5000/webrtcPeer',
       {
         path: '/io/webrtc',
@@ -171,44 +173,19 @@ class TalkRoom extends Component {
     }
     
   }
+  handleEndCall = () => {
+    console.log("disconnect");
+    this.disconnected = true;
+  }
 
   render() {
 
-    // return (
-    //   <div>
-    //     <video
-    //       style={{
-    //         width: 240,
-    //         height: 240,
-    //         margin: 5,
-    //         backgroundColor: 'black'
-    //       }}
-    //       ref={this.localVideoref}
-    //       autoPlay muted>
-    //     </video>
-    //     <video
-    //       style={{
-    //         width: 240,
-    //         height: 240,
-    //         margin: 5,
-    //         backgroundColor: 'black'
-    //       }}
-    //       ref={this.remoteVideoref}
-    //       autoPlay>
-    //     </video>
-    //     <br />
+    if (this.disconnected) {
+      this.socket.close()
+      this.localVideoref.getTracks().forEach(track => track.stop())
+      return (<div>You have successfully Disconnected</div>)
+    }
 
-    //     <button onClick={this.createOffer}>Offer</button>
-    //     <button onClick={this.createAnswer}>Answer</button>
-
-    //     <br />
-    //     <textarea style={{ width: 450, height: 40 }} ref={ref => { this.textref = ref }} />
-
-    //     <br />
-    //     {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>
-    //     <button onClick={this.addCandidate}>Add Candidate</button> */}
-    //   </div>
-    // )
     return (
       <div className="talkroom">
         <div className="videoWrap">
@@ -223,8 +200,8 @@ class TalkRoom extends Component {
           {this.renderTime()}
           <Container className="buttonWrap">
             <Row>
-            <Col className="buttonArea"><CamButton/></Col>
-            <Col className="buttonArea"><EndButton /></Col>
+            <Col className="buttonArea"><CamButton /></Col>
+            <Col className="buttonArea"><EndButton onClick={this.handleEndCall}/></Col>
             <Col className="buttonArea"><MicButton /></Col>
             </Row>
           </Container>

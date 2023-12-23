@@ -2,30 +2,30 @@ import React from 'react'
 import "./../../styles/tutorPage.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-export function CamButton() {
+export function CamButton(props) {
   return (
+    <button onClick={props.onClick}>
     <FontAwesomeIcon icon="fa-solid fa-video" className="btn white-btn"  style={{
       borderRadius: '50%',      
     }}/>
-    // <div className="btn white-btn" style={{
-    //   borderRadius: '50%',
-    // }}><FontAwesomeIcon icon="fa-solid fa-video" /></div>
+    </button>
   )
 }
-export function EndButton() {
+export function EndButton(props) {
   return (
+    <button onClick={props.onClick}>
     <FontAwesomeIcon icon="fa-solid fa-phone-slash" className="btn red-btn"  style={{
       borderRadius: '50%',      
     }}/>
+    </button>
   )
 }
-export function MicButton() {
+export function MicButton(props) {
   return (
+    <button onClick={props.onClick}>
     <FontAwesomeIcon icon="fa-solid fa-microphone" className="btn white-btn"  style={{
       borderRadius: '50%',      
     }}/>
-    // <div className="btn white-btn" style={{
-    //   borderRadius: '50%',
-    // }}><FontAwesomeIcon icon="fa-solid fa-microphone" /></div>
+    </button>
   )
 }

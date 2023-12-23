@@ -24,13 +24,14 @@ const SetGoal = ({route, navigation}) => {
         try {
             console.log(route.params);
             const res = await Auth.register(route.params);
-            const learner_id = res.data.data.learner_id;
+            console.log("res", res);
+            const learner_id = await res.data.data.learner_id;
             console.log("learner id: ", learner_id);
             await Map.unlockMapDefault({learnerId: learner_id})
             const learnerInfo = await Learner.getInfo({id: learner_id});
             await setLearnerId(learner_id);
             await setProfile(learnerInfo.data.data);
-            await Flashcard.unlockCardDefault({learnerId: learner_id});
+            // await Flashcard.unlockCardDefault({learnerId: learner_id});
 
             setIsLoggedIn(true);
         } catch (error) {
