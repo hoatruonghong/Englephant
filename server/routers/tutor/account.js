@@ -126,13 +126,13 @@ router.put('/change-password/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params
-        const { fullname, email, phone } = req.body
+        const { fullname, email, phone, nationality, bornyear, introduction } = req.body
 
         const tutor = await Tutor.findById(id)
         if (!tutor) sendError(res, "Information not found.");
 
-        await Tutor.findByIdAndUpdate(id, {phone: phone, email: email, fullname: fullname});
-        return sendSuccess(res, "Update account information successfully.", { fullname, phone, email });        
+        await Tutor.findByIdAndUpdate(id, {phone: phone, email: email, fullname: fullname, nationality: nationality, bornyear: bornyear, introduction: introduction });
+        return sendSuccess(res, "Update account information successfully.", { fullname, phone, email, nationality, bornyear, introduction  });        
     } catch (error) {
         console.log(error);
         return sendServerError(res);  

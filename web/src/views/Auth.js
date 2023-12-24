@@ -13,7 +13,8 @@ const Auth = ({ authRoute }) => {
   const {
     authState: { 
       authLoading, 
-      isAuthenticated },
+      isAuthenticated 
+    },
   } = useContext(AuthContext);
 
   const navigate = useNavigate()
