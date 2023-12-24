@@ -1,161 +1,211 @@
-// import React, { useEffect, useState, useRef } from 'react'
+import React, { Component } from "react";
+import io from "socket.io-client";
+import "./../styles/tutorPage.css";
+import TimeCounter from './../components/tutor/TimeCounter';
+import { CamButton, MicButton, EndButton }  from './../components/tutor/RoomButton';
+import Container from 'react-bootstrap/Container';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 
-// import Peer from "simple-peer"
-// import io from "socket.io-client"
+class TutorRoom extends Component {
+  constructor(props) {
+    super(props)
 
-// const socket = io.connect("http://localhost:5000")
+    this.localVideoref = React.createRef()
+    this.remoteVideoref = React.createRef()
 
-// function TutorRoom() {
-//     const [ me, setMe ] = useState("")
-//     const [ stream, setStream ] = useState()
-// 	const [ receivingCall, setReceivingCall ] = useState(false)
-// 	const [ caller, setCaller ] = useState("")
-// 	const [ callerSignal, setCallerSignal ] = useState()
-// 	const [ callAccepted, setCallAccepted ] = useState(false)
-// 	const [ idToCall, setIdToCall ] = useState("")
-// 	const [ callEnded, setCallEnded] = useState(false)
-// 	const [ name, setName ] = useState("")
-// 	const myVideo = useRef(null)
-// 	const userVideo = useRef(null)
-// 	const connectionRef= useRef(null)
+    this.socket = null
+    this.candidates = []
+    this.disconnected = false
+  }
 
-//     useEffect(()=>{
-//         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-//         .then((stream) => {
-// 			setStream(stream)
-// 			myVideo.current.srcObject = stream
-// 		})
-//         .catch((err) => {
-//             console.log("err", err);
-//         })
+  componentDidMount = () => {
 
-//         socket.on("me", (id) => {
-// 			setMe(id)
-// 		})
+    this.socket = io.connect(
+      // 'http://localhost:5000/webrtcPeer',
+      'https://englephant-server.adaptable.app/webrtcPeer',
+      // 'https://englephant.vercel.app:5000/webrtcPeer',
+      {
+        path: '/io/webrtc',
+        query: {}
+      }
+    )
 
-// 		socket.on("callUser", (data) => {
-// 			setReceivingCall(true)
-// 			setCaller(data.from)
-// 			setName(data.name)
-// 			setCallerSignal(data.signal)
-// 		})
-// 	}, [])
+    this.socket.on('connection-success', success => {
+      console.log(success)
+    })
 
-//     const callUser = (id) => {
-//         console.log("call to ", id);
-//         const peer = new Peer({
-// 			initiator: true,
-// 			trickle: false,
-// 			stream: stream
-// 		})
-// 		peer.on("signal", (data) => {
-// 			socket.emit("callUser", {
-// 				userToCall: id,
-// 				signalData: data,
-// 				from: me,
-// 				name: name
-// 			})
-// 		})
-// 		peer.on("stream", (stream) => {
-			
-// 			userVideo.current.srcObject = stream
-			
-// 		})
-// 		socket.on("callAccepted", (signal) => {
-// 			setCallAccepted(true)
-// 			peer.signal(signal)
-// 		})
+    //tutor always see notification first, there is an offer
+    //they will just answer
+    this.socket.on('offerOrAnswer', (sdp) => {  
+      this.textref.value = JSON.stringify(sdp)
+      if (sdp.type === "answer") {
+        // set sdp as remote description
+        this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
+      }
+    })
 
-// 		connectionRef.current = peer
-//         console.log("connectionRef", connectionRef.current);
+    this.socket.on('candidate', (candidate) => {
+      // console.log('From Peer... ', JSON.stringify(candidate))
+      // this.candidates = [...this.candidates, candidate]
+      this.pc.addIceCandidate(new RTCIceCandidate(candidate))
+    })
 
-//     }
+    // const pc_config = null
 
-//     const answerCall = () => {
-//         setCallAccepted(true)
-// 		const peer = new Peer({
-// 			initiator: false,
-// 			trickle: false,
-// 			stream: stream
-// 		})
-// 		peer.on("signal", (data) => {
-// 			socket.emit("answerCall", { signal: data, to: caller })
-// 		})
-// 		peer.on("stream", (stream) => {
-// 			userVideo.current.srcObject = stream
-// 		})
+    const pc_config = {
+      "iceServers": [
+        // {
+        //   urls: 'stun:[STUN_IP]:[PORT]',
+        //   'credentials': '[YOR CREDENTIALS]',
+        //   'username': '[USERNAME]'
+        // },
+        {
+          urls: 'stun:stun.l.google.com:19302'
+        }
+      ]
+    }
 
-// 		peer.signal(callerSignal)
-// 		connectionRef.current = peer
-//         console.log("connectionRef", connectionRef.current);
-//     }
+    // create an instance of RTCPeerConnection
+    this.pc = new RTCPeerConnection(pc_config)
 
-//     const leaveCall = () => {
-// 		setCallEnded(true);
-//         connectionRef.current.destroy();
-//         console.log("connection  ",connectionRef.current);   
-// 	}
+    // triggered when a new candidate is returned
+    this.pc.onicecandidate = (e) => {
+      // send the candidates to the remote peer
+      // see addCandidate below to be triggered on the remote peer
+      if (e.candidate) {
+        // console.log(JSON.stringify(e.candidate))
+        this.sendToPeer('candidate', e.candidate)
+      }
+    }
+
+    // triggered when there is a change in connection state
+    this.pc.oniceconnectionstatechange = (e) => {
+      console.log(e)
+    }
 
 
-//     return (
-//         <>
-// 		<div className="container">
-// 			<div className="video-container">
-// 				<div className="video">
-// 					{stream &&  <video muted ref={myVideo} autoPlay style={{ width: "300px" }} />}
-// 				</div>
-// 				<div className="video">
-// 					{callAccepted && !callEnded ?
-// 					<video ref={userVideo} autoPlay muted style={{ width: "300px"}} /> :
-// 					null}
-// 				</div>
-// 			</div>
-// 			<div className="myId">
-// 				<input
-// 					id="filled-basic"
-// 					label="Name"
-// 					variant="filled"
-// 					value={name}
-//                     placeholder='text name'
-// 					onChange={(e) => setName(e.target.value)}
-// 					style={{ marginBottom: "20px" }}
-// 				/>
-// 				<p style={{ marginBottom: "2rem", backgroundColor: 'yellow'}}>{me}</p>
+    this.pc.ontrack = (e) => {
+      this.remoteVideoref.current.srcObject = e.streams[0]
+    }
 
-// 				<input
-// 					id="filled-basic"
-// 					label="ID to call"
-// 					variant="filled"
-//                     placeholder='id to call'
-// 					value={idToCall}
-// 					onChange={(e) => setIdToCall(e.target.value)}
-// 				/>
-// 				<div className="call-button">
-// 					{callAccepted && !callEnded ? (
-// 						<button variant="contained" color="secondary" onClick={leaveCall}>
-// 							End Call
-// 						</button>
-// 					) : (
-// 						<button color="primary" aria-label="call" onClick={() => callUser(idToCall)}>
-// 							Start call
-// 						</button>
-// 					)}
-// 					{idToCall}
-// 				</div>
-// 			</div>
-// 			<div>
-// 				{receivingCall && !callAccepted ? (
-// 						<div className="caller">
-// 						<h1 >{name} is calling...</h1>
-// 						<button variant="contained" color="primary" onClick={answerCall}>
-// 							Answer
-// 						</button>
-// 					</div>
-// 				) : null}
-// 			</div>
-// 		</div>
-// 		</>
-//     )
-// }
+    // called when getUserMedia() successfully returns - see below
+    const success = (stream) => {
+      window.localStream = stream
+      this.localVideoref.current.srcObject = stream
+      this.pc.addStream(stream)
+    }
 
-// export default TutorRoom
+    // called when getUserMedia() fails - see below
+    const failure = (e) => {
+      console.log('getUserMedia Error: ', e)
+    }
+
+    // see the above link for more constraint options
+    const constraints = {
+      // audio: true,
+      video: true,      
+      options: {
+        mirror: true,
+      }
+    }
+
+    navigator.mediaDevices.getUserMedia(constraints)
+      .then(success)
+      .catch(failure)
+  }
+
+  sendToPeer = (messageType, payload) => {
+    this.socket.emit(messageType, {
+      socketID: this.socket.id,
+      payload
+    })
+  }
+
+  /* ACTION METHODS FROM THE BUTTONS ON SCREEN */
+
+  createOffer = () => {
+    console.log('Offer')
+
+    // initiates the creation of SDP
+    this.pc.createOffer({ offerToReceiveVideo: 1 })
+      .then(sdp => {
+
+        // set offer sdp as local description
+        this.pc.setLocalDescription(sdp)
+
+        this.sendToPeer('offerOrAnswer', sdp)
+      })
+  }
+
+  // creates an SDP answer to an offer received from remote peer
+  createAnswer = () => {
+    console.log('Answer')
+    this.pc.createAnswer({ offerToReceiveVideo: 1 })
+      .then(sdp => {
+
+        // set answer sdp as local description
+        this.pc.setLocalDescription(sdp)
+
+        this.sendToPeer('offerOrAnswer', sdp)
+      })
+  }
+
+  renderTime = () => {
+    console.log("checcc", this.remoteVideoref);
+    if(this.remoteVideoref != null) {
+      return <div className="timeWrap"><TimeCounter time={1200}/></div> 
+    }
+    
+  }
+  handleEndCall = () => {
+    console.log("disconnect");
+    this.disconnected = true;
+  }
+
+  render() {
+
+    if (this.disconnected) {
+      this.socket.close()
+      this.localVideoref.getTracks().forEach(track => track.stop())
+      return (<div>You have successfully Disconnected</div>)
+    }
+
+    return (
+      <div className="talkroom">
+        <div className="videoWrap">
+          <video className="remoteVideo"
+            ref={this.remoteVideoref}
+            autoPlay
+          ></video>
+          <video className="localVideo"
+            ref={this.localVideoref}
+            autoPlay
+          ></video>         
+          {this.renderTime()}
+          <Container className="buttonWrap">
+            <Row>
+            <Col className="buttonArea"><CamButton /></Col>
+            <Col className="buttonArea"><EndButton onClick={this.handleEndCall}/></Col>
+            <Col className="buttonArea"><MicButton /></Col>
+            </Row>
+          </Container>
+        </div>        
+        <div className="otherWrap">      
+          <br />
+          <button onClick={this.createOffer}>Offer</button>
+          <button onClick={this.createAnswer}>Answer</button>
+          <br />
+          <textarea
+            ref={ref => { this.textref = ref }}
+          />
+          
+        </div>
+        {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>
+          <button onClick={this.addCandidate}>Add Candidate</button> */}
+      </div>
+    );
+  }
+}
+
+export default TutorRoom;

@@ -16,14 +16,13 @@ class TalkRoom extends Component {
 
     this.socket = null
     this.candidates = []
-    this.disconnected = false
   }
 
   componentDidMount = () => {
 
     this.socket = io.connect(
-      // 'http://localhost:5000/webrtcPeer',
-      'https://englephant-server.adaptable.app/webrtcPeer',
+      'http://localhost:5000/webrtcPeer',
+      // 'https://englephant-server.adaptable.app/webrtcPeer',
       // 'https://englephant.vercel.app:5000/webrtcPeer',
       {
         path: '/io/webrtc',
@@ -50,7 +49,7 @@ class TalkRoom extends Component {
       // this.candidates = [...this.candidates, candidate]
       this.pc.addIceCandidate(new RTCIceCandidate(candidate))
     })
-
+    
     // const pc_config = null
 
     const pc_config = {
@@ -81,7 +80,7 @@ class TalkRoom extends Component {
 
     // triggered when there is a change in connection state
     this.pc.oniceconnectionstatechange = (e) => {
-      console.log(e)
+      console.log(e)      
     }
 
 
@@ -91,9 +90,9 @@ class TalkRoom extends Component {
 
     // called when getUserMedia() successfully returns - see below
     const success = (stream) => {
-      window.localStream = stream
-      this.localVideoref.current.srcObject = stream
-      this.pc.addStream(stream)
+        window.localStream = stream
+        this.localVideoref.current.srcObject = stream
+        this.pc.addStream(stream)
     }
 
     // called when getUserMedia() fails - see below
@@ -114,7 +113,7 @@ class TalkRoom extends Component {
       .then(success)
       .catch(failure)
   }
-
+  
   sendToPeer = (messageType, payload) => {
     this.socket.emit(messageType, {
       socketID: this.socket.id,
@@ -151,40 +150,18 @@ class TalkRoom extends Component {
       })
   }
 
-  // setRemoteDescription = () => {
-  //   // retrieve and parse the SDP copied from the remote peer
-  //   const desc = JSON.parse(this.textref.value)
+  endCall = () => {
+    this.socket.close()
+    this.pc.close()
+  }
 
-  //   // set sdp as remote description
-  //   this.pc.setRemoteDescription(new RTCSessionDescription(desc))
-  // }
-
-  // addCandidate = () => {
-  //   // retrieve and parse the Candidate copied from the remote peer
-  //   this.candidates.forEach(candidate => {
-  //     console.log(JSON.stringify(candidate))
-  //     this.pc.addIceCandidate(new RTCIceCandidate(candidate))
-  //   });
-  // }
   renderTime = () => {
-    console.log("checcc", this.remoteVideoref);
     if(this.remoteVideoref != null) {
       return <div className="timeWrap"><TimeCounter time={1200}/></div> 
     }
-    
   }
-  handleEndCall = () => {
-    console.log("disconnect");
-    this.disconnected = true;
-  }
-
+  
   render() {
-
-    if (this.disconnected) {
-      this.socket.close()
-      this.localVideoref.getTracks().forEach(track => track.stop())
-      return (<div>You have successfully Disconnected</div>)
-    }
 
     return (
       <div className="talkroom">
@@ -201,7 +178,7 @@ class TalkRoom extends Component {
           <Container className="buttonWrap">
             <Row>
             <Col className="buttonArea"><CamButton /></Col>
-            <Col className="buttonArea"><EndButton onClick={this.handleEndCall}/></Col>
+            <Col className="buttonArea"><EndButton onClick={this.endCall}/></Col>
             <Col className="buttonArea"><MicButton /></Col>
             </Row>
           </Container>

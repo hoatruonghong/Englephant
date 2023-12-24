@@ -99,7 +99,7 @@ peers.on('connection', socket => {
   connectedPeers.set(socket.id, socket)
 
   socket.on('disconnect', () => {
-    console.log('disconnected')
+    console.log(socket.id, 'disconnected')
     connectedPeers.delete(socket.id)
   })
 

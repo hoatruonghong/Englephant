@@ -40,8 +40,8 @@ class TutorRoom extends React.Component {
 
   componentDidMount = () => {
     this.socket = io.connect(
-      // "http://10.0.2.2:5000/webrtcPeer",
-      'https://englephant-server.adaptable.app/webrtcPeer',
+      "http://10.0.2.2:5000/webrtcPeer",
+      // 'https://englephant-server.adaptable.app/webrtcPeer',
     {
       path: "/io/webrtc",
       query: {},
@@ -213,8 +213,10 @@ class TutorRoom extends React.Component {
     });
   }
   endCall = () => {
+    this.socket.close()
+    this.pc.close()
+    console.log("close");
     this.props.navigation.goBack();
-    this.sendToPeer('disconnected');
   }
   
   render() {
