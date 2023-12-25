@@ -138,6 +138,16 @@
     margin-right: 2%;
     border-radius: 20px;
 }
+.otherWrap {
+    position: absolute;
+    z-index: 3;
+}
+.otherWrap .roomNotice {
+    border-radius: 5px;
+    border: 2px solid var(--bright-green);
+    background-color: var(--bright-green);
+    color: var(--black-green);
+}
 
 /*Time counter*/
 .timeContainer {
@@ -166,6 +176,9 @@
     width: 20%;
     left: 40%;
 }
+.buttonWrap .row {
+    width: 250px;
+}
 .buttonArea {
     margin-bottom: 20px;
 }
@@ -187,4 +200,11 @@
 .white-btn:hover {
     background-color: var(--red);
     opacity: 0.5;
+}
+.answerBtn {
+    height: 40px;
+    width: 80px;
+    border: 0px solid var(--black);
+    border-radius: 5px;
+    background-color: var(--white);
 }

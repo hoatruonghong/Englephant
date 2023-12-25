@@ -3,9 +3,6 @@ import io from "socket.io-client";
 import "./../styles/tutorPage.css";
 import TimeCounter from './../components/tutor/TimeCounter';
 import { CamButton, MicButton, EndButton }  from './../components/tutor/RoomButton';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 
 class TalkRoom extends Component {
   constructor(props) {
@@ -37,9 +34,10 @@ class TalkRoom extends Component {
     //tutor always see notification first, there is an offer
     //they will just answer
     this.socket.on('offerOrAnswer', (sdp) => {  
-      this.textref.value = JSON.stringify(sdp)
+      // this.textref.value = JSON.stringify(sdp)
       if (sdp.type === "offer") {
         // set sdp as remote description
+        this.textref.value = "There is an offer"
         this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
       }
     })
@@ -166,6 +164,13 @@ class TalkRoom extends Component {
     return (
       <div className="talkroom">
         <div className="videoWrap">
+          <div className="otherWrap">
+            <button className="answerBtn" onClick={this.createAnswer}>Answer</button>    
+            <br/>
+            <textarea className="roomNotice"
+              ref={ref => { this.textref = ref }}
+            />
+          </div>
           <video className="remoteVideo"
             ref={this.remoteVideoref}
             autoPlay
@@ -175,26 +180,14 @@ class TalkRoom extends Component {
             autoPlay
           ></video>         
           {this.renderTime()}
-          <Container className="buttonWrap">
-            <Row>
-            <Col className="buttonArea"><CamButton /></Col>
-            <Col className="buttonArea"><EndButton onClick={this.endCall}/></Col>
-            <Col className="buttonArea"><MicButton /></Col>
-            </Row>
-          </Container>
-        </div>        
-        <div className="otherWrap">      
-          <br />
-          {/* <button onClick={this.createOffer}>Offer</button> */}
-          <button onClick={this.createAnswer}>Answer</button>
-          <br />
-          <textarea
-            ref={ref => { this.textref = ref }}
-          />
-          
+          <div className="buttonWrap">
+            <div className="row">
+            {/* <div className="col-4 buttonArea"><CamButton /></div> */}
+            <div className="col-4 buttonArea"><EndButton onClick={this.endCall}/></div>
+            {/* <div className="col-4 buttonArea"><MicButton /></div> */}
+            </div>
+          </div>
         </div>
-        {/* <button onClick={this.setRemoteDescription}>Set Remote Desc</button>
-          <button onClick={this.addCandidate}>Add Candidate</button> */}
       </div>
     );
   }
