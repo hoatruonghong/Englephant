@@ -6,6 +6,7 @@ const router = express.Router();
 import { sendError, sendServerError, sendSuccess } from "../../helper/client.js"
 import { verifyToken} from '../../middleware/index.js'
 import { tutorRegisterValidate } from "../../validation/auth.js"
+import { JWT_SECRET_KEY } from './../../constant.js';
 
 import Tutor from "../../models/tutor.js";
 
@@ -36,7 +37,7 @@ router.post('/login', async (req, res) => {
         }
         const accessToken = jwt.sign(
             {user: tutorData},
-            process.env.JWT_SECRET_KEY,
+            JWT_SECRET_KEY,
             // {expiresIn: '5m'}
         )
 
