@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { sendError, sendServerError, sendSuccess } from "../helper/client.js";
+import { JWT_SECRET_KEY } from "../constant.js";
 
 /**
  * header contain
@@ -12,7 +13,7 @@ export const verifyToken = async (req, res, next) => {
 
     if (!token) return sendError(res, "Unauthorized.", 401);
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const decoded = jwt.verify(token, JWT_SECRET_KEY);
     req.user = decoded.user;
     // // req.user = { id: "", username: "", phone: "", email: "" };
     next();
