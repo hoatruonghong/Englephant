@@ -132,7 +132,7 @@ export default function LearningQuiz({route, navigation}) {
             })
             .then(function (res) {
                 if (cards_id.length>0)
-                    navigation.navigate("Flashcard", {cards: cards_content, onGoBack: ()=>setShowResultModal(true)});
+                    navigation.navigate("Done", {onPress: navigation.navigate("Flashcard", {cards: cards_content})})
                 else setShowResultModal(true);
             })
             .catch(function (error) {
@@ -287,7 +287,7 @@ export default function LearningQuiz({route, navigation}) {
         fullscreenchange: (data) => console.log('fullscreenchange: ', data),
         ended: (data) => console.log('ended: ', data),
         controlschange: (data) => console.log('controlschange: ', data),
-      };
+    };
 
     const renderContent = (type, item) => {
         switch (type) {

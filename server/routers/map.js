@@ -10,6 +10,7 @@ import flashcard from '../models/flashcard.js';
 
 const router = express.Router();
 
+//Admin: Get all Maps
 router.get('/', async (req, res) => {
   try {
     const maps = await map.find();  
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-
+//Admin: Create Map
 router.post('/add/', async (req, res) => {
   try {
       const { _id, name, mode, price, image } = req.body;
@@ -93,6 +94,7 @@ router.post('/unlock/:learnerId/:mapId', async (req, res) => {
       return res.status(200).json({ message: "Already unlocked!" });
     const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0, name: amap.name});
     const node1st = await node.find({mapId: mapId, position: 1});
+    console.log(node1st)
     const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
     console.log(unlockedmap, unlockednode)
     return res.status(200).json({ message: "Unlock successfully!" });
@@ -144,6 +146,37 @@ router.get('/:mode/topic/:name', async (req, res) => {
   }
 });
 
+//Dev: Create Node
+router.post('/add-node/', async (req, res) => {
+  try {
+    const { mapId, position, type } = req.body;
+
+    const dbMap = new map({
+      mapId: mapId,
+      position: position,
+      type: type
+    })
+
+    await dbMap.save();
+    res.status(200).json({ message: "Add Node successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Dev: Add next Node
+router.post('/add-next-node/:nodeId', async (req, res) => {
+  try {
+    const { nodeId } = req.params;
+    const { next } = req.body;
+
+    await node.findByIdAndUpdate(nodeId, { next: next });
+    res.status(200).json({ message: "Add next to Node successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
 //Admin: Show Node information
 router.get('/node/:nodeId', async (req, res) => {
   try {
@@ -174,14 +207,57 @@ router.put('/update-node/:nodeId', async (req, res) => {
   }
 });
 
+//Dev: Create flashcard
+router.post('/add-flc/', async (req, res) => {
+  try {
+      const { word, viemeaning, pos, audio, pronunciation, star, synonym, antonym, prefix, postfix, image, familywords, nodeId } = req.body;
+  
+      const dbFlc = new flashcard({
+        word: word,
+        viemeaning: viemeaning,
+        pos: pos,
+        audio: audio,
+        pronunciation: pronunciation,
+        star: star,
+        synonym: synonym,
+        antonym: antonym,
+        prefix: prefix,
+        postfix: postfix,
+        image: image,
+        familywords: familywords,
+        nodeId: nodeId
+      })
+  
+      await dbFlc.save();
+      res.status(200).json({ message: "Create flashcard successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
 //Admin: Update Flashcard in a Node
 router.put('/update-card/:flcId', async (req, res) => {
   try {
     const { flcId } = req.params;
-    const { nodeId } = req.body;
+    const { word, viemeaning, pos, audio, pronunciation, star, synonym, antonym, prefix, postfix, image, familywords, nodeId } = req.body;
 
     // Save Flashcard
-    await flashcard.findByIdAndUpdate(flcId, { nodeId: nodeId });
+    await flashcard.findByIdAndUpdate(flcId, 
+      {
+        word: word,
+        viemeaning: viemeaning,
+        pos: pos,
+        audio: audio,
+        pronunciation: pronunciation,
+        star: star,
+        synonym: synonym,
+        antonym: antonym,
+        prefix: prefix,
+        postfix: postfix,
+        image: image,
+        familywords: familywords,
+        nodeId: nodeId
+      });
 
     res.status(200).json({ message: "Update flashcard successfully!" })
   } catch (err) {

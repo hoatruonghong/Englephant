@@ -9,7 +9,7 @@ import { faXmark, faStar, faVolumeUp, faDumbbell } from '@fortawesome/free-solid
 library.add(faXmark, faStar, faVolumeUp, faDumbbell);
 
 export default function Flashcard({route, navigation}) {
-  const { cards, onGoBack } = route.params;
+  const { cards } = route.params;
   const numofcard = cards.length;
   const [index, setIndex] = useState(0);
   const [content, setContent] = useState(cards[0]);
@@ -20,7 +20,6 @@ export default function Flashcard({route, navigation}) {
       setIndex(index+1);
     }
     else {
-      onGoBack();
       navigation.goBack(null);
     }
   }

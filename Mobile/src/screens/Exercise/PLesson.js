@@ -1,5 +1,6 @@
 import React, { useState }  from 'react';
 import { Text, View, Image, SafeAreaView, TouchableOpacity, Animated} from "react-native";
+import {Vimeo} from 'react-native-vimeo-iframe';
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 import style from '../styles';
@@ -59,17 +60,29 @@ export default function PLesson({route, navigation}) {
             
         )
     };
+
+    const videoCallbacks = {
+        timeupdate: (data) => console.log('timeupdate: ', data),
+        play: (data) => console.log('play: ', data),
+        pause: (data) => console.log('pause: ', data),
+        fullscreenchange: (data) => console.log('fullscreenchange: ', data),
+        ended: (data) => console.log('ended: ', data),
+        controlschange: (data) => console.log('controlschange: ', data),
+    };
+
     const renderLesson = () => {
         return (
             <View style={styles.wrapQuestions}>
-                {renderContent(lessons[currentLessonIndex])}
+                <Vimeo
+                    videoId={lessons[currentLessonIndex]}
+                    params={'api=1&autoplay=0'}
+                    handlers={videoCallbacks}
+                />
                 <Text style={styles.questionText}>Cùng học phát âm theo video nào</Text>
             </View>
         )
     };
 
-    const renderContent = (lesson) => {
-    }
     //Render Next Button
     const renderButton = () => {
         return (

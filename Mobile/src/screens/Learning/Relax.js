@@ -38,6 +38,7 @@ export default function Relax({navigation}) {
 
         if (timer < 0) {
             setTimerContent('0:00');
+            navigation.pop(2);
             return;
         }
         if (seconds < 10) {

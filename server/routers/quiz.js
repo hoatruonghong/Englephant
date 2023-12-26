@@ -72,7 +72,7 @@ router.delete('/delete/:quizId', async (req, res) => {
 //Admin, Learner: Get all answers of a quiz
 router.get('/answer/:quizId', async (req, res) => {
   try {
-    const { quizId, numOptions } = req.params;
+    const { quizId } = req.params;
     const answers = await answer.find({quizId: quizId});  
     console.log(answers)
     res.status(200).json({ data: answers });
@@ -161,11 +161,11 @@ router.get('/node/:mapId/:position', async (req, res) => {
     }
     else {
       const arr = [...Array(numofquiz).keys()];
-        let shuffled = [...arr].sort(() => 0.5 - Math.random());
-        for (let i = 0; i < numofquiz; i++){
-          const newquiz = await quiz.findOne({node: anode._id}).skip(shuffled[i]);
-          quizzes.push(newquiz);
-        }
+      let shuffled = [...arr].sort(() => 0.5 - Math.random());
+      for (let i = 0; i < numofquiz; i++){
+        const newquiz = await quiz.findOne({node: anode._id}).skip(shuffled[i]);
+        quizzes.push(newquiz);
+      }
       return res.status(200).json({ nodeId: anode._id, quiz: quizzes});
     }
   } catch (err) {
