@@ -7,9 +7,6 @@ import TalkRoom from './views/TalkRoom';
 import Admin from './views/Admin';
 
 import AuthContextProvider from './contexts/AuthContext';
-// import Room from "./views/Room.js";
-// import RoomContextProvider from "./contexts/RoomContext.js";
-// import TutorRoom from "./views/TutorRoom.js";
 // import TutorContextProvider from './contexts/TutorContext';
 // import ProtectedRoute from './components/routing/ProtectedRoute';
 
@@ -25,7 +22,6 @@ function App() {
           <Route path='/change-password' element={<Auth authRoute="change-password" />} />
 
           {/* <Route path='/tutor' element={<RoomContextProvider><Tutor /></RoomContextProvider>} /> */}
-          {/* <Route path='/tutor/room/:id' element={<RoomContextProvider><Room /></RoomContextProvider>} /> */}
           
           <Route path='/tutor' element={<Tutor />} />
           <Route path='/tutor/talkroom' element={<TalkRoom />} />
