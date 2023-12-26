@@ -42,10 +42,10 @@ exchangeRouter.put('/exchange-item', async (req, res) => {
                 return sendSuccess(res, "Update successfully.", { peanut: newPeanut, price: from });
             case 'peanut2time':
                 var newPeanut = learner.peanut - from;
-                if (newPeanut < 0) return sendSuccess(res, "Not enough peanuts");
+                if (newPeanut < 0) return sendError(res, "Not enough peanuts");
 
                 var newTime = learner.talkroomTime + to;
-                const learner_t2 = await Learner.findByIdAndUpdate(learnerId, {peanut: newPeanut, talkroomTime: newTime})
+                await Learner.findByIdAndUpdate(learnerId, {peanut: newPeanut, talkroomTime: newTime})
                 return sendSuccess(res, "Update successfully.", { peanut: newPeanut, time: newTime });
             default:
                 return sendError(res, "Invalid type");

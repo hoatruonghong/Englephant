@@ -36,12 +36,13 @@ class TutorRoom extends React.Component {
     this.props.navigation;
     this.socket = null;
     this.candidates = [];
+    this.inRoom = false;
   }
 
   componentDidMount = () => {
     this.socket = io.connect(
-      // "http://10.0.2.2:5000/webrtcPeer",
-      'https://englephant-server.adaptable.app/webrtcPeer',
+      "http://10.0.2.2:5000/webrtcPeer",
+      // 'https://englephant-server.adaptable.app/webrtcPeer',
     {
       path: "/io/webrtc",
       query: {},
@@ -53,9 +54,12 @@ class TutorRoom extends React.Component {
 
     this.socket.on('offerOrAnswer', (sdp) => {
       // this.sdp = JSON.stringify(sdp)
-      if(sdp.type === "answer") {
+      console.log("socket listen", this.inRoom);
+      if(this.inRoom == false && sdp.type === "answer") {
         // set sdp as remote description
+        
         this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
+        this.inRoom = true
       }
     })
 
@@ -282,13 +286,17 @@ class TutorRoom extends React.Component {
           </View>
         </View>
         <View style={{...styles.buttonsContainer}}>
-          <View style={{flex: 1}}>
+          {
+            this.inRoom ? <View></View> 
+            : <View style={{flex: 1}}>
             <TouchableOpacity onPress={this.createOffer}>
               <View style={styles.button}>
                 <Text style={{...styles.textContent}}>Call</Text>
               </View>
             </TouchableOpacity>
           </View>
+          }
+          
           {/* <View style={{flex: 1}}>
             <TouchableOpacity onPress={this.createAnswer}>
               <View style={styles.button}>

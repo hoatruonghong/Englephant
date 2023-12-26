@@ -8,6 +8,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import colors from './../../../assets/colors';
 import { useLogin } from '../../context/LoginProvider';
 import { RateRoomModal } from '../../components/RateModal';
+import Learner from './../../api/Learner';
+import { host } from '../../api/ApiManager';
+import axios from 'axios';
 
 const talkRoomData = [
     {
@@ -98,8 +101,8 @@ export default function TalkRoom({navigation}) {
     const [notEnoughTimeModalVisible, setNotEnoughTimeModalVisible] = useState(false);
     const {height, width} = useWindowDimensions();
     const {profile, learnerId} = useLogin();
-    const [peanut, setPeanut] = useState(profile.peanut);
-    const [talkroomTime, setTalkroomTime] = useState(profile.talkroomTime);
+    const [peanut, setPeanut] = useState();
+    const [talkroomTime, setTalkroomTime] = useState();
     const [modalState, setModalState] = useState("none"); //[none, chooseRoom, moreTime, buyPeanut, confirmJoin, notEnoughTime, rateRoom]
 
     useEffect(() => {
@@ -149,7 +152,22 @@ export default function TalkRoom({navigation}) {
                 break;
         }
     }, [modalState])
-    
+
+    useEffect(()=>{
+        // if(typeof peanut === 'undefined' || typeof talkroomTime === "undefined") {
+            axios.get(`${host}/api/learner/item/`+learnerId)
+            .then(function (res) {
+                console.log(res.data);
+                setPeanut(res.data.data.peanut);
+                setTalkroomTime(res.data.data.talkroomTime);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        // }
+
+    }, [modalState])
+
     const renderWrapInfo = () => {
         return (
         <View style={styles.wrapInfo}>

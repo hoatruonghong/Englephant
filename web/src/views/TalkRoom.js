@@ -13,14 +13,15 @@ class TalkRoom extends Component {
 
     this.socket = null
     this.candidates = []
+    this.inRoom = false
     
   }
 
   componentDidMount = () => {
 
     this.socket = io.connect(
-      // 'http://localhost:5000/webrtcPeer',
-      'https://englephant-server.adaptable.app/webrtcPeer',
+      'http://localhost:5000/webrtcPeer',
+      // 'https://englephant-server.adaptable.app/webrtcPeer',
       // 'https://englephant.vercel.app:5000/webrtcPeer',
       {
         path: '/io/webrtc',
@@ -34,13 +35,15 @@ class TalkRoom extends Component {
 
     //tutor always see notification first, there is an offer
     //they will just answer
-    this.socket.on('offerOrAnswer', (sdp) => {  
-      if (sdp.type === "offer") {
+    this.socket.on('offerOrAnswer', (sdp) => {
+      console.log("socket listen", this.inRoom);
+      if (this.inRoom === false && sdp.type === "offer") {
         // set sdp as remote description
         this.renderAnswerButton()
         this.textref.value = "There is an offer"
+        this.inRoom = true
         this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
-      } else if (sdp.type === "answer") {
+      } else if (this.inRoom === false && sdp.type === "answer") {
         this.textref.value = "Answered"
       }
     })
@@ -146,6 +149,7 @@ class TalkRoom extends Component {
 
         // set answer sdp as local description
         this.pc.setLocalDescription(sdp)
+        this.textref.value = "Answered"
 
         this.sendToPeer('offerOrAnswer', sdp)
       })

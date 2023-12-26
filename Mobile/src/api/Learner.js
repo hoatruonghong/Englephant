@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { host } from './ApiManager';
 
 const update = async (params) => {
     try {
@@ -27,13 +28,13 @@ const getInfo = async (params) => {
 
 const getMoreTime = async (params) => {
     try {
-        console.log("parrr", params);
-        const result = await axios.put('https://englephant.vercel.app/api/exchangetable/exchange-item', {
+        const result = await axios.put(`${host}/api/exchangetable/exchange-item`, {
             type: 'peanut2time',
             from: params.peanut,
             to: params.time,
-            learnerId: params.id,
+            learnerId: params.learnerId,
         });
+        console.log("loggg", result);
         return result;        
     } catch (error) {
         console.log(error);
@@ -54,6 +55,17 @@ const getMorePeanut = async (params) => {
         return error.response;
     }
 }
+
+const getItem = async (params) => {
+    try {
+        const result = await axios.get(`${host}/api/learner/item/`+params.id);
+        console.log(result);
+        return result;
+    } catch (error) {
+        return error.response;        
+    }
+}
+
 module.exports = {
-    getInfo, update, getMorePeanut, getMoreTime
+    getInfo, update, getMorePeanut, getMoreTime, getItem
 }

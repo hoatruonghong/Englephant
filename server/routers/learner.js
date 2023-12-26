@@ -46,6 +46,25 @@ learnerRouter.get('/:id', async (req, res) => {
 });
 
 /**
+ * @route GET /api/learner/item/:id
+ * @description get learner item: heart, peanut, talkroomTime, targetTime, bud
+ * @access public
+ */
+learnerRouter.get('/item/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const learner = await Learner.findById(id).select("heart peanut bud targetTime talkroomTime ");
+
+        if (learner) return sendSuccess(res, "Get item successfully.", learner);
+        return sendError(res, "Information not found.");
+        
+    } catch (error) {
+        console.log(error);
+        return sendServerError(res);  
+    }
+});
+
+/**
  * @route PUT /api/learner/:id
  * @description update learner information
  * @access public
