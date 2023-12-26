@@ -22,23 +22,23 @@ function Chart(props) {
           cy={props.radius}
           r={props.radius}
           stroke="green"
-          stroke-width={props.strokeWidth}
+          strokeWidth={props.strokeWidth}
           fill="transparent"
-          stroke-opacity="0.2"
+          strokeOpacity="0.2"
         />
         <circle
           cx={props.radius}
           cy={props.radius}
           r={props.radius}
           stroke="rgba(159, 197, 90, 1)"
-          stroke-width={props.strokeWidth}
+          strokeWidth={props.strokeWidth}
           fill="transparent"
-          stroke-dasharray={circleCircumference}
-          stroke-dashoffset={strokeDashoffset}
-          stroke-linecap="round"
+          strokeDasharray={circleCircumference}
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
         />
       </g>
-      <text x="25%" y={props.radius+strokeOffset} font-size={50} font-weight={800} fill="rgba(16, 64, 27, 1)" >{props.percentage} %</text>
+      <text x="25%" y={props.radius+strokeOffset} fontSize={50} fontWeight={800} fill="rgba(16, 64, 27, 1)" >{props.percentage} %</text>
     </svg>
   );
 };

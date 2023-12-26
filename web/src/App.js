@@ -12,20 +12,20 @@ import AuthContextProvider from './contexts/AuthContext';
 
 function App() {
   return (
-    <AuthContextProvider>
+    <AuthContextProvider>      
       <Router>
-        <Routes>
-          {/* Tutor */}
-          {/* <Route path='/tutor' element={<ProtectedRoute directTo={<Tutor />} />} /> */}
-          <Route path='/tutor' element={<Tutor />} />
-          <Route path='/tutor/talkroom' element={<TalkRoom />} />
-          {/* Auth */}
+        <Routes>          
           <Route path='/' element={<Landing />} />
           <Route path='/login' element={<Auth authRoute="login" />} />
           <Route path='/forget-password' element={<Auth authRoute="forget-password" />} />
           <Route path='/verify-otp' element={<Auth authRoute="verify-otp" />} />
           <Route path='/change-password' element={<Auth authRoute="change-password" />} />
-          {/* Admin */}
+
+          {/* <Route path='/tutor' element={<RoomContextProvider><Tutor /></RoomContextProvider>} /> */}
+          
+          <Route path='/tutor' element={<Tutor />} />
+          <Route path='/tutor/talkroom' element={<TalkRoom />} />
+
           <Route path='/admin' element={<Admin adminRoute="main" />} />
           <Route path='/admin/manage-tutor' element={<Admin adminRoute="manage-tutor" />} />
           <Route path='/admin/manage-quiz' element={<Admin adminRoute="manage-quiz" />} />

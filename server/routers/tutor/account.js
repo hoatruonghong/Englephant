@@ -6,6 +6,7 @@ const router = express.Router();
 import { sendError, sendServerError, sendSuccess } from "../../helper/client.js"
 import { verifyToken} from '../../middleware/index.js'
 import { tutorRegisterValidate } from "../../validation/auth.js"
+import { JWT_SECRET_KEY } from './../../constant.js';
 
 import Tutor from "../../models/tutor.js";
 
@@ -36,7 +37,7 @@ router.post('/login', async (req, res) => {
         }
         const accessToken = jwt.sign(
             {user: tutorData},
-            process.env.JWT_SECRET_KEY,
+            JWT_SECRET_KEY,
             // {expiresIn: '5m'}
         )
 
@@ -54,6 +55,23 @@ router.post('/login', async (req, res) => {
         return sendServerError(res);  
     }
 })
+
+/**
+ * @route GET /api/tutor/account/auth
+ * @description check if learner is logged or not
+ * @access public
+ */
+router.get('/auth', verifyToken, async (req, res) => {
+    try {
+        const user = await Tutor.findById(req.user.id);
+        if (!user) return res.status(400).json({success: false, message: 'user not found'})
+        res.json({success: true, user})
+    } catch (error) {
+        console.log(error);
+        return sendServerError(res);   
+    }
+})
+
 
 /**
  * @route GET /api/tutor/account/
@@ -109,13 +127,13 @@ router.put('/change-password/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params
-        const { fullname, email, phone } = req.body
+        const { fullname, email, phone, nationality, bornyear, introduction } = req.body
 
         const tutor = await Tutor.findById(id)
         if (!tutor) sendError(res, "Information not found.");
 
-        await Tutor.findByIdAndUpdate(id, {phone: phone, email: email, fullname: fullname});
-        return sendSuccess(res, "Update account information successfully.", { fullname, phone, email });        
+        await Tutor.findByIdAndUpdate(id, {phone: phone, email: email, fullname: fullname, nationality: nationality, bornyear: bornyear, introduction: introduction });
+        return sendSuccess(res, "Update account information successfully.", { fullname, phone, email, nationality, bornyear, introduction  });        
     } catch (error) {
         console.log(error);
         return sendServerError(res);  

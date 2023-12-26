@@ -1,46 +1,126 @@
-import React from 'react'
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import React, { useContext, useState } from 'react'
 import "./../../styles/formTutor.css";
+import { AuthContext } from '../../contexts/AuthContext';
+import AlertMessage from './../layout/AlertMessage';
 
 const InfoForm = () => {
+    const {
+        authState: { 
+          user
+        },
+    } = useContext(AuthContext);
+    
+    console.log("userrr", user);
+    const [alert, setAlert] = useState(null)
+
+    //context
+    const { updateUser } = useContext(AuthContext);
+
+    //local state
+    const [updateForm, setUpdateForm] = useState({
+        fullname: user.fullname,
+        bornyear: user.bornyear,
+        nationality: user.nationality,
+        phone: user.phone,
+        introduction: user.introduction
+    });
+    const { fullname, bornyear, nationality, phone, introduction } = updateForm;
+
+    const onChangeUpdateForm = (event) => {
+        setUpdateForm({ ...updateForm, [event.target.name]: event.target.value });
+    };
+    const update = async (event) => {
+        event.preventDefault();
+        try {
+            console.log("updateform", updateForm);
+        const updateData = await updateUser(updateForm);
+        if (updateData.success) {
+            console.log("update successfully");
+            setAlert({ type: 'success', message: updateData.message })
+                    setTimeout(() => setAlert(null), 2000)
+        }
+        else {
+            console.log("update failed");
+            setAlert({ type: 'danger', message: updateData.message })
+                    setTimeout(() => setAlert(null), 2000)
+        }
+        } catch (error) {
+        console.log(error);
+        }
+    };
+
     return (
-        <Form>
-            <Form.Group className="mb-3" controlId="formBasicName">
-                <Form.Label>Name</Form.Label>
-                <Form.Control className="inputLine" type="email" placeholder="FullName" />
-                <Form.Text className="text-muted"></Form.Text>
-            </Form.Group>
-            <Container fluid>
-                <Row>
-                    <Col><Form.Group className="mb-3" controlId="formBasicAge">
-                        <Form.Label>Age</Form.Label>
-                        <Form.Control type="email" placeholder="FullName" />
-                        <Form.Text className="text-muted"></Form.Text>
-                    </Form.Group></Col>
-                    <Col><Form.Group className="mb-3" controlId="formBasicNation">
-                        <Form.Label>Nationality</Form.Label>
-                        <Form.Control type="email" placeholder="FullName" />
-                        <Form.Text className="text-muted"></Form.Text>
-                    </Form.Group></Col>
-                </Row>
-            </Container>
-            <Form.Group className="mb-3" controlId="formBasicIntroduction">
-                <Form.Label>Introduction</Form.Label>
-                <Form.Control
-                    as="textarea"
-                    placeholder="Leave a comment here"
-                    style={{ height: '100px' }}
+        <form method="post" onSubmit={update}>
+          <div className="mb-3">
+            <label className="labelForm">Fullname</label>
+            <input
+              type="text"
+              className="form-control"
+              name="fullname"
+              placeholder="Fullname"
+              value={fullname}
+              onChange={onChangeUpdateForm}
+              required
+            />
+          </div>
+          <div className='row'>
+            <div className="col-6 mb-3">
+                <label className="labelForm">Year of Birth</label>
+                <input
+                type="text"
+                className="form-control"
+                name="bornyear"
+                placeholder="BornYearn"
+                value={bornyear}
+                onChange={onChangeUpdateForm}
+                required
                 />
-            </Form.Group>
-            
-            <Button variant="primary" className="updateBtn" type="submit">
-                Update
-            </Button>
-        </Form>
+            </div>
+            <div className="col-6 mb-3">
+                <label className="labelForm">Nationality</label>
+                <input
+                type="text"
+                className="form-control"
+                name="nationality"
+                placeholder="Nationality"
+                value={nationality}
+                onChange={onChangeUpdateForm}
+                required
+                />
+            </div>
+
+          </div>
+          <div className="mb-3">
+            <label className="labelForm">Phone</label>
+            <input
+              type="text"
+              className="form-control"
+              name="phone"
+              placeholder="Phone"
+              value={phone}
+              onChange={onChangeUpdateForm}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="labelForm">Introduction</label>
+            <textarea
+              type="text"
+              className="form-control"
+              name="introduction"
+              placeholder="Introduction"
+              value={introduction}
+              onChange={onChangeUpdateForm}
+            />
+          </div>
+          
+          <div className="center addMargin">
+            <button type="submit" className="btn-custom">
+              Update
+            </button>
+          </div>
+          <AlertMessage info={alert} />
+        </form>
     );
 }
 

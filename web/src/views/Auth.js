@@ -11,15 +11,18 @@ import Spinner from "react-bootstrap/Spinner";
 
 const Auth = ({ authRoute }) => {
   const {
-    authState: { authLoading, isAuthenticated },
+    authState: { 
+      authLoading, 
+      isAuthenticated 
+    },
   } = useContext(AuthContext);
 
   const navigate = useNavigate()
 
   let body;
 
-//   console.log("authLoad isAuthenticated",authLoading, isAuthenticated);
-  if (/*authLoading*/ false) {
+  console.log("authLoad isAuthenticated",authLoading, isAuthenticated);
+  if (authLoading) {
     body = (
       <div className="justify-content-center mt-2">
         <Spinner animation="border" />

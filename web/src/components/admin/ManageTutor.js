@@ -3,7 +3,6 @@ import { useState } from "react";
 import "../../styles/adminPage.css";
 import Table from "react-bootstrap/Table";
 import Pagination from "react-bootstrap/Pagination";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 
@@ -50,9 +49,9 @@ function AddTutorModal(props) {
             <Form.Control type="text" placeholder="Quốc tịch" required/>            
           </Form.Group>
           
-          <Button variant="primary" type="submit">
+          <button className="primaryButton" type="submit">
             Submit
-          </Button>
+          </button>
         </Form>
       </Modal.Body>
     </Modal>
@@ -76,9 +75,9 @@ const ManageTutor = () => {
     <>
       <div className="bodyContainer">
         <div className="buttonView">
-          <Button variant="primary" onClick={() => setModalShow(true)}>
+          <button className="primaryButton" onClick={() => setModalShow(true)}>
             Thêm chuyên viên
-          </Button>
+          </button>
         </div>
 
         <Table striped bordered hover>

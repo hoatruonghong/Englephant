@@ -27,21 +27,33 @@ var dataUser = {
 };
 var bestPronunciation = [
   {
-    sound: '/dʒ/',
-    percentage: 100,
-  },
-  {
-    sound: '/ʃ/',
+    sound: '/m/',
     percentage: 98,
   },
   {
-    sound: '/ŋ/',
+    sound: '/ɪ/',
+    percentage: 90,
+  },
+  {
+    sound: '/d/',
     percentage: 88,
   },
+  // {
+  //   sound: '/dʒ/',
+  //   percentage: 100,
+  // },
+  // {
+  //   sound: '/ʃ/',
+  //   percentage: 98,
+  // },
+  // {
+  //   sound: '/ŋ/',
+  //   percentage: 88,
+  // },
 ];
 var worstPronunciation = [
   {
-    sound: '/æ/',
+    sound: '/ʌ/',
     percentage: 33,
   },
   {
@@ -66,25 +78,25 @@ var VocalAssess = [
 ];
 var historyProgress = [
   {
-    learnedTime: 10, learnedWord: 0 
+    learnedTime: 0, learnedWord: 0 
   },
   {
-    learnedTime: 20, learnedWord: 6 
+    learnedTime: 0, learnedWord: 0 
   },
   {
-    learnedTime: 30, learnedWord: 10 
+    learnedTime: 0, learnedWord: 0 
   },
   {
-    learnedTime: 25, learnedWord: 8
+    learnedTime: 0, learnedWord: 0
   },
   {
-    learnedTime: 30, learnedWord: 5 
+    learnedTime: 5, learnedWord: 5 
   },
   {
-    learnedTime: 10, learnedWord: 0 
+    learnedTime: 0, learnedWord: 0
   },
   {
-    learnedTime: 15, learnedWord: 3 
+    learnedTime: 0, learnedWord: 0
   },
 ];
 const buyPeanutModalData = [
@@ -188,7 +200,7 @@ export default function Account({navigation}) {
             <View style={styles.trackingHeader}>
               <Text style={styles.trackingTitle}>Theo dõi hàng tuần</Text>
               <View style={styles.iconFire}>
-                <IconWrap name="fire" num={3}/>
+                <IconWrap name="fire" num={1}/>
               </View>
             </View>
             <View style={styles.trackingCalendar}>
@@ -206,7 +218,7 @@ export default function Account({navigation}) {
               <Text style={styles.trackingTitleText}>Từ vựng</Text>
               <Charts.VocabularyChart 
                 data={VocalAssess} 
-                strokeWidth={15} size={100} totalNum={100} 
+                strokeWidth={15} size={100} totalNum={totalWord} 
                 textColor={colors.black_green} textSize={18}/>
               <View style={styles.trackingDescChart}>
               {VocalAssess.map((item, id) => {

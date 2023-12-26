@@ -70,6 +70,7 @@ flashcardRouter.post('/learner/:learnerid', async (req, res) => {
                 mapId: cur_node.mapId
             })
             await dbLearnerCard.save();
+            console.log(dbLearnerCard);
         }
         res.status(200).json({ message: "Add flashcard successfully!" });
     } catch (err) {

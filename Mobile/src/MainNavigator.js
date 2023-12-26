@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import type {PropsWithChildren} from 'react';
 import { View, StyleSheet, useWindowDimensions, Text } from 'react-native';
 import axios from 'axios';
 
@@ -58,7 +57,6 @@ import LRLesson from './screens/Exercise/LRLesson';
 import PLesson from './screens/Exercise/PLesson';
 import PronunciationQuiz from './screens/Quiz/PronunciationQuiz';
 import ArchiveScreen from './screens/Archive/ArchiveScreen';
-import ChatRoom from './screens/Exercise/ChatRoom';
 import TutorRoom from './screens/Exercise/TutorRoom';
 import Wardrobe from './screens/Setting/Wardrobe';
 import TimeCounter from './components/TimeCounter';
@@ -295,8 +293,8 @@ function StackNavigator(){
         options={{ headerTitle: 'Tủ đồ' }} />
       <Stack.Screen name="TutorRoom" component={TutorRoom}
         options={{
-          headerTitle : () => {return (<TimeCounter time={600} />)},
-        }} />
+          headerTitle : () => {return (<TimeCounter time={1200} />)},
+        }} />      
       <Stack.Screen name="LRLesson" component={LRLesson}
         options={({ route }) => ({ title: route.params.name })}
       />

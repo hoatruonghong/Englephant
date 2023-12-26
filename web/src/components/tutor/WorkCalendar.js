@@ -18,15 +18,14 @@ const data = [
 function WorkCalendar(props) {
   return (
     <table className="table-col">
-      <th>
+      <tbody>
         <tr>
           <td>--</td>
           <td>Date</td>
           <td>Start</td>
           <td>End</td>
           <td>Duration</td>
-        </tr>
-      </th>
+        </tr>      
       {data.map((col) => (
         <tr key={col.day}>
           <td className="dayText">{col.day}</td>
@@ -36,6 +35,7 @@ function WorkCalendar(props) {
           <td className="durationText">{col.duration}</td>
         </tr>
       ))}
+      </tbody>
     </table>
   );
 }

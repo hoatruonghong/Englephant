@@ -57,4 +57,27 @@ exchangeRouter.put('/exchange-item', async (req, res) => {
     }
 });
 
+/**
+ * @route PUT /api/exchangetable/add-heart
+ * @description update number of heart
+ * @access public
+ */
+exchangeRouter.put('/add-heart', async (req, res) => {
+    try {
+        const { num, learnerId } = req.body
+
+        const learner = await Learner.findById(learnerId)
+        if (!learner) return sendError(res, "Information not found.");
+        // if (num < 0)  return sendError(res, "Num must be greater or equal than 0");
+
+        var newHeart = learner.heart + num;
+        await Learner.findByIdAndUpdate(learnerId, {heart: newHeart})
+        return sendSuccess(res, "Update successfully.", { heart: newHeart });
+        
+    } catch (error) {
+        console.log(error);
+        return sendServerError(res);  
+    }
+});
+
 export default exchangeRouter

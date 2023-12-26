@@ -3,13 +3,13 @@ import React, { createContext, useContext, useState }  from 'react';
 const LoginContext = createContext();
 
 const LoginProvider = ({children}) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [learnerId, setLearnerId] = useState('6523a83652d8423281c01341');
     const [profile, setProfile] = useState({
         _id:"6523a83652d8423281c01341",    
         username:"TestAccount",
-        fullname:"TestAccount",
-        phone:"1234567890",
+        fullname:"Anna Tran",
+        phone:"097856435",
         email:"",
         password:"123456",
         bornYear:"2018",
@@ -18,7 +18,7 @@ const LoginProvider = ({children}) => {
         heart: 0,
         bud: 0,
         currentMap: 3,
-        gender: "Nam",
+        gender: "Nữ",
         talkroomTime: 20,
         targetTime: 10,
     });

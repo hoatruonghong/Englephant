@@ -20,7 +20,7 @@ const AuthContextProvider = ({children}) => {
 		}
 
 		try {
-			const response = await axios.get(`${apiUrl}/auth`)
+			const response = await axios.get(`${apiUrl}/tutor/account/auth`)
             console.log("response  ",response.data);
 			if (response.data.success) {
 				dispatch({
@@ -44,9 +44,26 @@ const AuthContextProvider = ({children}) => {
     // Login
     const loginUser = async loginForm => {
         try {
-            const res = await axios.post(`${apiUrl}/auth/login`, loginForm)
+            console.log(`${apiUrl}/tutor/account/login`, loginForm);
+            const res = await axios.post(`${apiUrl}/tutor/account/login`, loginForm)
             if (res.data.success) {
                 localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.data.response.accessToken)
+                await loadUser()
+            }
+            return res.data
+        } catch (error) {
+            if (error.response.data) return error.response.data
+            else return {success: false, message: error.message}
+        }
+    }
+
+    // Update
+    const updateUser = async updateForm => {
+        try {
+            console.log(`${apiUrl}/tutor/account/${authState.user._id}`, updateForm);
+            const res = await axios.put(`${apiUrl}/tutor/account/${authState.user._id}`, updateForm)
+            if (res.data.success) {
+                // localStorage.setItem(LOCAL_STORAGE_TOKEN_NAME, res.data.data.response.accessToken)
                 await loadUser()
             }
             return res.data
@@ -66,7 +83,7 @@ const AuthContextProvider = ({children}) => {
     }
 
     // Context data
-    const authContextData = {loginUser, authState, logoutUser}
+    const authContextData = {loginUser, authState, logoutUser, updateUser}
 
     // Return provider
     return (
