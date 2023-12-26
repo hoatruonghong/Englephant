@@ -58,8 +58,8 @@ exchangeRouter.put('/exchange-item', async (req, res) => {
 });
 
 /**
- * @route PUT /api/exchangetable/exchange-item
- * @description update number of bud, heart, peanut, time
+ * @route PUT /api/exchangetable/add-heart
+ * @description update number of heart
  * @access public
  */
 exchangeRouter.put('/add-heart', async (req, res) => {
