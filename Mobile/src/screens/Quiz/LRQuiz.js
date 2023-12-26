@@ -126,6 +126,7 @@ export default function LRQuiz({route, navigation}) {
     const renderProgressBar = () => {
         return (
             <View style={{height:"5%", flexDirection: "row"}}>
+                <Text style = {[styles.questionText, {marginRight: "4%"}]}>{currentQuestionIndex}/{numofquiz}</Text>
                 <View style={styles.wrapProgressBar}>
                 <Animated.View style={[{
                     height: 10,

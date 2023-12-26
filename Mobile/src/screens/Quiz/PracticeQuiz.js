@@ -171,6 +171,7 @@ export default function PracticeQuiz({route, navigation}) {
     const renderProgressBar = () => {
         return (
             <View style={{height:"5%", flexDirection: "row"}}>
+                <Text style = {[styles.questionText, {marginRight: "4%"}]}>{currentQuestionIndex}/{numofquiz}</Text>
                 <View style={styles.wrapProgressBar}>
                 <Animated.View style={[{
                     height: 10,
@@ -236,14 +237,7 @@ export default function PracticeQuiz({route, navigation}) {
                     <TouchableOpacity 
                         style={{width: "100%", height: "50%", alignItems: "center", justifyContent: "center"}} 
                         onPress={
-                            ()=>sound.play(success => {
-                                sound.release();
-                                if (success) {
-                                  console.log('Successfully finished playing');
-                                } else {
-                                  console.log('Playback failed due to audio decoding errors');
-                                }
-                              })}>
+                            ()=>sound.play()}>
                         <FontAwesomeIcon 
                             icon={faVolumeUp}  
                             color={
@@ -344,10 +338,10 @@ export default function PracticeQuiz({route, navigation}) {
     //Render Result modal
     const renderModal = () => {
         let modalTitle = "Chưa hoàn thành";
-        let modalContent = "Bạn chưa đủ điểm để vượt qua Node";
+        let modalContent = "Bạn chưa đủ điểm để đi tiếp";
         if (pass){
             modalTitle = "Chúc mừng";
-            modalContent = "Chúc mừng bạn đã hoàn thành Node";
+            modalContent = "Chúc mừng bạn đã hoàn thành bài học";
         }
         return(
             <Modal 

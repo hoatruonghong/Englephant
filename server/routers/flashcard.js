@@ -67,7 +67,7 @@ flashcardRouter.post('/learner/:learnerid', async (req, res) => {
                 learnerId: learnerid,
                 cardId: cards[i],
                 nodeId: nodeId,
-                map: cur_node.mapId
+                mapId: cur_node.mapId
             })
             await dbLearnerCard.save();
         }

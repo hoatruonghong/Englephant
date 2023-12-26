@@ -28,6 +28,7 @@ export default function LearningQuiz({route, navigation}) {
     const {profile} = useLogin();
     const learnerId = profile._id;
     const {nodeId, lessons, quizzes, flashcards} = route.params;
+    const numoflesson = lessons.length;
     const numofquiz = quizzes.length;
     const numofcard = flashcards.length;
     const quizzesPerCard = 3;
@@ -157,7 +158,7 @@ export default function LearningQuiz({route, navigation}) {
     }
 
     const progressAnim = progress.interpolate({
-        inputRange: [0, numofquiz+lessons.length],
+        inputRange: [0, numofquiz+numoflesson],
         outputRange: ['0%','100%']
     });
 
@@ -221,20 +222,21 @@ export default function LearningQuiz({route, navigation}) {
     const renderProgressBar = () => {
         return (
             <View style={{height:"5%", flexDirection: "row"}}>
+                <Text style = {[styles.questionText, {marginRight: "4%"}]}>{currentQuestionIndex+currentLessonIndex}/{numofquiz+numoflesson}</Text>
                 <View style={styles.wrapProgressBar}>
-                <Animated.View style={[{
-                    height: 10,
-                    top: "3%",
-                    borderRadius: 5,
-                    backgroundColor: colors.dark_green,
-                }, {
-                    width: progressAnim,
-                }]}>
-                </Animated.View>
-            </View>
-            <TouchableOpacity style={[style.close, {right: "2%"}]} onPress={()=>{setAnswers([]);navigation.goBack(null)}}>
-                <FontAwesomeIcon icon={faXmark} color={colors.black_green} size={30}/>
-            </TouchableOpacity>
+                    <Animated.View style={[{
+                        height: 10,
+                        top: "3%",
+                        borderRadius: 5,
+                        backgroundColor: colors.dark_green,
+                    }, {
+                        width: progressAnim,
+                    }]}>
+                    </Animated.View>
+                </View>
+                <TouchableOpacity style={[style.close, {right: "2%"}]} onPress={()=>{setAnswers([]);navigation.goBack(null)}}>
+                    <FontAwesomeIcon icon={faXmark} color={colors.black_green} size={30}/>
+                </TouchableOpacity>
             </View>
             
         )
@@ -428,7 +430,7 @@ export default function LearningQuiz({route, navigation}) {
         let modalContent = "Bạn chưa đạt đủ flashcard để đi tiếp";
         if (pass){
             modalTitle = "Chúc mừng";
-            modalContent = "Chúc mừng bạn đã hoàn thành Node";
+            modalContent = "Chúc mừng bạn đã hoàn thành bài học";
         }
         return(
             <Modal 
