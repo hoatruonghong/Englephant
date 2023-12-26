@@ -94,7 +94,9 @@ router.post('/unlock/:learnerId/:mapId', async (req, res) => {
       return res.status(200).json({ message: "Already unlocked!" });
     const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0, name: amap.name});
     const node1st = await node.find({mapId: mapId, position: 1});
-    console.log(node1st)
+    console.log(node1st._id)
+    
+    console.log(typeof node1st._id)
     const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
     console.log(unlockedmap, unlockednode)
     return res.status(200).json({ message: "Unlock successfully!" });
