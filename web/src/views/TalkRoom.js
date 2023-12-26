@@ -13,13 +13,14 @@ class TalkRoom extends Component {
 
     this.socket = null
     this.candidates = []
+    
   }
 
   componentDidMount = () => {
 
     this.socket = io.connect(
-      // 'http://localhost:5000/webrtcPeer',
-      'https://englephant-server.adaptable.app/webrtcPeer',
+      'http://localhost:5000/webrtcPeer',
+      // 'https://englephant-server.adaptable.app/webrtcPeer',
       // 'https://englephant.vercel.app:5000/webrtcPeer',
       {
         path: '/io/webrtc',
@@ -34,11 +35,13 @@ class TalkRoom extends Component {
     //tutor always see notification first, there is an offer
     //they will just answer
     this.socket.on('offerOrAnswer', (sdp) => {  
-      // this.textref.value = JSON.stringify(sdp)
       if (sdp.type === "offer") {
         // set sdp as remote description
+        this.renderAnswerButton()
         this.textref.value = "There is an offer"
         this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
+      } else if (sdp.type === "answer") {
+        this.textref.value = "Answered"
       }
     })
 
@@ -153,19 +156,26 @@ class TalkRoom extends Component {
     this.pc.close()
   }
 
-  renderTime = () => {
+  renderAnswerButton = () => {
+    console.log("render button");
+
+    return <button className="answerBtn" onClick={this.createAnswer}>Answer</button>
+  }
+
+  renderTime = (time) => {
     if(this.remoteVideoref != null) {
-      return <div className="timeWrap"><TimeCounter time={1200}/></div> 
+      return <div className="timeWrap"><TimeCounter time={time}/></div> 
     }
   }
-  
+
   render() {
 
     return (
       <div className="talkroom">
         <div className="videoWrap">
           <div className="otherWrap">
-            <button className="answerBtn" onClick={this.createAnswer}>Answer</button>    
+            {/* {this.renderAnswerButton} */}
+            <button className="answerBtn" onClick={this.createAnswer}>Answer</button>
             <br/>
             <textarea className="roomNotice"
               ref={ref => { this.textref = ref }}
@@ -179,12 +189,12 @@ class TalkRoom extends Component {
             ref={this.localVideoref}
             autoPlay
           ></video>         
-          {this.renderTime()}
+          {/* {this.renderTime(1200)} */}
           <div className="buttonWrap">
             <div className="row">
-            {/* <div className="col-4 buttonArea"><CamButton /></div> */}
+            <div className="col-4 buttonArea"><CamButton /></div>
             <div className="col-4 buttonArea"><EndButton onClick={this.endCall}/></div>
-            {/* <div className="col-4 buttonArea"><MicButton /></div> */}
+            <div className="col-4 buttonArea"><MicButton /></div>
             </div>
           </div>
         </div>
