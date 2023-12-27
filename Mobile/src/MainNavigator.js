@@ -61,6 +61,7 @@ import TutorRoom from './screens/Exercise/TutorRoom';
 import Wardrobe from './screens/Setting/Wardrobe';
 import TimeCounter from './components/TimeCounter';
 import Auth from './api/Auth';
+import Done from './screens/Learning/Done';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -276,6 +277,7 @@ function StackNavigator(){
       <Stack.Screen name="Flashcard" component={Flashcard} />
       <Stack.Screen name="FlashcardDetails" component={FlashcardDetails} />
       <Stack.Screen name="Warmup" component={Warmup} />
+      <Stack.Screen name="Done" component={Done} />
       <Stack.Screen name="LearningQuiz" component={LearningQuiz} />
       <Stack.Screen name="PracticeQuiz" component={PracticeQuiz} />
       <Stack.Screen name="LRQuiz" component={LRQuiz} />

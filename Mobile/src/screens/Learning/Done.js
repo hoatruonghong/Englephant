@@ -3,7 +3,8 @@ import {
   ImageBackground,
   SafeAreaView,
   Text,
-  useWindowDimensions
+  useWindowDimensions,
+  TouchableOpacity
 } from 'react-native';
 import MascotHappy from '../../../assets/svg/mascot_happy.svg';
 import styles from '../styles';
