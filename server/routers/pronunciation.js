@@ -9,6 +9,186 @@ import sound from '../models/sound.js';
 
 const router = express.Router();
 
+//Admin: Add a sound
+router.post('/create/sound/', async (req, res) => {
+  try {
+      const { name, audio, video } = req.body;
+  
+      const dbSound = new sound({
+        name: name,
+        audio: audio,
+        video: video
+      });
+      await dbSound.save();
+      res.status(200).json({ message: "Add new sound successfully!" });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Admin: Edit a sound
+router.put('/edit/sound/:soundId', async (req, res) => {
+    try {
+        const {soundId} = req.params;
+        const { name, audio, video } = req.body;
+    
+        await sound.findByIdAndUpdate( soundId,{
+          name: name,
+          audio: audio,
+          video: video
+        });
+        res.status(200).json({ message: "Update sound successfully!" });
+    } catch (err) {
+      return res.status(500).json({ message: JSON.stringify(err) });
+    }
+  });
+
+//Admin: Delete a sound
+router.delete('/delete/sound/:soundId', async (req, res) => {
+    try {
+        const {soundId} = req.params;
+        await sound.findByIdAndDelete( soundId );
+        res.status(200).json({ message: "Delete sound successfully!" });
+    } catch (err) {
+      return res.status(500).json({ message: JSON.stringify(err) });
+    }
+  });
+
+//Admin: Add a lesson
+router.post('/create/lesson/', async (req, res) => {
+  try {
+      const { name, sound1, sound2 } = req.body;
+  
+      const dbLesson = new pl({
+        name: name,
+        sound1: sound1,
+        sound2: sound2
+      });
+      await dbLesson.save();
+      res.status(200).json({ message: "Create pronunciation lesson successfully!" });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Admin: Edit a lesson
+router.put('/edit/lesson/:lessonId', async (req, res) => {
+    try {
+        const {lessonId} = req.params;
+        const { name, sound1, sound2 } = req.body;
+    
+        await pl.findByIdAndUpdate( lessonId,{
+          name: name,
+          sound1: sound1,
+          sound2: sound2
+        });
+        res.status(200).json({ message: "Update pronunciation lesson successfully!" });
+    } catch (err) {
+      return res.status(500).json({ message: JSON.stringify(err) });
+    }
+  });
+
+//Admin: Delete a lesson
+router.delete('/delete/lesson/:lessonId', async (req, res) => {
+    try {
+        const {lessonId} = req.params;
+        await pl.findByIdAndDelete( lessonId );
+        res.status(200).json({ message: "Delete pronunciation lesson successfully!" });
+    } catch (err) {
+      return res.status(500).json({ message: JSON.stringify(err) });
+    }
+  });
+
+//Admin: Add pquiz
+router.post('/create/quiz', async (req, res) => {
+  const { question, word, audio, type, soundId } = req.body;
+  try {
+    const existedSound = await sound.findById(soundId);
+    if (!existedSound)
+      return res.status(400).json({ message: "Sound doesn't exist!" });
+
+    const quiz = await pquiz.create({ question, word, audio, type, sound: existedSound });
+    return res.status(200).json({ message: "Create successfully", data: quiz });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });  
+  }
+});
+
+//Admin: Add answer for pquiz
+router.post('/create/answer/:quizId', async (req, res) => {
+  const { quizId } = req.params;
+  const { content, isCorrect } = req.body;
+  try {
+    const existedQuiz = await pquiz.findById(quizId);
+    if (!existedQuiz)
+      return res.status(400).json({ message: "Quiz doesn't exist!" });
+
+    const answer = await panswer.create({ content: content, isCorrect: isCorrect, quizId: existedQuiz });
+    return res.status(200).json({ message: "Create successfully", data: answer });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });  
+  }
+});
+
+//Admin: Edit an answer
+router.put('/edit/answer/:answerId', async (req, res) => {
+  try {
+      const {answerId} = req.params;
+      const { content, isCorrect, quizId } = req.body;
+  
+      await panswer.findByIdAndUpdate( answerId,{
+        content: content, 
+        isCorrect: isCorrect, 
+        quizId: quizId
+      });
+      res.status(200).json({ message: "Update answer successfully!" });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Admin: Delete an answer
+router.delete('/delete/answer/:answerId', async (req, res) => {
+  try {
+      const {answerId} = req.params;
+      await panswer.findByIdAndDelete( answerId );
+      res.status(200).json({ message: "Delete answer successfully!" });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Admin: Edit a quiz
+router.put('/edit/quiz/:quizId', async (req, res) => {
+    try {
+        const {quizId} = req.params;
+        const { question, word, audio, type, sound, category } = req.body;
+    
+        await pquiz.findByIdAndUpdate( quizId,{
+          question: question,
+          word: word,
+          audio: audio,
+          type: type,
+          sound: sound,
+          category: category
+        });
+        res.status(200).json({ message: "Update pronunciation quiz successfully!" });
+    } catch (err) {
+      return res.status(500).json({ message: JSON.stringify(err) });
+    }
+  });
+
+//Admin: Delete a quiz
+router.delete('/delete/quiz/:quizId', async (req, res) => {
+    try {
+        const {quizId} = req.params;
+        await pquiz.findByIdAndDelete( quizId );
+        res.status(200).json({ message: "Delete pronunciation quiz successfully!" });
+    } catch (err) {
+      return res.status(500).json({ message: JSON.stringify(err) });
+    }
+  });
+
 //to shuffle quizzes
 function shuffle(array) {
   let currentIndex = array.length,  randomIndex;
@@ -41,36 +221,6 @@ router.get('/quiz/:type/:sound1/:sound2', async (req, res) => {
       return res.status(500).json({ message: JSON.stringify(err) });
     }
 });  
-
-router.post('/create/quiz', async (req, res) => {
-  const { question, word, audio, type, soundId } = req.body;
-  try {
-    const existedSound = await sound.findById(soundId);
-    if (!existedSound)
-      return res.status(400).json({ message: "Sound doesn't exist!" });
-
-    const quiz = await pquiz.create({ question, word, audio, type, sound: existedSound });
-    return res.status(200).json({ message: "Create successfully", data: quiz });
-  } catch (err) {
-    return res.status(500).json({ message: JSON.stringify(err) });  
-  }
-});
-
-//Admin: Post answer for pquiz
-router.post('/create/answer/:quizId', async (req, res) => {
-  const { quizId } = req.params;
-  const { content, isCorrect } = req.body;
-  try {
-    const existedQuiz = await pquiz.findById(quizId);
-    if (!existedQuiz)
-      return res.status(400).json({ message: "Quiz doesn't exist!" });
-
-    const answer = await panswer.create({ content: content, isCorrect: isCorrect, quizId: existedQuiz });
-    return res.status(200).json({ message: "Create successfully", data: answer });
-  } catch (err) {
-    return res.status(500).json({ message: JSON.stringify(err) });  
-  }
-});
 
 //Learner: Get answers
 router.get('/answer/:quizId', async (req, res) => {

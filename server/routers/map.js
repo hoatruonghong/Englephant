@@ -10,6 +10,7 @@ import flashcard from '../models/flashcard.js';
 
 const router = express.Router();
 
+//Admin: Get all Maps
 router.get('/', async (req, res) => {
   try {
     const maps = await map.find();  
@@ -19,21 +20,41 @@ router.get('/', async (req, res) => {
   }
 });
 
-
+//Dev: Create Map
 router.post('/add/', async (req, res) => {
   try {
-      const { _id, name, mode, price, image } = req.body;
+      const { _id, name, mode, price, image, previousmap } = req.body;
   
       const dbMap = new map({
         _id: _id, 
         name: name, 
         mode: mode, 
         price: price, 
-        image:image
+        image:image,
+        previousmap: previousmap
       })
   
       await dbMap.save();
       res.status(200).json({ message: "Create map successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Admin: Update Map
+router.put('/update/:mapId', async (req, res) => {
+  try {
+      const {mapId} = req.params;
+      const { name, mode, price, image, previousmap, nextmap } = req.body;
+      let update_content = {};
+      if (name) update_content.name = name;      
+      if (mode) update_content.mode = mode;
+      if (price) update_content.price = price;
+      if (image) update_content.image = image;
+      if (previousmap) update_content.previousmap = previousmap;
+      if (nextmap) update_content.nextmap = nextmap;
+      await map.findByIdAndUpdate(mapId, update_content)
+      res.status(200).json({ message: "Update map successfully!" })
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
   }
@@ -92,7 +113,10 @@ router.post('/unlock/:learnerId/:mapId', async (req, res) => {
     if (isUnlocked) 
       return res.status(200).json({ message: "Already unlocked!" });
     const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0, name: amap.name});
-    const node1st = await node.find({mapId: mapId, position: 1});
+    const node1st = await node.findOne({mapId: mapId, position: 1});
+    console.log(node1st._id)
+    
+    console.log(typeof node1st._id)
     const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
     console.log(unlockedmap, unlockednode)
     return res.status(200).json({ message: "Unlock successfully!" });
@@ -144,6 +168,37 @@ router.get('/:mode/topic/:name', async (req, res) => {
   }
 });
 
+//Dev: Create Node
+router.post('/add-node/', async (req, res) => {
+  try {
+    const { mapId, position, type } = req.body;
+
+    const dbMap = new map({
+      mapId: mapId,
+      position: position,
+      type: type
+    })
+
+    await dbMap.save();
+    res.status(200).json({ message: "Add Node successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Dev: Add next Node
+router.post('/add-next-node/:nodeId', async (req, res) => {
+  try {
+    const { nodeId } = req.params;
+    const { next } = req.body;
+
+    await node.findByIdAndUpdate(nodeId, { next: next });
+    res.status(200).json({ message: "Add next to Node successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
 //Admin: Show Node information
 router.get('/node/:nodeId', async (req, res) => {
   try {
@@ -174,14 +229,55 @@ router.put('/update-node/:nodeId', async (req, res) => {
   }
 });
 
+//Dev: Create flashcard
+router.post('/add-flc/', async (req, res) => {
+  try {
+      const { word, viemeaning, pos, audio, pronunciation, star, synonym, antonym, prefix, postfix, image, familywords, nodeId } = req.body;
+  
+      const dbFlc = new flashcard({
+        word: word,
+        viemeaning: viemeaning,
+        pos: pos,
+        audio: audio,
+        pronunciation: pronunciation,
+        star: star,
+        synonym: synonym,
+        antonym: antonym,
+        prefix: prefix,
+        postfix: postfix,
+        image: image,
+        familywords: familywords,
+        nodeId: nodeId
+      })
+  
+      await dbFlc.save();
+      res.status(200).json({ message: "Create flashcard successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
 //Admin: Update Flashcard in a Node
 router.put('/update-card/:flcId', async (req, res) => {
   try {
     const { flcId } = req.params;
-    const { nodeId } = req.body;
-
+    const { word, viemeaning, pos, audio, pronunciation, star, synonym, antonym, prefix, postfix, image, familywords, nodeId } = req.body;
+    let update_content = {};
+    if (word) update_content.word=word;
+    if (viemeaning) update_content.viemeaning=viemeaning;
+    if (pos) update_content.pos=pos;
+    if (audio) update_content.audio=audio;
+    if (pronunciation) update_content.pronunciation=pronunciation;
+    if (star) update_content.star=star;
+    if (synonym) update_content.synonym=synonym;
+    if (antonym) update_content.antonym=antonym;
+    if (prefix) update_content.prefix=prefix;
+    if (postfix) update_content.postfix=postfix;
+    if (image) update_content.image=image;
+    if (familywords) update_content.familywords=familywords;
+    if (nodeId) update_content.nodeId=nodeId;
     // Save Flashcard
-    await flashcard.findByIdAndUpdate(flcId, { nodeId: nodeId });
+    await flashcard.findByIdAndUpdate(flcId,update_content);
 
     res.status(200).json({ message: "Update flashcard successfully!" })
   } catch (err) {
@@ -300,7 +396,7 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
     if (!isUnlocked) {
       const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
-      const node1st = await node.find({mapId: mapId, position: 1});
+      const node1st = await node.findOne({mapId: mapId, position: 1});
       const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
       await learner.findByIdAndUpdate(learnerId, {currentMap: mapId})
     }
@@ -317,7 +413,6 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
 
     totaltimecontent=minutes + ':' + seconds;
     
-    console.log(totaltimecontent)
     await learnermap.findOneAndUpdate({mapId: mapId}, { status: numofstars });
     return res.status(200).json({ result: learnernoderesults, flashcard: {got: totalgotcards, total: totalcards}, time: totaltimecontent });
   } catch (err) {
