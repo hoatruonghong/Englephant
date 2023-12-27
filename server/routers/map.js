@@ -20,21 +20,43 @@ router.get('/', async (req, res) => {
   }
 });
 
-//Admin: Create Map
+//Dev: Create Map
 router.post('/add/', async (req, res) => {
   try {
-      const { _id, name, mode, price, image } = req.body;
+      const { _id, name, mode, price, image, previousmap } = req.body;
   
       const dbMap = new map({
         _id: _id, 
         name: name, 
         mode: mode, 
         price: price, 
-        image:image
+        image:image,
+        previousmap: previousmap,
+        nextmap: nextmap
       })
   
       await dbMap.save();
       res.status(200).json({ message: "Create map successfully!" })
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+//Admin: Update Map
+router.post('/update/:mapId', async (req, res) => {
+  try {
+      const {mapId} = req.params;
+      const { name, mode, price, image, previousmap } = req.body;
+  
+      await map.findByIdAndUpdate(mapId, {
+        name: name, 
+        mode: mode, 
+        price: price, 
+        image:image,
+        previousmap: previousmap,
+        nextmap: nextmap
+      })
+      res.status(200).json({ message: "Update map successfully!" })
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
   }
@@ -395,7 +417,6 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
 
     totaltimecontent=minutes + ':' + seconds;
     
-    console.log(totaltimecontent)
     await learnermap.findOneAndUpdate({mapId: mapId}, { status: numofstars });
     return res.status(200).json({ result: learnernoderesults, flashcard: {got: totalgotcards, total: totalcards}, time: totaltimecontent });
   } catch (err) {
