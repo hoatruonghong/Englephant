@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 //Dev: Create Map
 router.post('/add/', async (req, res) => {
   try {
-      const { _id, name, mode, price, image, previousmap, nextmap } = req.body;
+      const { _id, name, mode, price, image, previousmap } = req.body;
   
       const dbMap = new map({
         _id: _id, 
@@ -31,8 +31,7 @@ router.post('/add/', async (req, res) => {
         mode: mode, 
         price: price, 
         image:image,
-        previousmap: previousmap,
-        nextmap: nextmap
+        previousmap: previousmap
       })
   
       await dbMap.save();
@@ -46,16 +45,15 @@ router.post('/add/', async (req, res) => {
 router.put('/update/:mapId', async (req, res) => {
   try {
       const {mapId} = req.params;
-      const { name, mode, price, image, previousmap } = req.body;
-  
-      await map.findByIdAndUpdate(mapId, {
-        name: name, 
-        mode: mode, 
-        price: price, 
-        image:image,
-        previousmap: previousmap,
-        nextmap: nextmap
-      })
+      const { name, mode, price, image, previousmap, nextmap } = req.body;
+      let update_content = {};
+      if (name) update_content.name = name;      
+      if (mode) update_content.mode = mode;
+      if (price) update_content.price = price;
+      if (image) update_content.image = image;
+      if (previousmap) update_content.previousmap = previousmap;
+      if (nextmap) update_content.nextmap = nextmap;
+      await map.findByIdAndUpdate(mapId, update_content)
       res.status(200).json({ message: "Update map successfully!" })
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
@@ -264,24 +262,22 @@ router.put('/update-card/:flcId', async (req, res) => {
   try {
     const { flcId } = req.params;
     const { word, viemeaning, pos, audio, pronunciation, star, synonym, antonym, prefix, postfix, image, familywords, nodeId } = req.body;
-
+    let update_content = {};
+    if (word) update_content.word=word;
+    if (viemeaning) update_content.viemeaning=viemeaning;
+    if (pos) update_content.pos=pos;
+    if (audio) update_content.audio=audio;
+    if (pronunciation) update_content.pronunciation=pronunciation;
+    if (star) update_content.star=star;
+    if (synonym) update_content.synonym=synonym;
+    if (antonym) update_content.antonym=antonym;
+    if (prefix) update_content.prefix=prefix;
+    if (postfix) update_content.postfix=postfix;
+    if (image) update_content.image=image;
+    if (familywords) update_content.familywords=familywords;
+    if (nodeId) update_content.nodeId=nodeId;
     // Save Flashcard
-    await flashcard.findByIdAndUpdate(flcId, 
-      {
-        word: word,
-        viemeaning: viemeaning,
-        pos: pos,
-        audio: audio,
-        pronunciation: pronunciation,
-        star: star,
-        synonym: synonym,
-        antonym: antonym,
-        prefix: prefix,
-        postfix: postfix,
-        image: image,
-        familywords: familywords,
-        nodeId: nodeId
-      });
+    await flashcard.findByIdAndUpdate(flcId,update_content);
 
     res.status(200).json({ message: "Update flashcard successfully!" })
   } catch (err) {
