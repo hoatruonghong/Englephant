@@ -23,7 +23,7 @@ router.get('/', async (req, res) => {
 //Dev: Create Map
 router.post('/add/', async (req, res) => {
   try {
-      const { _id, name, mode, price, image, previousmap } = req.body;
+      const { _id, name, mode, price, image, previousmap, nextmap } = req.body;
   
       const dbMap = new map({
         _id: _id, 
@@ -43,7 +43,7 @@ router.post('/add/', async (req, res) => {
 });
 
 //Admin: Update Map
-router.post('/update/:mapId', async (req, res) => {
+router.put('/update/:mapId', async (req, res) => {
   try {
       const {mapId} = req.params;
       const { name, mode, price, image, previousmap } = req.body;
