@@ -173,13 +173,13 @@ router.post('/add-node/', async (req, res) => {
   try {
     const { mapId, position, type } = req.body;
 
-    const dbMap = new map({
+    const dbNode = new node({
       mapId: mapId,
       position: position,
       type: type
     })
 
-    await dbMap.save();
+    await dbNode.save();
     res.status(200).json({ message: "Add Node successfully!" })
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
