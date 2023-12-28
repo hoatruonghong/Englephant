@@ -39,7 +39,7 @@ const Signin2 = ({route, navigation}) => {
             <Image
                 style={styles.logo}
                 source={require('./../../../assets/images/ellipse.png')}
-                resizeMode = 'cover' style = {styles.backdrop}
+                resizeMode = 'cover'
             />
         </View>
         <View style = {styles.logoContainer}>        
@@ -62,7 +62,7 @@ const Signin2 = ({route, navigation}) => {
                     <FontAwesomeIcon icon="fa-solid fa-user" size={20} color={colors.main_green} style={styles.inputIcon}/>
                     <TextInput
                         style={styles.input}
-                        placeholder="Nickname"
+                        placeholder="Name"
                         onChangeText={setFullname}
                         value={fullname}
                     />

@@ -10,16 +10,19 @@ import { useLogin } from '../context/LoginProvider';
 //Choose talkroom: timeItem
 function TimeItem(props) {
   const { onPress, time, navigation, setModalVisible } = props;
+  const { learnerId } = useLogin();
 
   return (
-    <TouchableOpacity style={styles.container} onPress={()=> {handleChooseRoom(time, setModalVisible, navigation)}}>
+    <TouchableOpacity style={styles.container} onPress={()=> {handleChooseRoom(time, setModalVisible, navigation, learnerId)}}>
         <Text style={styles.text}>{time} phút</Text>
     </TouchableOpacity>
   );
 }
 
-const handleChooseRoom = (choosingTime, setModalVisible, navigation) => {
-  if (choosingTime != 0 && choosingTime <= 20) {
+const handleChooseRoom = async (choosingTime, setModalVisible, navigation, learnerId) => {
+  const res = await Learner.getItem({id: learnerId})
+  const talkroomTime = res.data.data.talkroomTime;
+  if (choosingTime != 0 && choosingTime <= talkroomTime) {
     setModalVisible("none");
     navigation.navigate('TutorRoom');
   }

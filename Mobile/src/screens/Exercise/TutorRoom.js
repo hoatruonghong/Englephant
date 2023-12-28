@@ -55,11 +55,11 @@ class TutorRoom extends React.Component {
     this.socket.on('offerOrAnswer', (sdp) => {
       // this.sdp = JSON.stringify(sdp)
       console.log("socket listen", this.inRoom);
-      if(this.inRoom == false && sdp.type === "answer") {
+      if(sdp.type === "answer") {
         // set sdp as remote description
+        this.inRoom = true;
         
         this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
-        this.inRoom = true
       }
     })
 
@@ -104,12 +104,7 @@ class TutorRoom extends React.Component {
       // this.remoteVideoref.current.srcObject = e.streams[0]
       this.setState({
         remoteStream: e.streams[0]
-      })
-      // setTimeout(() => {
-      //   this.setState({
-      //     remoteStream: e.streams[0]
-      //   })
-      // }, 3000);
+      })      
     }
 
     const success = (stream)=> {
@@ -186,22 +181,6 @@ class TutorRoom extends React.Component {
       this.sendToPeer('offerOrAnswer', sdp);
     });
   };
-
-  // setRemoteDescription = () => {
-  //   // retrieve and parse the SDP copied from the remote peer
-  //   const desc = JSON.parse(this.sdp);
-
-  //   // set sdp as remote description
-  //   this.pc.setRemoteDescription(new RTCSessionDescription(desc));
-  // };
-
-  // addCandidate = () => {
-  //   // retrieve and parse the Candidate copied from the remote peer
-  //   this.candidates.forEach(candidate => {
-  //     console.log(JSON.stringify(candidate));
-  //     this.pc.addIceCandidate(new RTCIceCandidate(candidate));
-  //   });
-  // };
 
   /** HANDLE CAM & MIC */
   toggleCamera = () => {

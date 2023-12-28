@@ -59,7 +59,7 @@ const getMorePeanut = async (params) => {
 const getItem = async (params) => {
     try {
         const result = await axios.get(`${host}/api/learner/item/`+params.id);
-        console.log(result);
+        console.log(result.data);
         return result;
     } catch (error) {
         return error.response;        

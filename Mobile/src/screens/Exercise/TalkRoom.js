@@ -157,7 +157,7 @@ export default function TalkRoom({navigation}) {
         // if(typeof peanut === 'undefined' || typeof talkroomTime === "undefined") {
             axios.get(`${host}/api/learner/item/`+learnerId)
             .then(function (res) {
-                console.log(res.data);
+                // console.log(res.data);
                 setPeanut(res.data.data.peanut);
                 setTalkroomTime(res.data.data.talkroomTime);
             })

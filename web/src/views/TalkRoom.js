@@ -41,7 +41,6 @@ class TalkRoom extends Component {
         // set sdp as remote description
         this.renderAnswerButton()
         this.textref.value = "There is an offer"
-        this.inRoom = true
         this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
       } else if (this.inRoom === false && sdp.type === "answer") {
         this.textref.value = "Answered"
@@ -146,10 +145,10 @@ class TalkRoom extends Component {
     console.log('Answer')
     this.pc.createAnswer({ offerToReceiveVideo: 1 })
       .then(sdp => {
-
         // set answer sdp as local description
         this.pc.setLocalDescription(sdp)
         this.textref.value = "Answered"
+        this.inRoom = true
 
         this.sendToPeer('offerOrAnswer', sdp)
       })

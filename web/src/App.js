@@ -7,6 +7,7 @@ import TalkRoom from './views/TalkRoom';
 import Admin from './views/Admin';
 
 import AuthContextProvider from './contexts/AuthContext';
+// import Room from "./views/Room.js";
 // import TutorContextProvider from './contexts/TutorContext';
 // import ProtectedRoute from './components/routing/ProtectedRoute';
 
@@ -25,6 +26,7 @@ function App() {
           
           <Route path='/tutor' element={<Tutor />} />
           <Route path='/tutor/talkroom' element={<TalkRoom />} />
+          {/* <Route path='/tutor/room' element={<Room />} /> */}
 
           <Route path='/admin' element={<Admin adminRoute="main" />} />
           <Route path='/admin/manage-tutor' element={<Admin adminRoute="manage-tutor" />} />

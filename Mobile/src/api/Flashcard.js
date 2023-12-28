@@ -13,11 +13,11 @@ const unlockCardDefault = async (params) => {
                 "656d83041b65b53883de949d",
                 "656d83631b65b53883de949e",
                 "656d83e91b65b53883de949f",
-                "656d84601b65b53883de94a0"        
+                "656d84601b65b53883de94a0"
             ],
             nodeId: "65279ee58b2b3620d82c969f"
         });
-        console.log("loggg");
+        console.log(res.data);
         return true
     } catch (error) {
         return error.response;        

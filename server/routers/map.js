@@ -233,6 +233,8 @@ router.put('/update-node/:nodeId', async (req, res) => {
 router.post('/add-flc/', async (req, res) => {
   try {
       const { word, viemeaning, pos, audio, pronunciation, star, synonym, antonym, prefix, postfix, image, familywords, nodeId } = req.body;
+      const _node = await node.findById(nodeId);
+      if (!_node) res.status(400).json({ message: "Node doesn't exist !" })
   
       const dbFlc = new flashcard({
         word: word,
@@ -253,6 +255,7 @@ router.post('/add-flc/', async (req, res) => {
       await dbFlc.save();
       res.status(200).json({ message: "Create flashcard successfully!" })
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ message: JSON.stringify(err) });
   }
 });

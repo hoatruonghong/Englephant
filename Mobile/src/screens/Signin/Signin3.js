@@ -31,7 +31,7 @@ const SetGoal = ({route, navigation}) => {
             const learnerInfo = await Learner.getInfo({id: learner_id});
             await setLearnerId(learner_id);
             await setProfile(learnerInfo.data.data);
-            // await Flashcard.unlockCardDefault({learnerId: learner_id});
+            await Flashcard.unlockCardDefault({learnerId: learner_id});
 
             setIsLoggedIn(true);
         } catch (error) {

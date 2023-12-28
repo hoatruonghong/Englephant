@@ -15,16 +15,11 @@ import Learner from './../../api/Learner';
 import axios from 'axios';
 import MyCalendar from './../../components/Calendar';
 import Modals from './../../components/Modals';
+import { useIsFocused } from "@react-navigation/native";
 
 const image = require("./../../../assets/images/forest-landscape.png");
 library.add(faBell, faGear);
 
-var dataUser = {
-  avatar: "./../../../assets/images/avatar.jpg",
-  name: "Hong Hoa",
-  hearts: 1,
-  peanuts: 10,
-};
 var bestPronunciation = [
   {
     sound: '/m/',
@@ -38,18 +33,6 @@ var bestPronunciation = [
     sound: '/d/',
     percentage: 88,
   },
-  // {
-  //   sound: '/dʒ/',
-  //   percentage: 100,
-  // },
-  // {
-  //   sound: '/ʃ/',
-  //   percentage: 98,
-  // },
-  // {
-  //   sound: '/ŋ/',
-  //   percentage: 88,
-  // },
 ];
 var worstPronunciation = [
   {
@@ -110,24 +93,28 @@ const buyPeanutModalData = [
       peanut: 20, price: 20000
   }
 ];
+
 export default function Account({navigation}) {
   const { setIsLoggedIn, learnerId, setProfile, profile } = useLogin();
   const [learner, setLearner] = useState(profile);
   const [refreshing, setRefreshing] = React.useState(false);
   const [modalState, setModalState] = useState("none"); //[none, buyPeanut]
   const [buyPeanutModalVisible, setBuyPeanutModalVisible] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(()=>{
     uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
-    axios.get(uri)
-    .then(function (res) {
-      setLearner(res.data.data);
-      setProfile(res.data.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-  }, [])
+    if(isFocused) {
+      axios.get(uri)
+      .then(function (res) {
+        setLearner(res.data.data);
+        setProfile(res.data.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    };
+  }, [modalState, isFocused])
   useEffect(() => {
     if (modalState ==="buyPeanut") setBuyPeanutModalVisible(true);
     else setBuyPeanutModalVisible(false);    
