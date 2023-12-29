@@ -11,6 +11,8 @@ import Auth from './../../api/Auth';
 import Learner from './../../api/Learner';
 import Map from './../../api/Map';
 import Flashcard from './../../api/Flashcard';
+import Pronunciation from './../../api/Pronunciation';
+import LR from './../../api/LR';
 
 const image = require("./../../../assets/images/forest-landscape.png");
 const minutes = ["10", "15", "20", "30"];
@@ -32,6 +34,8 @@ const SetGoal = ({route, navigation}) => {
             await setLearnerId(learner_id);
             await setProfile(learnerInfo.data.data);
             await Flashcard.unlockCardDefault({learnerId: learner_id});
+            await Pronunciation.unlockPLessonDefault({learnerId: learner_id});
+            await LR.unlockLRLessonDefault({learnerId: learner_id});
 
             setIsLoggedIn(true);
         } catch (error) {
