@@ -295,7 +295,7 @@ router.delete('/delete-map/:mode/topic/:name', async (req, res) => {
     const map0 = await map.findOne({ mode: mode, name: name });
     const nodes = await node.find({ mapId: map0._id });
     await Promise.all(nodes.map(async node => {
-      await flashcard.updateMany({ nodeId: node._id }, {nodeId: None});
+      await flashcard.updateMany({ nodeId: node._id }, {nodeId: null});
     }));
     await node.deleteMany({ mapId: map0._id });
     await map.findByIdAndRemove(map0._id);

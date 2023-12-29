@@ -4,6 +4,7 @@ import learnerlrl from '../models/learnerlrl.js';
 import lrl from '../models/lrl.js';
 import lrquiz from '../models/lrquiz.js';
 import lranswer from '../models/lranswer.js';
+import learner from "../models/learner.js";
 
 const router = express.Router();
 
@@ -145,6 +146,31 @@ router.delete('/delete/answer/:answerId', async (req, res) => {
   }
 });
 
+//Admin: Get all lessons
+router.get('/', async (req, res) => {
+  try {
+      const lessons = await lrl.find()
+      return res.status(200).json({ lessons: lessons});
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});  
+
+//Learner: Unlock the first lesson
+router.post('/first-lesson/:learnerId', async (req, res) => {
+  try {
+      const { learnerId } = req.params;
+      const flesson = await lrl.findOne();
+      const isUnlocked = await learnerlrl.exists({learnerId: learnerId, lrlId: flesson});
+      if (isUnlocked) 
+        return res.status(200).json({ message: "Already unlocked!" });
+      await learnerlrl.create({learnerId: learnerId, lrlId: flesson._id, status: 0});
+      return res.status(200).json({ message: "Unlock lesson"+flesson.name});
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});  
+
 //Learner: Get quizzes of a lesson
 router.get('/quiz/:lessonId', async (req, res) => {
     try {
@@ -201,14 +227,18 @@ router.get('/learner/:learnerId', async (req, res) => {
     }
   });
 
-//Learner: Unlock Lesson
+//Learner: Unlock Next Lesson
 router.post('/:lessonId', async (req, res) => {
   const {lessonId} = req.params;
   const {learnerId} = req.body;
   try {
-      const isUnlocked = await learnerlrl.exists({learnerId: learnerId, lrlId: lessonId});
+      const curLesson = await lrl.findById(lessonId);
+      const isUnlocked = await learnerlrl.exists({learnerId: learnerId, lrlId: curLesson.next});
       if (isUnlocked) 
         return res.status(200).json({ message: "Already unlocked!" });
+      const curLearner = await learner.findById(learnerId)
+      var newHeart = curLearner.heart + num;
+      await learner.findByIdAndUpdate(learnerId, {heart: newHeart})
       const unlockedlr = await learnerlrl.create({learnerId: learnerId, lrlId: lessonId, status: 0});
       return res.status(200).json({ data: unlockedlr });
   } catch (err) {
@@ -217,7 +247,7 @@ router.post('/:lessonId', async (req, res) => {
 });
 
 //Learner: Send result
-router.get('/result/:lessonId', async (req, res) => {
+router.put('/result/:lessonId', async (req, res) => {
   const { lessonId } = req.params;
   const { learnerId, point, totalnumofquiz } = req.body;
   try {

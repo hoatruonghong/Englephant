@@ -189,6 +189,29 @@ router.delete('/delete/quiz/:quizId', async (req, res) => {
     }
   });
 
+//Learner: Unlock all lessons
+router.post('/all-lessons/:learnerId', async (req, res) => {
+  try {
+    const {learnerId} = req.params;
+    const alllessons = await pl.find();
+    const data = await Promise.all(
+      alllessons.map(
+        async lesson => {
+          const isUnlocked = await learnerpl.exists({learnerId: learnerId, plId: lesson._id});
+          console.log(isUnlocked)
+          if (isUnlocked) 
+            return "";
+          await learnerpl.create({learnerId: learnerId, plId: lesson._id, progress: 2});
+          console.log(lesson.name)
+          return lesson.name;
+    }))
+    console.log(data)
+    return res.status(200).json({ message: "Unlock lessons: "+ data});
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});  
+
 //to shuffle quizzes
 function shuffle(array) {
   let currentIndex = array.length,  randomIndex;
@@ -287,7 +310,7 @@ router.post('/:lessonId', async (req, res) => {
       const isUnlocked = await learnerpl.exists({learnerId: learnerId, plId: lessonId});
       if (isUnlocked) 
         return res.status(200).json({ message: "Already unlocked!" });
-      const unlockedlr = await learnerpl.create({learnerId: learnerId, plId: lessonId, status: 0});
+      const unlockedlr = await learnerpl.create({learnerId: learnerId, plId: lessonId, progress: 2});
       return res.status(200).json({ data: unlockedlr });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });  

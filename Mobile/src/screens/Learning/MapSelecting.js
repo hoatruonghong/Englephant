@@ -42,6 +42,7 @@ library.add(faList, faCircleInfo, faXmark);
 
 
 function reducer(id, action){
+  console.log(id)
   if(action.type === '+'){
     action.ref.current.scrollToIndex({index: id+1, viewPosition: 0, animated: false});
     return id+1;
