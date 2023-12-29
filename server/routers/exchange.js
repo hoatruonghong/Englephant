@@ -66,7 +66,7 @@ exchangeRouter.put('/add-heart', async (req, res) => {
     try {
         const { num, learnerId } = req.body
 
-        const learner = await Learner.findById(learnerId)
+        const learner = await Learner.findById(learnerId);
         if (!learner) return sendError(res, "Information not found.");
         // if (num < 0)  return sendError(res, "Num must be greater or equal than 0");
 

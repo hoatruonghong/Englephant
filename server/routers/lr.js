@@ -236,9 +236,6 @@ router.post('/:lessonId', async (req, res) => {
       const isUnlocked = await learnerlrl.exists({learnerId: learnerId, lrlId: curLesson.next});
       if (isUnlocked) 
         return res.status(200).json({ message: "Already unlocked!" });
-      const curLearner = await learner.findById(learnerId)
-      var newHeart = curLearner.heart + num;
-      await learner.findByIdAndUpdate(learnerId, {heart: newHeart})
       const unlockedlr = await learnerlrl.create({learnerId: learnerId, lrlId: lessonId, status: 0});
       return res.status(200).json({ data: unlockedlr });
   } catch (err) {

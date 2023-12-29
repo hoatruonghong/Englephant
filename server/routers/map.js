@@ -306,14 +306,41 @@ router.delete('/delete-map/:mode/topic/:name', async (req, res) => {
   }
 });
 
+//function to add heart
+function addHeart(prev, cur) {
+  const heartPerStar = 2;
+
+  let addHeart = 0;
+  if (prev < 0.6){
+    addHeart = (cur==1)? 
+      3*heartPerStar : (cur>=0.8)?
+        2*heartPerStar : (cur>=0.6)?
+          heartPerStar : 0;
+  } else if (prev < 0.8) {
+    addHeart = (cur==1)?
+      2*heartPerStar : (cur>=0.8)?
+        heartPerStar : 0;
+  } else if (prev < 1) {
+    if (cur == 1) addHeart = heartPerStar;
+  }
+  return addHeart;
+}
 //Learner: Update Node Point
 router.put('/node-result/:nodeId', async (req, res) => {
   try {
     const { nodeId } = req.params;
     const { learnerId, point, totalnumofquiz, time } = req.body;
     const node_result = await learnernode.findOne({nodeId: nodeId, learnerId: learnerId});
-    if (point>= node_result.point)
+    const prevResult = node_result.point/totalnumofquiz;
+    const curResult = point/totalnumofquiz;
+    if (curResult > prev || (curResult==prev && time < node_result.time)){
       await learnernode.findByIdAndUpdate( node_result._id, { point: point, totalnumofquiz: totalnumofquiz, time: time });
+      let numaddheart = addHeart(prevResult, curResult);
+      if (numaddheart>0){
+        const curLearner = await learner.findById(learnerId);
+        await learner.findByIdAndUpdate(learnerId, {heart: curLearner.heart+numaddheart});
+      }
+    }
     res.status(200).json({ message: "Update Node result successfully!" })
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
@@ -369,6 +396,11 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
   try {
     const {mapId, learnerId} = req.params;
     const nodes = await node.find({mapId: mapId});
+    const numaddheart = 5;
+    //Add heart whenever learner finish map
+    const curLearner = await learner.findById(learnerId);
+    await learner.findByIdAndUpdate(learnerId, {heart: curLearner.heart+numaddheart});
+    
     let length = nodes.length;
     let learnernoderesults = [];
     let sumpoint = 0;
@@ -398,9 +430,9 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     //check if map has been unlocked already
     const isUnlocked = await learnermap.exists({learnerId: learnerId, mapId: mapId});
     if (!isUnlocked) {
-      const unlockedmap = await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
+      await learnermap.create({learnerId: learnerId, mapId: mapId, status: 0});
       const node1st = await node.findOne({mapId: mapId, position: 1});
-      const unlockednode = await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
+      await learnernode.create({learnerId: learnerId, nodeId: node1st._id});
       await learner.findByIdAndUpdate(learnerId, {currentMap: mapId})
     }
 
