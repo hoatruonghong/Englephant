@@ -333,7 +333,7 @@ router.put('/node-result/:nodeId', async (req, res) => {
     const node_result = await learnernode.findOne({nodeId: nodeId, learnerId: learnerId});
     const prevResult = node_result.point/totalnumofquiz;
     const curResult = point/totalnumofquiz;
-    if (curResult > prev || (curResult==prev && time < node_result.time)){
+    if (curResult > prevResult || (curResult==prevResult && time < node_result.time)){
       await learnernode.findByIdAndUpdate( node_result._id, { point: point, totalnumofquiz: totalnumofquiz, time: time });
       let numaddheart = addHeart(prevResult, curResult);
       if (numaddheart>0){

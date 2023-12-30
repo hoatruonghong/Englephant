@@ -165,6 +165,7 @@ export default function LearningQuiz({route, navigation}) {
     //Send Node result to backend
     const sendResult = () => {
         uri = 'https://englephant.vercel.app/api/map/node-result/'+nodeId;
+        console.log(learnerId, score.reduce((s, i) => s + i, 0), numofquiz, timer)
         axios.put(uri,{
             learnerId: learnerId,
             point: score.reduce((s, i) => s + i, 0),

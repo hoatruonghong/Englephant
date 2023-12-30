@@ -10,21 +10,24 @@ library.add(faCheckCircle, faLock);
 
 import colors from './../../assets/colors';
 
-export default function ListenReadItem({ item, navigation }) {
+export default function ListenReadItem({ item, navigation, onPressInactive }) {
   if (!item.active){
     return(
-      <TouchableOpacity style={[styles.ListenReadIteamWrapper,{backgroundColor: colors.bright_gray_brown}]}>
-      <View style={styles.topItem}>
-        <View style={styles.leftSide}>
+      <TouchableOpacity 
+        style={[styles.ListenReadIteamWrapper,{backgroundColor: colors.bright_gray_brown}]}
+        onPress={()=>onPressInactive()}
+      >
+        <View style={styles.topItem}>
+          <View style={styles.leftSide}>
+            <View style={[styles.dot, {backgroundColor: "white"}]} />
+            <Text style={styles.titleText}>{"  "+item.name}</Text>
+          </View>
           <View style={[styles.dot, {backgroundColor: "white"}]} />
-          <Text style={styles.titleText}>{"  "+item.name}</Text>
         </View>
-        <View style={[styles.dot, {backgroundColor: "white"}]} />
-      </View>
-      <View style={styles.iconItem2}>
-        <FontAwesomeIcon icon={faLock}  color={"white"} size={30}/>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.iconItem2}>
+          <FontAwesomeIcon icon={faLock}  color={"white"} size={30}/>
+        </View>
+      </TouchableOpacity>
     )
     
   }
@@ -47,7 +50,7 @@ export default function ListenReadItem({ item, navigation }) {
       )
   }
 
-  const onPress = () => {
+  const onPressActive = () => {
     uri = 'https://englephant.vercel.app/api/lr/quiz/'+item._id;
     axios.get(uri)
     .then(function (res) {
@@ -60,7 +63,7 @@ export default function ListenReadItem({ item, navigation }) {
   return (
     <TouchableOpacity 
       style={[styles.ListenReadIteamWrapper,{backgroundColor: "white"}]}
-      onPress={()=>onPress()}
+      onPress={()=>onPressActive()}
     >
       <View style={styles.topItem}>
         <View style={styles.leftSide}>

@@ -1,6 +1,6 @@
 import React, { useState }  from 'react';
 import { Text, View, Image, SafeAreaView, TouchableOpacity, Animated} from "react-native";
-import {Vimeo} from 'react-native-vimeo-iframe';
+import WebView from 'react-native-webview';
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 import style from '../styles';
@@ -16,12 +16,12 @@ export default function PLesson({route, navigation}) {
 
     const {lessons} = route.params;
     const numoflesson = lessons.length;
-    const [progress, setProgress] = useState(new Animated.Value(0));
+    const [progress, setProgress] = useState(new Animated.Value(1));
     const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
     const [buttonVisible, setButtonVisible] = useState(true);
 
     const progressAnim = progress.interpolate({
-        inputRange: [0, numoflesson-1],
+        inputRange: [0, numoflesson],
         outputRange: ['0%','100%']
     });
 
@@ -33,7 +33,7 @@ export default function PLesson({route, navigation}) {
         }
         setCurrentLessonIndex(currentLessonIndex+1);
         Animated.timing(progress, {
-            toValue: currentLessonIndex+1,
+            toValue: currentLessonIndex+2,
             duration: 1000,
             useNativeDriver: false
         }).start();
@@ -42,6 +42,7 @@ export default function PLesson({route, navigation}) {
     const renderProgressBar = () => {
         return (
             <View style={{height:"5%", flexDirection: "row"}}>
+                <Text style = {[styles.questionText, {marginRight: "4%"}]}>{currentLessonIndex+1}/{numoflesson}</Text>
                 <View style={styles.wrapProgressBar}>
                 <Animated.View style={[{
                     height: 10,
@@ -61,23 +62,17 @@ export default function PLesson({route, navigation}) {
         )
     };
 
-    const videoCallbacks = {
-        timeupdate: (data) => console.log('timeupdate: ', data),
-        play: (data) => console.log('play: ', data),
-        pause: (data) => console.log('pause: ', data),
-        fullscreenchange: (data) => console.log('fullscreenchange: ', data),
-        ended: (data) => console.log('ended: ', data),
-        controlschange: (data) => console.log('controlschange: ', data),
-    };
-
     const renderLesson = () => {
         return (
             <View style={styles.wrapQuestions}>
-                <Vimeo
-                    videoId={lessons[currentLessonIndex]}
-                    params={'api=1&autoplay=0'}
-                    handlers={videoCallbacks}
-                />
+                <View style={{flex: 1}}>
+                    <WebView
+                        style={ {  marginTop: (Platform.OS == 'ios') ? 20 : 0,} }
+                        javaScriptEnabled={true}
+                        domStorageEnabled={true}
+                        source={{uri: 'https://www.youtube.com/embed/'+lessons[currentLessonIndex] }}
+                    />
+                </View>
                 <Text style={styles.questionText}>Cùng học phát âm theo video nào</Text>
             </View>
         )
