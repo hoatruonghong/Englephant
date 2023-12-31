@@ -41,13 +41,14 @@ export default function ListenReadItem({ item, navigation, onPressInactive }) {
   }
 
   const renderProgress = (item) => {
-    if (item.point)
+    if (item.point){
       return (
         <View style={styles.progressItem}>
             <Text style={styles.contentText}>{item.point}/{item.total}</Text>
             <Text style={styles.contentText}>{Math.round(item.point/item.total*100)+'%'}</Text>
         </View>
       )
+    }
   }
 
   const onPressActive = () => {

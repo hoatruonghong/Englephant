@@ -164,7 +164,7 @@ router.post('/first-lesson/:learnerId', async (req, res) => {
       const isUnlocked = await learnerlrl.exists({learnerId: learnerId, lrlId: flesson});
       if (isUnlocked) 
         return res.status(200).json({ message: "Already unlocked!" });
-      await learnerlrl.create({learnerId: learnerId, lrlId: flesson._id, status: 0});
+      await learnerlrl.create({learnerId: learnerId, lrlId: flesson._id, point: 0, total: 0});
       return res.status(200).json({ message: "Unlock lesson"+flesson.name});
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
@@ -236,7 +236,7 @@ router.post('/:lessonId', async (req, res) => {
       const isUnlocked = await learnerlrl.exists({learnerId: learnerId, lrlId: curLesson.next});
       if (isUnlocked) 
         return res.status(200).json({ message: "Already unlocked!" });
-      const unlockedlr = await learnerlrl.create({learnerId: learnerId, lrlId: lessonId, status: 0});
+      const unlockedlr = await learnerlrl.create({learnerId: learnerId, lrlId: curLesson.next, point: 0, total: 0});
       return res.status(200).json({ data: unlockedlr });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });  
@@ -246,10 +246,11 @@ router.post('/:lessonId', async (req, res) => {
 //Learner: Send result
 router.put('/result/:lessonId', async (req, res) => {
   const { lessonId } = req.params;
+  console.log(req.body)
   const { learnerId, point, totalnumofquiz } = req.body;
   try {
     const result = await learnerlrl.findOne({lrlId: lessonId, learnerId: learnerId});
-    if (point> result.point)
+    if (!result.point || point> result.point)
       await learnerlrl.findByIdAndUpdate( result._id, { point: point, total: totalnumofquiz });
     res.status(200).json({ message: "Update Node result successfully!" })
   } catch (error) {

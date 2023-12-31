@@ -48,16 +48,18 @@ function LessonItem(props) {
         case 3:
             icon = faDumbbell;
             color = colors.red;
-            if (item.progress!=3) visible = false;
-            onPress=()=>{
-              uri = 'https://englephant.vercel.app/api/pronunciation/quiz/3/'+item.sound1+'/'+item.sound2;
-              axios.get(uri)
-              .then(function (res) {
-                navigation.navigate("PronunciationQuiz",{lessonId: item._id, quizzes: res.data.quiz});
-              })
-              .catch(function (error) {
-                  console.log(error);
-              });
+            if (item.progress!=3){
+              visible = false;
+              onPress=()=>{
+                uri = 'https://englephant.vercel.app/api/pronunciation/quiz/3/'+item.sound1+'/'+item.sound2;
+                axios.get(uri)
+                .then(function (res) {
+                  navigation.navigate("PronunciationQuiz",{lessonId: item._id, quizzes: res.data.quiz});
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+              }
             }
             break;
     }

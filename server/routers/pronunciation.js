@@ -6,6 +6,7 @@ import pl from '../models/pl.js';
 import pquiz from '../models/pquiz.js';
 import panswer from '../models/panswer.js';
 import sound from '../models/sound.js';
+import e from "express";
 
 const router = express.Router();
 
@@ -318,7 +319,7 @@ router.post('/:lessonId', async (req, res) => {
 });
 
 //Learner: Send result
-router.get('/result/:lessonId', async (req, res) => {
+router.post('/result/:lessonId', async (req, res) => {
   const { lessonId } = req.params;
   const { learnerId, sound1, accuracy1, sound2, accuracy2, pass } = req.body;
   try {
@@ -326,13 +327,16 @@ router.get('/result/:lessonId', async (req, res) => {
     const alearnerpl = await learnerpl.findOne({plId: lessonId, learnerId: learnerId});
     if (!alearnerpl)
       await learnerpl.create({lessonId: lessonId, learnerId: learnerId, progress: pass? 3: 2});
-    const result1 = await learnersound.findOne({learnerId: learnerId, soundId: sound1})
-    console.log(result1)
-    await learnersound.findByIdAndUpdate( result1._id, { accuracy: accuracy1 });
+    else if (pass) 
+      await learnerpl.findByIdAndUpdate( alearnerpl._id, { progress: 3 });
+    const result1 = await learnersound.findOne({learnerId: learnerId, soundId: sound1});
+    if (!result1)
+      await learnersound.create({learnerId: learnerId, soundId: sound1, accuracy: accuracy1});
+    else await learnersound.findByIdAndUpdate( result1._id, { accuracy: accuracy1 });
     const result2 = await learnersound.findOne({learnerId: learnerId, soundId: sound2})
-    console.log(result2)
-    await learnersound.findByIdAndUpdate( result2._id, { accuracy: accuracy2 });
-    console.log(point)
+    if (!result2)
+      await learnersound.create({learnerId: learnerId, soundId: sound1, accuracy: accuracy2});
+    else await learnersound.findByIdAndUpdate( result2._id, { accuracy: accuracy2 });
     res.status(200).json({ message: "Update result result successfully!" })
   } catch (error) {
       return res.status(500).json({ message: JSON.stringify(error) });
