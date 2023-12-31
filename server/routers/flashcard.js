@@ -29,8 +29,8 @@ flashcardRouter.get('/learner/:learnerId', async (req, res) => {
 flashcardRouter.get('/node/:nodeId/:learnerId', async (req, res) => {
   try {
     const { nodeId, learnerId } = req.params;
-    const flashcards = await learnercard.find({learnerId: learnerId, nodeId: nodeId})
-    const ret = flashcards.map((i)=>i.cardId)
+    const flashcards = await learnercard.find({learnerId: learnerId, nodeId: nodeId});
+    const ret = flashcards? flashcards.map((i)=>i.cardId): [];
     return res.status(200).json({ data: ret });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });

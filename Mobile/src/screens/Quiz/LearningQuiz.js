@@ -108,9 +108,11 @@ export default function LearningQuiz({route, navigation}) {
     //get flashcards
     const getFlashcards = () => {
         uri = 'https://englephant.vercel.app/api/card/node/'+nodeId+'/'+learnerId;
+        console.log(uri)
         axios.get(uri)
         .then(function (res) {
             let havingFlashcards = res.data.data;
+            console.log(1)
             let cards_id = [];
             let cards_content = [];
             for (let i = 0; i < numofcard; i++){
@@ -121,11 +123,13 @@ export default function LearningQuiz({route, navigation}) {
                     }
                 }
             }
+            console.log(1)
             if (score.reduce((s, i) => s + i, 0)/numofquiz >= 0.6 || cards_id.length >= (numofcard - 2)){
                 setPass(true);
                 unlockNewNode(nodeId);
             }
             uri = 'https://englephant.vercel.app/api/card/learner/'+learnerId;
+            console.log(uri)
             axios.post(uri,{
                 cards: cards_id,
                 nodeId: nodeId
@@ -349,6 +353,7 @@ export default function LearningQuiz({route, navigation}) {
       
     const renderOptions = () => {
         let type = "word";
+        console.log(answers)
         if (answers && answers.length>0){
             if (answers[0].image){
                 type = "image";
