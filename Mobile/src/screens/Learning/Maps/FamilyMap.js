@@ -20,7 +20,7 @@ export default function FamilyMap({navigation}){
       uri = 'https://englephant.vercel.app/api/map/check-node/'+mapId+'/'+learnerId;
       axios.get(uri)
       .then(function (res) {
-        setNodeState(res.data.state);
+        setNodeState(res.data.state).then(console.log(nodeState));
         setNumStars(res.data.star);
       })
       .catch(function (error) {

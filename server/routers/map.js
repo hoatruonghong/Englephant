@@ -354,7 +354,7 @@ router.post('/node/:nodeId', async (req, res) => {
     const {learnerId} = req.body;
     const cur_node = await node.findById(nodeId);
     if(cur_node.next){
-      const next_node = await learnernode.findOne({nodeId : cur_node.next});
+      const next_node = await learnernode.findOne({nodeId : cur_node.next, learnerId: learnerId});
       if (!next_node){
         const dbLearnerNode = new learnernode({
           learnerId: learnerId,
@@ -380,10 +380,14 @@ router.get('/check-node/:mapId/:learnerId', async (req, res) => {
     let starRet = [];
     for (let i in nodes){
       let nodestate = await learnernode.findOne({learnerId: learnerId, nodeId: nodes[i]._id});
-      stateRet.push(nodestate? "Unlock" : "Lock");
-      let result = nodestate.totalnumofquiz>0? nodestate.point/nodestate.totalnumofquiz: 0;
-      starRet.push(result>=0.6? result>=0.8? result==1? 3 : 2 : 1 : 0);
-      if (i>=1 && stateRet[i-1] == "Unlock" && stateRet[i] == "Lock") stateRet[i]="Next";
+      if (nodestate){
+        stateRet.push("Unlock");
+        let result = nodestate.totalnumofquiz>0? nodestate.point/nodestate.totalnumofquiz: 0;
+        starRet.push(result>=0.6? result>=0.8? result==1? 3 : 2 : 1 : 0);
+      } else {
+        stateRet.push((i>=1 && stateRet[i-1] == "Unlock")?"Next": "Lock");
+        starRet.push(0);
+      }
     }
     return res.status(200).json({ state: stateRet, star: starRet });
   } catch (err) {
