@@ -98,9 +98,9 @@ export default function PronunciationQuiz({route, navigation}) {
         axios.put(uri,{
             learnerId: learnerId,
             sound1: sound1,
-            accuracy1: score1/5,
+            accuracy1: 2*score1/quizzes.length,
             sound2: sound2,
-            accuracy2: score2/5,
+            accuracy2: 2*score2/quizzes.length,
             pass: pass
         })
         .then(function (res) {
@@ -113,7 +113,7 @@ export default function PronunciationQuiz({route, navigation}) {
     //Handle showing result
     const handleResult = async () => {
         console.log(1,score1,2,score2);
-        if (score1/5>=0.6 && score2/5>=0.6){
+        if (2*score1/quizzes.length>=0.6 && 2*score2/quizzes.length>=0.6){
             setPass(true);
             unlockExercise(lessonId);
         }

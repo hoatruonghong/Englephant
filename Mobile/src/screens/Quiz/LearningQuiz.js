@@ -121,7 +121,7 @@ export default function LearningQuiz({route, navigation}) {
                     }
                 }
             }
-            if (havingFlashcards.length >= (numofcard -2) || cards_id.length >= (numofcard - 2)){
+            if (score.reduce((s, i) => s + i, 0)/numofquiz >= 0.6 || cards_id.length >= (numofcard - 2)){
                 setPass(true);
                 unlockNewNode(nodeId);
             }
@@ -131,8 +131,8 @@ export default function LearningQuiz({route, navigation}) {
                 nodeId: nodeId
             })
             .then(function (res) {
-                if (cards_id.length>0)
-                    navigation.navigate("Done", {onPress: navigation.navigate("Flashcard", {cards: cards_content})})
+                if (cards_id.length>0 && pass)
+                    navigation.navigate("Done", {cards: cards_content})
                 else setShowResultModal(true);
             })
             .catch(function (error) {
@@ -165,6 +165,7 @@ export default function LearningQuiz({route, navigation}) {
     //Send Node result to backend
     const sendResult = () => {
         uri = 'https://englephant.vercel.app/api/map/node-result/'+nodeId;
+        console.log(learnerId, score.reduce((s, i) => s + i, 0), numofquiz, timer)
         axios.put(uri,{
             learnerId: learnerId,
             point: score.reduce((s, i) => s + i, 0),

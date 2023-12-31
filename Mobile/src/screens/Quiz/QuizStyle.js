@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     wrapProgressBar: {
+        right: '10%',
         width: '75%',
         height: 10,
         top: "3%",

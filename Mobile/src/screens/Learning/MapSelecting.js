@@ -63,7 +63,7 @@ export default function MapSelecting({navigation}) {
   const {height, width} = useWindowDimensions();
   const slider = createRef();
   const [data, setData] = useState([]);
-  const [id, dispatch] = useReducer(reducer,1);
+  const [id, dispatch] = useReducer(reducer,currentMap-1);
   const [itemCount, setItemCount] = useState(0);
   const [notiModalVisible, setNotiModalVisible] = useState(false);
   const [exchangeModalVisible, setExchangeModalVisible] = useState(false);
@@ -79,7 +79,7 @@ export default function MapSelecting({navigation}) {
       console.log(res.data.data)
       newData = res.data.data.concat({name:"None", image: "", active: true, status:0});
       setData(newData);
-      setItemCount(data.length);
+      setItemCount(newData.length);
     })
     .catch(function (error) {
       console.log(error);
@@ -197,7 +197,7 @@ export default function MapSelecting({navigation}) {
             <MascotCry 
                 viewBox='0 0 68 90'/>
             </View>
-            <Text style={[styles.textStyle, {textAlign: 'center'}]}>{modalContent}</Text>
+            <Text style={[styles.text, {textAlign: 'center'}]}>{modalContent}</Text>
           </View>
           </View>
         </Modal>
