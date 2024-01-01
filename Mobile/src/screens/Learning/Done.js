@@ -4,7 +4,8 @@ import {
   SafeAreaView,
   Text,
   useWindowDimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  StyleSheet
 } from 'react-native';
 import MascotHappy from '../../../assets/svg/mascot_happy.svg';
 import styles from '../styles';
@@ -19,6 +20,7 @@ library.add(fas);
 export default function Done({route, navigation}) {
   const {height, width} = useWindowDimensions();
   const { cards } = route.params;
+  const star =3;
   return (
     <SafeAreaView style={styles.container}>
         <ImageBackground source={require('./../../../assets/images/bg.png')} style={styles.bg}>
@@ -29,7 +31,22 @@ export default function Done({route, navigation}) {
             <FontAwesomeIcon icon="xmark"  color={colors.black} size={32}/>
             </TouchableOpacity>
             <Text style={[{top: "60%", width: "100%"},styles.heading]}>Chúc mừng!!!</Text>
-            <Text style={[{top: "66%", left: "10%", width: "80%"},styles.text]}>Chúc mừng bạn đã hoàn thành bài học! Bấm GO để nhận flashcard!</Text>
+            <Text style={[{top: "66%", left: "10%", width: "80%"},styles.text]}>
+              Chúc mừng bạn đã hoàn thành bài học với {star} sao! 
+              Bấm GO để nhận flashcard!
+            </Text>
+            <View>
+              <FontAwesomeIcon icon="star"  color={colors.bright_gray_brown} size={13}/>
+              <Text style={style.conditionText}> đúng 60% quiz </Text>
+            </View>
+            <View>
+              <FontAwesomeIcon icon="star"  color={colors.bright_gray_brown} size={13}/>
+              <Text style={style.conditionText}> đúng 80% quiz </Text>
+            </View>
+            <View>
+              <FontAwesomeIcon icon="star"  color={colors.bright_gray_brown} size={13}/>
+              <Text style={style.conditionText}> đúng 100% quiz </Text>
+            </View>
             <GoButton 
             onPress={() => navigation.navigate("Flashcard", {cards: cards})}
             height={height} 
@@ -40,3 +57,14 @@ export default function Done({route, navigation}) {
     </SafeAreaView>
   );
 }
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  conditionText: {
+    color: colors.bright_gray_brown,
+    fontSize: 13,
+  }
+})

@@ -33,6 +33,7 @@ export default function LearningQuiz({route, navigation}) {
     const numofcard = flashcards.length;
     const quizzesPerCard = 3;
     const cardThreshold = quizzesPerCard > 3? Math.ceil(quizzesPerCard*0.75): 2;
+    const [answersAvailable, setAnswersAvailable] = useState(false);
     const [answers, setAnswers] = useState([]);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -50,6 +51,8 @@ export default function LearningQuiz({route, navigation}) {
     const [timerIsActive, setTimerIsActive ] = useState(true);
 
     useEffect(() => {
+        if (answers.length >0 && answers[0].quizId == quizzes[currentQuestionIndex]._id)
+            setAnswersAvailable(true);
         const interval = setInterval(() => {
             if(timerIsActive)
                 count(timer+1);
@@ -63,15 +66,17 @@ export default function LearningQuiz({route, navigation}) {
 
     //get answers
     const getAnswers = (index)=>{
-        uri = 'https://englephant.vercel.app/api/quiz/answer/'+quizzes[index]._id;
-        console.log(uri);
-        axios.get(uri)
-        .then(function (res) {
-            setAnswers(res.data.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+        if (!answersAvailable){
+            uri = 'https://englephant.vercel.app/api/quiz/answer/'+quizzes[index]._id;
+            console.log(uri);
+            axios.get(uri)
+            .then(function (res) {
+                setAnswers(res.data.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        }
     }
 
     const chooseAnswer = (selectedOption) => {
@@ -108,9 +113,11 @@ export default function LearningQuiz({route, navigation}) {
     //get flashcards
     const getFlashcards = () => {
         uri = 'https://englephant.vercel.app/api/card/node/'+nodeId+'/'+learnerId;
+        console.log(uri)
         axios.get(uri)
         .then(function (res) {
             let havingFlashcards = res.data.data;
+            console.log(1)
             let cards_id = [];
             let cards_content = [];
             for (let i = 0; i < numofcard; i++){
@@ -121,11 +128,13 @@ export default function LearningQuiz({route, navigation}) {
                     }
                 }
             }
+            console.log(1)
             if (score.reduce((s, i) => s + i, 0)/numofquiz >= 0.6 || cards_id.length >= (numofcard - 2)){
                 setPass(true);
                 unlockNewNode(nodeId);
             }
             uri = 'https://englephant.vercel.app/api/card/learner/'+learnerId;
+            console.log(uri)
             axios.post(uri,{
                 cards: cards_id,
                 nodeId: nodeId
@@ -204,6 +213,7 @@ export default function LearningQuiz({route, navigation}) {
                 validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
                 handleResult();
             } else {
+                setAnswersAvailable(false);
                 validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
                 if ((currentQuestionIndex+1) % quizzesPerCard == 0)
                     setCurrentCardIndex(currentCardIndex+1);
@@ -348,73 +358,70 @@ export default function LearningQuiz({route, navigation}) {
     }
       
     const renderOptions = () => {
-        let type = "word";
-        if (answers && answers.length>0){
-            if (answers[0].image){
-                type = "image";
-            }
-            if (answers[0].audio){
-                type = "audio";
-            }
-            if (answers[0].video){
-                type = "video";
-            }
+        let type = "word";        console.log(answers)
+        if (answers[0].image){
+            type = "image";
         }
-        if (answers && answers!=[])
-            switch (quizzes[currentQuestionIndex].type){
-                case "Từ - Nghe":
-                case "Từ - Hình":
-                    {
-                        return (
-                            <FlatList style={styles.wrapOptions}
-                            numColumns={2}
-                            data={answers}
-                            columnWrapperStyle={{justifyContent: 'space-between'}}
-                            renderItem={({item, index}) =>(   
-                                    <TouchableOpacity 
-                                        onPress={()=>{chooseAnswer(item)}}
-                                        disabled={isDisabled}
-                                        key={item._id}
-                                        style={[styles.wrapOption,
-                                        {
-                                            backgroundColor: 
-                                                item==currentOptionSelected?
-                                                colors.bright_gray_brown :
-                                                colors.white
-                                        }]}
-                                    >
-                                        {renderContent(type, item)}
-                                    </TouchableOpacity>
-                                )
-                            }
-                            contentContainerStyle={{width: "100%", height: "100%"}}
-                            />
-                        )
-                    }
-                case "Phát âm - Hình":
-                case "Phát âm - Nghe":
+        if (answers[0].audio){
+            type = "audio";
+        }
+        if (answers[0].video){
+            type = "video";
+        }
+        switch (quizzes[currentQuestionIndex].type){
+            case "Từ - Nghe":
+            case "Từ - Hình":
+                {
                     return (
-                        answers.length== 1 && 
-                        <View style={styles.wrapOptions}>
-                            <PronunciationAssess ref={recorder} refText={answers[0].content}/>
-                        </View>
+                        <FlatList style={styles.wrapOptions}
+                        numColumns={2}
+                        data={answers}
+                        columnWrapperStyle={{justifyContent: 'space-between'}}
+                        renderItem={({item, index}) =>(   
+                                <TouchableOpacity 
+                                    onPress={()=>{chooseAnswer(item)}}
+                                    disabled={isDisabled}
+                                    key={item._id}
+                                    style={[styles.wrapOption,
+                                    {
+                                        backgroundColor: 
+                                            item==currentOptionSelected?
+                                            colors.bright_gray_brown :
+                                            colors.white
+                                    }]}
+                                >
+                                    {renderContent(type, item)}
+                                </TouchableOpacity>
+                            )
+                        }
+                        contentContainerStyle={{width: "100%", height: "100%"}}
+                        />
                     )
-                case "Điền - Nghe":
-                case "Điền - Hình":
-                    return (
-                        <View style={styles.wrapOptions}>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={text=>onChangeText(text.toLowerCase().trim())}
-                                value={text}
-                                placeholder='Điền vào đây'
-                                color={colors.bright_gray_brown}
-                                placeholderTextColor={colors.bright_gray_brown}
-                            />
-                        </View>
-                    )
-                default:
-                    return ;
+                }
+            case "Phát âm - Hình":
+            case "Phát âm - Nghe":
+                return (
+                    answers.length== 1 && 
+                    <View style={styles.wrapOptions}>
+                        <PronunciationAssess ref={recorder} refText={answers[0].content}/>
+                    </View>
+                )
+            case "Điền - Nghe":
+            case "Điền - Hình":
+                return (
+                    <View style={styles.wrapOptions}>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={text=>onChangeText(text.toLowerCase().trim())}
+                            value={text}
+                            placeholder='Điền vào đây'
+                            color={colors.bright_gray_brown}
+                            placeholderTextColor={colors.bright_gray_brown}
+                        />
+                    </View>
+                )
+            default:
+                return ;
         }
     };
 
@@ -468,7 +475,7 @@ export default function LearningQuiz({route, navigation}) {
         <SafeAreaView style={styles.container}>
             {renderProgressBar()}
             {currentLessonIndex < numofcard? renderLesson() : renderQuestion()}
-            {currentLessonIndex == numofcard && renderOptions()}
+            {currentLessonIndex == numofcard && answers.length > 0 && currentQuestionIndex+1<numofquiz && answers[0].quizId == quizzes[currentQuestionIndex]._id && renderOptions()}
             {renderButton()}
             {renderModal()}
             

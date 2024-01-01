@@ -29,8 +29,8 @@ flashcardRouter.get('/learner/:learnerId', async (req, res) => {
 flashcardRouter.get('/node/:nodeId/:learnerId', async (req, res) => {
   try {
     const { nodeId, learnerId } = req.params;
-    const flashcards = await learnercard.find({learnerId: learnerId, nodeId: nodeId})
-    const ret = flashcards.map((i)=>i.cardId)
+    const flashcards = await learnercard.find({learnerId: learnerId, nodeId: nodeId});
+    const ret = flashcards? flashcards.map((i)=>i.cardId): [];
     return res.status(200).json({ data: ret });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
@@ -132,6 +132,38 @@ flashcardRouter.get('/archive/:learnerId', async (req, res) => {
       return {mapId: map.mapId, map: map.name, flashcards: flashcards};
     }));
     return res.status(200).json({ data: data });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+/**
+ * @route GET /api/card/account/:learnerId
+ * @description Learner: Get number and state of having flashcards for Account screen
+ * @access public
+ */
+flashcardRouter.get('/account/:learnerId', async (req, res) => {
+  try {
+    const { learnerId } = req.params;
+    const flashcards = await learnercard.find({learnerId: learnerId});
+    let newflcs = 0;
+    let almostflcs = 0;
+    let rememberflcs = 0;
+    flashcards.map(card =>{
+        switch (card.status){
+          case "Mới học":
+            newflcs++;
+            break;
+          case "Gần nhớ":
+            almostflcs++;
+            break;
+          case "Đã nhớ":
+            rememberflcs++;
+            break;
+        }
+      })
+    ;
+    return res.status(200).json({ new: newflcs, almost_remembered: almostflcs, remembered: rememberflcs });
   } catch (err) {
     return res.status(500).json({ message: JSON.stringify(err) });
   }
