@@ -6,7 +6,6 @@ import pl from '../models/pl.js';
 import pquiz from '../models/pquiz.js';
 import panswer from '../models/panswer.js';
 import sound from '../models/sound.js';
-import e from "express";
 
 const router = express.Router();
 
@@ -343,5 +342,20 @@ router.post('/result/:lessonId', async (req, res) => {
   }
 });
 
+/**
+ * @route GET /api/pronunciation/account/:learnerId
+ * @description Learner: Get state of sounds for Account screen
+ * @access public
+ */
+router.get('/account/:learnerId', async (req, res) => {
+  try {
+    const { learnerId } = req.params;
+    const ascsounds = await learnersound.find({learnerId: learnerId}).sort({accuracy: 1}).limit(3);
+    const descsounds = await learnersound.find({learnerId: learnerId}).sort({accuracy: -1}).limit(3);
+    return res.status(200).json({ best: descsounds, worst: ascsounds });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
 
 export default router;

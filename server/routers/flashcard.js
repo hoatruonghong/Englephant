@@ -137,4 +137,36 @@ flashcardRouter.get('/archive/:learnerId', async (req, res) => {
   }
 });
 
+/**
+ * @route GET /api/card/account/:learnerId
+ * @description Learner: Get number and state of having flashcards for Account screen
+ * @access public
+ */
+flashcardRouter.get('/account/:learnerId', async (req, res) => {
+  try {
+    const { learnerId } = req.params;
+    const flashcards = await learnercard.find({learnerId: learnerId});
+    let newflcs = 0;
+    let almostflcs = 0;
+    let rememberflcs = 0;
+    flashcards.map(card =>{
+        switch (card.status){
+          case "Mới học":
+            newflcs++;
+            break;
+          case "Gần nhớ":
+            almostflcs++;
+            break;
+          case "Đã nhớ":
+            rememberflcs++;
+            break;
+        }
+      })
+    ;
+    return res.status(200).json({ new: newflcs, almost_remembered: almostflcs, remembered: rememberflcs });
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
 export default flashcardRouter
