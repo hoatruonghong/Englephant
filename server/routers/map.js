@@ -402,8 +402,11 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     const nodes = await node.find({mapId: mapId});
     const numaddheart = 5;
     //Add heart whenever learner finish map
-    const curLearner = await learner.findById(learnerId);
-    await learner.findByIdAndUpdate(learnerId, {heart: curLearner.heart+numaddheart});
+    const firstTimeFinish = await learnermap.exists({learnerId: learnerId, mapId: mapId-1, status: 0});
+    if (firstTimeFinish){
+      const curLearner = await learner.findById(learnerId);
+      await learner.findByIdAndUpdate(learnerId, {heart: curLearner.heart+numaddheart});
+    }
     
     let length = nodes.length;
     let learnernoderesults = [];
