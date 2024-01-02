@@ -62,6 +62,9 @@ import Wardrobe from './screens/Setting/Wardrobe';
 import TimeCounter from './components/TimeCounter';
 import Auth from './api/Auth';
 import Done from './screens/Learning/Done';
+import Welcome from './screens/Onboarding/Welcome';
+import LearnMap from './screens/Onboarding/LearnMap';
+import Room from './screens/Exercise/Room';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -137,25 +140,25 @@ function LearningScreens() {
     <Stack.Navigator screenOptions={styles.headerWrap} initialRouteName='MapSelecting'>
       <Stack.Screen name="MapSelecting" component={MapSelecting}
         options={{
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut}]}/>)},
         }}
       />
       <Stack.Screen name="2" component={FamilyMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut}]}/>)},
         }}
       />
       <Stack.Screen name="1" component={FruitMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut}]}/>)},
         }}
       />
       <Stack.Screen name="3" component={SchoolMap}
         options={{
           headerBackVisible: false,
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut}]}/>)},
         }}      
       />
     </Stack.Navigator>    
@@ -169,7 +172,7 @@ function ExerciseScreens() {
 
   useEffect(() => {
     uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
-    const learner = axios.get(uri)
+    axios.get(uri)
     .then(function (res) {
       setHeart(res.data.data.heart);
       setPeanut(res.data.data.peanut);
@@ -183,7 +186,7 @@ function ExerciseScreens() {
     <Stack.Navigator screenOptions={styles.headerWrap}>
       <Stack.Screen name="ExerciseMain" component={ExerciseMain}
         options={{
-          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut, hasPlus: true}]}/>)},
+          headerTitle : () => {return (<HeaderBar items={[{name:"heart", num:heart}, {name:"peanut", num:peanut}]}/>)},
         }}
       />
       <Stack.Screen name="ListenRead" component={ListenRead} 
@@ -283,6 +286,8 @@ function StackNavigator(){
       <Stack.Screen name="LRQuiz" component={LRQuiz} />
       <Stack.Screen name="PronunciationQuiz" component={PronunciationQuiz}/>
       <Stack.Screen name="PLesson" component={PLesson} />
+      <Stack.Screen name="Welcome" component={Welcome} />
+      {/* <Stack.Screen name="FirstMap" component={LearnMap} /> */}
       </Stack.Group>
 
       <Stack.Screen name="Setting" component={Setting} 
@@ -296,7 +301,12 @@ function StackNavigator(){
       <Stack.Screen name="TutorRoom" component={TutorRoom}
         options={{
           headerTitle : () => {return (<TimeCounter time={1200} />)},
-        }} />      
+        }} />
+      <Stack.Screen name="Room" component={Room}
+        options={{
+          headerTitle : () => {return (<TimeCounter time={1200} />)},
+        }} />
+      
       <Stack.Screen name="LRLesson" component={LRLesson}
         options={({ route }) => ({ title: route.params.name })}
       />

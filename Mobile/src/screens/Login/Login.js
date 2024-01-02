@@ -11,7 +11,7 @@ import Learner from './../../api/Learner';
 const image = require("./../../../assets/images/forest-landscape.png");
 
 export default function Login({navigation}) {
-  const { setIsLoggedIn, profile, setProfile } = useLogin();
+  const { setIsLoggedIn, profile, learnerId, setProfile, setLearnerId } = useLogin();
 
   const [username, onChangeUsername] = React.useState('');
   const [password, onChangePassword] = React.useState('');
@@ -21,6 +21,7 @@ export default function Login({navigation}) {
     if (res.status == 200) {
       setIsLoggedIn(true);
       const learnerData = await Learner.getInfo({id: res.data.data.user.id});
+      setLearnerId(res.data.data.user.id);
       setProfile(learnerData.data.data);
     } else {
       console.log(res);

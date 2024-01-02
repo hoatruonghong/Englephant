@@ -100,7 +100,7 @@ export default function TalkRoom({navigation}) {
     const [confirmJoinModalVisible, setConfirmJoinModalVisible] = useState(false);
     const [notEnoughTimeModalVisible, setNotEnoughTimeModalVisible] = useState(false);
     const {height, width} = useWindowDimensions();
-    const {profile, learnerId} = useLogin();
+    const {learnerId} = useLogin();
     const [peanut, setPeanut] = useState();
     const [talkroomTime, setTalkroomTime] = useState();
     const [modalState, setModalState] = useState("none"); //[none, chooseRoom, moreTime, buyPeanut, confirmJoin, notEnoughTime, rateRoom]
@@ -154,8 +154,7 @@ export default function TalkRoom({navigation}) {
     }, [modalState])
 
     useEffect(()=>{
-        // if(typeof peanut === 'undefined' || typeof talkroomTime === "undefined") {
-            axios.get(`${host}/api/learner/item/`+learnerId)
+        axios.get(`${host}/api/learner/item/`+learnerId)
             .then(function (res) {
                 // console.log(res.data);
                 setPeanut(res.data.data.peanut);
@@ -163,9 +162,7 @@ export default function TalkRoom({navigation}) {
             })
             .catch(function (error) {
                 console.log(error);
-            });
-        // }
-
+        });
     }, [modalState])
 
     const renderWrapInfo = () => {

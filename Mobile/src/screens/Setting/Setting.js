@@ -24,10 +24,10 @@ export default function Setting({navigation}) {
                     <FontAwesomeIcon icon="fa-solid fa-key" size={20} color={colors.bright_gray_brown} style={styles.featureIcon}/>
                     <Text style={styles.featureText}>Đổi mật khẩu</Text>
                 </View>
-                <View style={styles.feature}>
+                <TouchableOpacity style={styles.feature} onPress={()=> navigation.navigate('Welcome')}>
                     <FontAwesomeIcon icon="fa-solid fa-headset" size={20} color={colors.bright_gray_brown} style={styles.featureIcon}/>
                     <Text style={styles.featureText}>Hỗ trợ</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.feature}>
                     <FontAwesomeIcon icon="fa-solid fa-comments" size={20} color={colors.bright_gray_brown} style={styles.featureIcon}/>
                     <Text style={styles.featureText}>Góp ý</Text>

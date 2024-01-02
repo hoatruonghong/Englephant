@@ -24,7 +24,8 @@ const handleChooseRoom = async (choosingTime, setModalVisible, navigation, learn
   const talkroomTime = res.data.data.talkroomTime;
   if (choosingTime != 0 && choosingTime <= talkroomTime) {
     setModalVisible("none");
-    navigation.navigate('TutorRoom');
+    navigation.navigate('Room');
+    // navigation.navigate('TutorRoom');
   }
   else {
     setModalVisible("notEnoughTime");
