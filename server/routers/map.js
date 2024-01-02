@@ -459,4 +459,19 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
   }
 })
 
+//Learner: Update Map status
+router.put('/update-status/:mapId/:learnerId', async (req, res) => {
+  try {
+    const { mapId, learnerId } = req.params;
+    const { status } = req.body;
+
+    // Save Node
+    await learnermap.findOneAndUpdate({mapId: mapId, learnerId: learnerId}, { status: status });
+
+    res.status(200).json({ message: "Update map status successfully!" })
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
 export default router;

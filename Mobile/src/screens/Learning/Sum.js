@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHeart, fas, faStar } from '@fortawesome/free-solid-svg-icons';
 import { useLogin } from '../../context/LoginProvider';
+import { useIsFocused } from '@react-navigation/native';
 
 library.add(fas);
 
@@ -31,6 +32,7 @@ export default function Sum({route, navigation}) {
   const totalnumofflashcard = flashcard.total;
   const numofstars = (numofhearts/totalnumofquiz >= 0.8)? ((numofflashcard == totalnumofflashcard)? 3: 2) :1;
   const {height, width} = useWindowDimensions();
+  const isFocused = useIsFocused();
 
   useEffect(()=>{
     uri = 'https://englephant.vercel.app/api/map/unlock/'+learnerId+'/'+(map+1);
@@ -42,7 +44,14 @@ export default function Sum({route, navigation}) {
     .catch(function (error) {
         console.log(error);
     });
-  })
+    axios.put('https://englephant.vercel.app/api/map/update-status/'+map+'/'+learnerId)
+    .then(function (res) {
+        console.log(res.data.message)
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  }, isFocused)
 
   const renderHeart = () => {
     return (<View style={style.subsubContainer}>
