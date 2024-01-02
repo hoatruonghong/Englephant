@@ -44,7 +44,6 @@ class Room extends Component {
     // DONT FORGET TO CHANGE TO YOUR URL
     this.serviceIP = 'http://localhost:5000/webrtcPeer'
 
-    // https://reactjs.org/docs/refs-and-the-dom.html
     // this.localVideoref = React.createRef()
     // this.remoteVideoref = React.createRef()
 
@@ -71,7 +70,6 @@ class Room extends Component {
       console.log('getUserMedia Error: ', e)
     }
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
     // see the above link for more constraint options
     const constraints = {
       audio: true,

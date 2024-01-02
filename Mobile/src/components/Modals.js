@@ -153,6 +153,33 @@ function NotEnoughTimeModal(props) {
     </View>
   );
 }
+
+//Waiting for register
+function WaitingModal(props) {
+  const { onPress, visible, setModalVisible, title, content, navigation } = props;
+  return (
+    <View>
+      <Modal
+        animationType="slide"
+        visible={visible}
+        transparent={true}        
+      >
+        <View style={styles.infoModalContainer}>
+          <View style={styles.infoModalHeader}>
+            <View style={styles.infoModalTitle}>
+              <Text style={styles.infoModalTitleText}>{title}</Text>
+            </View>
+            <TouchableOpacity onPress={()=>{setModalVisible(false)}}>
+              <FontAwesomeIcon icon="fa-solid fa-xmark" size={24} color={colors.bright_gray_brown} style={styles.modalTitleIcon}/>
+            </TouchableOpacity>
+          </View>
+          <MascotDef/>
+          <Text style={styles.infoModalText}>{content}</Text>          
+        </View>
+      </Modal>
+    </View>
+  );
+}
 //Use peanut to get time
 
 //Confirm join tutorroom
@@ -283,5 +310,5 @@ const styles = StyleSheet.create({
 });
 
 module.exports = {
-  MultipleSelectModal, MoreTimeModal, ConfirmJoinModal, NotEnoughTimeModal
+  MultipleSelectModal, MoreTimeModal, ConfirmJoinModal, NotEnoughTimeModal, WaitingModal
 }

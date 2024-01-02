@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect }  from 'react';
-import { Text, SafeAreaView, View, StyleSheet, ImageBackground, Image, TextInput, Picker, TouchableOpacity } from "react-native";
+import { Text, SafeAreaView, View, StyleSheet, Image, TouchableOpacity, Modal } from "react-native";
 import Buttons from "./../../components/Buttons";
 import colors from './../../../assets/colors';
 import content from './../../../declarations.d';
@@ -13,6 +13,12 @@ import Map from './../../api/Map';
 import Flashcard from './../../api/Flashcard';
 import Pronunciation from './../../api/Pronunciation';
 import LR from './../../api/LR';
+import Modals from '../../components/Modals';
+import MascotHappy from '../../../assets/svg/mascot_happy.svg';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faXmark);
 
 const image = require("./../../../assets/images/forest-landscape.png");
 const minutes = ["10", "15", "20", "30"];
@@ -20,13 +26,14 @@ const minutes = ["10", "15", "20", "30"];
 const SetGoal = ({route, navigation}) => {
     const [targetTime, setTargetTime] = useState('');
     const { setIsLoggedIn, learnerId, setLearnerId, setProfile } = useLogin();
+    const [modalVisible, setModalVisible] = useState(false);
 
     const handleRegister = async () => {
         route.params.targetTime = targetTime;
         try {
+            setModalVisible(true);
             console.log(route.params);
             const res = await Auth.register(route.params);
-            console.log("res", res);
             const learner_id = await res.data.data.learner_id;
             console.log("learner id: ", learner_id);
             await Map.unlockMapDefault({learnerId: learner_id})
@@ -36,19 +43,38 @@ const SetGoal = ({route, navigation}) => {
             await Flashcard.unlockCardDefault({learnerId: learner_id});
             await Pronunciation.unlockPLessonDefault({learnerId: learner_id});
             await LR.unlockLRLessonDefault({learnerId: learner_id});
+            setModalVisible(false);
 
             setIsLoggedIn(true);
         } catch (error) {
             console.log(error);
         }
     }
-    // useEffect(()=>{
-    //     if (mapUnlocked) {
-    //         setIsLoggedIn(true);
-    //     }
-    // })
+
+    const NoticeModal = () => {
+        return (
+                <Modal 
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(false);
+                }}
+            >
+                <View style={styles.wrapper}>
+                <View style={styles.modalView}>                
+                <View style={{width: 90, height: 68, marginTop: "5%", marginBottom: "5%"}}>
+                    <MascotHappy height="100%" width="100%" viewBox='0 0 283 300'/>
+                </View>
+                <Text style={[styles.textStyle, {textAlign: 'center'}]}>Wait</Text>
+                </View>
+                </View>
+                    
+            </Modal>
+            );
+    }
+    
     return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} >
         <View style = {styles.backgroundContainer}>
             <Image
                 source={require('./../../../assets/images/ellipse.png')}
@@ -90,7 +116,8 @@ const SetGoal = ({route, navigation}) => {
             <View style={styles.buttonArea}>
                 <Buttons.GreenButton title="Đăng ký" onPress={handleRegister}/>         
             </View>            
-        </View>       
+        </View>
+        {NoticeModal()}
     </SafeAreaView>
   )
 }

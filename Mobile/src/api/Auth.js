@@ -14,6 +14,7 @@ const login = async (params) => {
 
 const register = async (params) => {
     try {
+        console.log("parram", params);
         const result = await axios.post('https://englephant.vercel.app/api/auth/register', {
             username: params.username,
             password: params.password,
@@ -25,7 +26,7 @@ const register = async (params) => {
         });
         return result;
     } catch (error) {
-        console.log(error.response);
+        console.log(error);
         return error.response;        
     }
 }
