@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import { Text, StyleSheet, TouchableOpacity, ImageBackground, SafeAreaView, View, Image } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import colors from '../../../../assets/colors';
 import { useLogin } from '../../../context/LoginProvider';
 import { FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -10,6 +11,7 @@ import { faStar as farStar} from '@fortawesome/free-regular-svg-icons/faStar';
 const mapId=2;
 
 export default function FamilyMap({navigation}){
+    const mapIsFocused = useIsFocused();
     const {profile} = useLogin();
     const learnerId = profile._id;
     const [nodeState, setNodeState] = useState(["Unlock","Next","Lock","Lock","Lock"]);
@@ -27,7 +29,7 @@ export default function FamilyMap({navigation}){
         console.log(error);
       });
     }
-    useEffect(()=>checkNodeState());
+    useEffect(()=>checkNodeState(), [mapIsFocused]);
 
     const getNodeOpacity = (node) => {
       return node == "Unlock"? 0 : node == "Next"? 0.5 : 1;
