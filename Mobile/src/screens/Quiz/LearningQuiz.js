@@ -56,7 +56,6 @@ export default function LearningQuiz({route, navigation}) {
     const numofcard = flashcards.length;
     const quizzesPerCard = 3;
     const cardThreshold = quizzesPerCard > 3? Math.ceil(quizzesPerCard*0.75): 2;
-    const [state, setState] = useState({answers: [], currentQuestionIndex:0, currentOptionSelected: null, currentCardIndex:0})
     const [answers, setAnswers] = useState([]);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -127,15 +126,15 @@ export default function LearningQuiz({route, navigation}) {
     };
 
     //get flashcards
-    const getFlashcards = () => {
+    const getFlashcards = async () => {
+        let cards_id = [];
+        let cards_content = [];
         uri = 'https://englephant.vercel.app/api/card/node/'+nodeId+'/'+learnerId;
         console.log(uri)
-        axios.get(uri)
+        await axios.get(uri)
         .then(function (res) {
             let havingFlashcards = res.data.data;
             console.log(havingFlashcards)
-            let cards_id = [];
-            let cards_content = [];
             for (let i = 0; i < numofcard; i++){
                 if (score[i] >= cardThreshold){
                     if (havingFlashcards.length == 0 || (havingFlashcards!=[] && !(havingFlashcards.includes(flashcards[i]._id)))){
@@ -144,29 +143,27 @@ export default function LearningQuiz({route, navigation}) {
                     }
                 }
             }
-            console.log(score.reduce((s, i) => s + i, 0)/numofquiz)
             console.log(cards_id)
             if (score.reduce((s, i) => s + i, 0)/numofquiz >= 0.6 || cards_id.length >= (numofcard - 2)){
                 setPass(true);
                 unlockNewNode(nodeId);
             }
-            uri = 'https://englephant.vercel.app/api/card/learner/'+learnerId;
-            console.log(uri)
-            console.log(cards_id.length>0)
-            console.log(pass)
-            axios.post(uri,{
-                cards: cards_id,
-                nodeId: nodeId
-            })
-            .then(function (res) {
-                console.log("ww")
-                if (cards_id.length>0 && pass)
-                    navigation.navigate("Done", {cards: cards_content})
-                else setShowResultModal(true);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        console.log(cards_id)
+        await axios.post('https://englephant.vercel.app/api/card/learner/'+learnerId,{
+            cards: cards_id,
+            nodeId: nodeId
+        })
+        .then(function (res) {
+            console.log('https://englephant.vercel.app/api/card/learner/'+learnerId)
+            const totalscore = score.reduce((s, i) => s + i, 0)/numofquiz;
+            let star = totalscore == 1 ? 3: totalscore >=0.8? 2 : 1;
+            if (pass)
+                navigation.navigate("Done", {cards: cards_id.length>0? cards_content: [], result:{star: star, time: time/1000}})
+            else setShowResultModal(true);
         })
         .catch(function (error) {
             console.log(error);
@@ -471,11 +468,7 @@ export default function LearningQuiz({route, navigation}) {
     const renderModal = () => {
         log("renderButton")
         let modalTitle = "Chưa hoàn thành";
-        let modalContent = "Bạn chưa đạt đủ flashcard để đi tiếp";
-        if (pass){
-            modalTitle = "Chúc mừng";
-            modalContent = "Chúc mừng bạn đã hoàn thành bài học";
-        }
+        let modalContent = "Bạn chưa đạt đúng đủ quiz để đi tiếp";
         return(
             <Modal 
                 transparent={true}
@@ -497,7 +490,7 @@ export default function LearningQuiz({route, navigation}) {
                     <Text style={styles.titleStyle}>{modalTitle}</Text>
                 </View>
                 <View style={{width: 90, height: 68, marginTop: "5%", marginBottom: "5%"}}>
-                    {pass? <MascotHappy height="100%" width="100%" viewBox='0 0 283 300'/> : <MascotCry viewBox='0 0 68 90'/>}
+                    <MascotCry viewBox='0 0 68 90'/>
                 </View>
                 <Text style={[styles.textStyle, {textAlign: 'center'}]}>{modalContent}</Text>
                 </View>

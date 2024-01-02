@@ -25,7 +25,7 @@ export default function Sum({route, navigation}) {
   const {profile} = useLogin();
   const learnerId = profile._id;
   const resultlength = result.length;
-  const numofhearts = result[resultlength-1].point;
+  const numofhearts = 5;
   const totalnumofquiz = result[resultlength-1].totalnumofquiz;
   const numofflashcard = flashcard.got;
   const totalnumofflashcard = flashcard.total;

@@ -444,7 +444,7 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     let numofstars = (sumpoint/sumtotalnumofquiz >= 0.8)? ((totalgotcards == totalcards)? 3: 2) :1;
     //timer
     let minutes = Math.floor(totaltime / 60);
-    let seconds = totaltime % 60;
+    let seconds = Math.round(totaltime % 60);
 
     if (seconds < 10) {
         seconds = '0' + seconds;

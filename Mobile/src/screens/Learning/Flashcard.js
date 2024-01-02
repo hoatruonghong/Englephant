@@ -9,18 +9,19 @@ import { faXmark, faStar, faVolumeUp, faDumbbell } from '@fortawesome/free-solid
 library.add(faXmark, faStar, faVolumeUp, faDumbbell);
 
 export default function Flashcard({route, navigation}) {
-  const { cards } = route.params;
+  const { cards, result } = route.params;
   const numofcard = cards.length;
   const [index, setIndex] = useState(0);
   const [content, setContent] = useState(cards[0]);
-
+  
+  if(numofcard==0) return navigation.navigate("RevisionNode", {result: {...result, numofcard: numofcard}});
   const changeContent = () => {
     if (index<numofcard-1){
       setContent(cards[index+1]);
       setIndex(index+1);
     }
     else {
-      navigation.goBack(null);
+      navigation.navigate("RevisionNode", {result: {...result, numofcard: numofcard}});
     }
   }
   

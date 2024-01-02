@@ -62,6 +62,7 @@ import Wardrobe from './screens/Setting/Wardrobe';
 import TimeCounter from './components/TimeCounter';
 import Auth from './api/Auth';
 import Done from './screens/Learning/Done';
+import RevisionNode from './screens/Learning/RevisionNode';
 import Welcome from './screens/Onboarding/Welcome';
 import LearnMap from './screens/Onboarding/LearnMap';
 import Room from './screens/Exercise/Room';
@@ -276,6 +277,7 @@ function StackNavigator(){
       <Stack.Group screenOptions={{headerShown: false}}>
       <Stack.Screen name="MyTabs" component={MyTabs} />
       <Stack.Screen name="Done" component={Done} />
+      <Stack.Screen name="RevisionNode" component={RevisionNode} />
       <Stack.Screen name="Sum" component={Sum} />
       <Stack.Screen name="Relax" component={Relax} />
       <Stack.Screen name="Flashcard" component={Flashcard} />
