@@ -42,11 +42,11 @@ talkroomRouter.get('/choose-room', async (req, res) => {
         const currentTime = new Date();
         const rooms = await Workshift.find(
             {
-                "startTime": { $lte: currentTime.toISOString() },
-                "endTime": { $gte: (new Date(currentTime.getTime() + learningTime*60000)).toISOString() },
+                "startTime": { $lte: currentTime },
+                "endTime": { $gte: (new Date(currentTime.getTime() + learningTime*60000)) },
             },
         );
-        if (rooms){
+        if (rooms.length>0){
             var random = Math.floor(Math.random() * rooms.length)
             return sendSuccess(res, "System choose this room", rooms[random].tutorId);
         } 
