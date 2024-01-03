@@ -21,7 +21,9 @@ export default function Flashcard({route, navigation}) {
       setIndex(index+1);
     }
     else {
-      navigation.navigate("RevisionNode", {result: {...result, numofcard: numofcard}});
+      if (result)
+        navigation.navigate("RevisionNode", {result: {...result, numofcard: numofcard}});
+      else navigation.goBack(null);
     }
   }
   

@@ -6,7 +6,7 @@ const LoginProvider = ({children}) => {
     const [isLoggedIn, setIsLoggedIn] = useState(true);
     const [learnerId, setLearnerId] = useState('6523a83652d8423281c01341');
     const [profile, setProfile] = useState({
-        _id:"",    
+        _id:"658ea902c2903e12598390b0",    
         username:"",
         fullname:"",
         phone:"",
@@ -17,7 +17,7 @@ const LoginProvider = ({children}) => {
         peanut: 0,
         heart: 0,
         bud: 0,
-        currentMap: 0,
+        currentMap: 3,
         gender: "",
         talkroomTime: 0,
         targetTime: 0,
