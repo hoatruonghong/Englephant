@@ -36,14 +36,14 @@ talkroomRouter.get('/available', async (req, res) => {
  * @description system random choose room for learner
  * @access public
  */
-talkroomRouter.get('/choose-room', async (req, res) => {
+talkroomRouter.get('/choose-room/:time', async (req, res) => {
     try {
-        const { learningTime  } = req.body
+        const { time } = req.params;
         const currentTime = new Date();
         const rooms = await Workshift.find(
             {
                 "startTime": { $lte: currentTime },
-                "endTime": { $gte: (new Date(currentTime.getTime() + learningTime*60000)) },
+                "endTime": { $gte: (new Date(currentTime.getTime() + time*60000)) },
             },
         );
         if (rooms.length>0){
