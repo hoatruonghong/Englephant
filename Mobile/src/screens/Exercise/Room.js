@@ -68,7 +68,7 @@ class Room extends React.Component {
     }
 
     // DONT FORGET TO CHANGE TO YOUR URL
-    this.serviceIP = 'http://10.0.2.2:5000/webrtcPeer'
+    this.serviceIP = 'https://englephant-server.adaptable.app/webrtcPeer'
 
     // this.sdp
     this.socket = null
@@ -152,13 +152,13 @@ class Room extends React.Component {
       }
 
       pc.oniceconnectionstatechange = (e) => {
-        // if (pc.iceConnectionState === 'disconnected') {
-        //   const remoteStreams = this.state.remoteStreams.filter(stream => stream.id !== socketID)
+        if (pc.iceConnectionState === 'disconnected') {
+          const remoteStreams = this.state.remoteStreams.filter(stream => stream.id !== socketID)
 
-        //   this.setState({
-        //     remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
-        //   })
-        // }
+          this.setState({
+            remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
+          })
+        }
       }
 
       pc.ontrack = (e) => {
@@ -384,71 +384,71 @@ class Room extends React.Component {
       })
     })
 
-    this.socket.on('offer', data => {
-      console.log("send offer");
-      this.createPeerConnection(data.socketID, pc => {
-          // pc.addStream(this.state.localStream)
-          if(pc === null) return 
+    // this.socket.on('offer', data => {
+    //   console.log("send offer");
+    //   this.createPeerConnection(data.socketID, pc => {
+    //       // pc.addStream(this.state.localStream)
+    //       if(pc === null) return 
   
-          // this.state.localStream.getTracks().forEach(track => {
-          //   pc.addTrack(track, this.state.localStream)
-          // })
+    //       // this.state.localStream.getTracks().forEach(track => {
+    //       //   pc.addTrack(track, this.state.localStream)
+    //       // })
 
-        // Send Channel
-        const handleSendChannelStatusChange = (event) => {
-          console.log('send channel status: ' + this.state.sendChannels[0].readyState)
-        }
+    //     // Send Channel
+    //     const handleSendChannelStatusChange = (event) => {
+    //       console.log('send channel status: ' + this.state.sendChannels[0].readyState)
+    //     }
 
-        const sendChannel = pc.createDataChannel('sendChannel')
-        sendChannel.onopen = handleSendChannelStatusChange
-        sendChannel.onclose = handleSendChannelStatusChange
+    //     const sendChannel = pc.createDataChannel('sendChannel')
+    //     sendChannel.onopen = handleSendChannelStatusChange
+    //     sendChannel.onclose = handleSendChannelStatusChange
         
-        this.setState(prevState => {
-          return {
-            sendChannels: [...prevState.sendChannels, sendChannel]
-          }
-        })
+    //     this.setState(prevState => {
+    //       return {
+    //         sendChannels: [...prevState.sendChannels, sendChannel]
+    //       }
+    //     })
 
-        // Receive Channels
-        const handleReceiveMessage = (event) => {
-          const message = JSON.parse(event.data)
-          console.log(message)
-          this.setState(prevState => {
-            return {
-              messages: [...prevState.messages, message]
-            }
-          })
-        }
+    //     // Receive Channels
+    //     const handleReceiveMessage = (event) => {
+    //       const message = JSON.parse(event.data)
+    //       console.log(message)
+    //       this.setState(prevState => {
+    //         return {
+    //           messages: [...prevState.messages, message]
+    //         }
+    //       })
+    //     }
 
-        const handleReceiveChannelStatusChange = (event) => {
-          if (this.receiveChannel) {
-            console.log("receive channel's status has changed to " + this.receiveChannel.readyState);
-          }
-        }
+    //     const handleReceiveChannelStatusChange = (event) => {
+    //       if (this.receiveChannel) {
+    //         console.log("receive channel's status has changed to " + this.receiveChannel.readyState);
+    //       }
+    //     }
 
-        const receiveChannelCallback = (event) => {
-          const receiveChannel = event.channel
-          receiveChannel.onmessage = handleReceiveMessage
-          receiveChannel.onopen = handleReceiveChannelStatusChange
-          receiveChannel.onclose = handleReceiveChannelStatusChange
-        }
+    //     const receiveChannelCallback = (event) => {
+    //       const receiveChannel = event.channel
+    //       receiveChannel.onmessage = handleReceiveMessage
+    //       receiveChannel.onopen = handleReceiveChannelStatusChange
+    //       receiveChannel.onclose = handleReceiveChannelStatusChange
+    //     }
 
-        pc.ondatachannel = receiveChannelCallback
-        pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
-          // 2. Create Answer
-          pc.createAnswer(this.state.sdpConstraints)
-            .then(sdp => {
-              console.log("offer sdp",sdp);
-              pc.setLocalDescription(sdp)
+    //     pc.ondatachannel = receiveChannelCallback
+    //     pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
+    //       // 2. Create Answer
+    //       pc.createAnswer(this.state.sdpConstraints)
+    //         .then(sdp => {
+    //           console.log("offer sdp",sdp);
+    //           pc.setLocalDescription(sdp)
 
-              this.sendToPeer('answer', sdp, {
-                local: this.socket.id,
-                remote: data.socketID
-              })
-            })
-        }).catch(e=>console.log("check remote", e))
-      })
-    })
+    //           this.sendToPeer('answer', sdp, {
+    //             local: this.socket.id,
+    //             remote: data.socketID
+    //           })
+    //         })
+    //     }).catch(e=>console.log("check remote", e))
+    //   })
+    // })
 
     this.socket.on('answer', data => {
       console.log("send answer", data.sdp);
@@ -465,7 +465,9 @@ class Room extends React.Component {
       const pc = this.state.peerConnections[data.socketID]
 
       if (pc){
-        pc.addIceCandidate(new RTCIceCandidate(data.candidate))
+        pc.addIceCandidate(new RTCIceCandidate(data.candidate)).then(()=>{console.log(data.candidate)}).catch((e) => {
+          console.log('Failure during addIceCandidate(): '+e.name);
+        });
       }
     })
   }
