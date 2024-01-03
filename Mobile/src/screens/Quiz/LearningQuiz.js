@@ -1,4 +1,4 @@
-import React, { useReducer, useState, createRef, useEffect }  from 'react';
+import React, { useReducer, useState, createRef }  from 'react';
 import { Text, View, Image, TextInput, SafeAreaView, FlatList, TouchableOpacity, Animated, Modal } from "react-native";
 import axios from 'axios';
 import {Vimeo} from 'react-native-vimeo-iframe';
@@ -19,12 +19,35 @@ import { faXmark, faVolumeUp } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faXmark, faVolumeUp);
 
+//log
+const zeroes = "000000000000000000000000000000";
+
+function zeroPad(num, padLen) {
+    let str = num + "";
+    let padNum = padLen - str.length;
+    if (padNum > 0) {
+        str = zeroes.slice(0, padNum) + str;
+    }
+    return str;
+}
+const base = Date.now();
+
+function log(...args) {
+    let delta = Date.now() - base;
+    let deltaPad = zeroPad(delta, 6);
+    console.log(deltaPad + ": ", ...args);
+}
 function reducer(score, currentId){
-    return score.map((s, i) => (i === currentId)?  s + 1 : s );
+    let newscore = [];
+    for (i in score){
+        console.log(i, currentId)
+        newscore.push((i == currentId)?score[i]+1: score[i]) ;
+    }
+    log(newscore)
+    return newscore;
 }
 
 export default function LearningQuiz({route, navigation}) {
-
     const {profile} = useLogin();
     const learnerId = profile._id;
     const {nodeId, lessons, quizzes, flashcards} = route.params;
@@ -33,7 +56,6 @@ export default function LearningQuiz({route, navigation}) {
     const numofcard = flashcards.length;
     const quizzesPerCard = 3;
     const cardThreshold = quizzesPerCard > 3? Math.ceil(quizzesPerCard*0.75): 2;
-    const [answersAvailable, setAnswersAvailable] = useState(false);
     const [answers, setAnswers] = useState([]);
     const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -47,36 +69,26 @@ export default function LearningQuiz({route, navigation}) {
     const [pass, setPass] = useState(false);
 
     //timer
-    const [timer, count] = useState(0);
-    const [timerIsActive, setTimerIsActive ] = useState(true);
-
-    useEffect(() => {
-        if (answers.length >0 && answers[0].quizId == quizzes[currentQuestionIndex]._id)
-            setAnswersAvailable(true);
-        const interval = setInterval(() => {
-            if(timerIsActive)
-                count(timer+1);
-            }, 1000);
-        return () => clearInterval(interval);
-        }
-    );
+    const [starttime, setStarttime] = useState(new Date());
+    let time;
 
     //create ref to interact with Pronunciation Assess component
     const recorder = createRef()
 
     //get answers
     const getAnswers = (index)=>{
-        if (!answersAvailable){
-            uri = 'https://englephant.vercel.app/api/quiz/answer/'+quizzes[index]._id;
-            console.log(uri);
-            axios.get(uri)
-            .then(function (res) {
-                setAnswers(res.data.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        }
+        uri = 'https://englephant.vercel.app/api/quiz/answer/'+quizzes[index]._id;
+        log("begin get " + uri);
+        axios.get(uri)
+        .then(function (res) {
+            console.log(res.data.data)
+            setAnswers(res.data.data);
+            
+            log("end get "+uri)
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
 
     const chooseAnswer = (selectedOption) => {
@@ -84,9 +96,11 @@ export default function LearningQuiz({route, navigation}) {
     }
 
     const validateAnswer = (type) => {
+        log("validateAnswer")
         switch (type){
             case "Từ - Nghe":
             case "Từ - Hình": {
+                log("Từ - Hình")
                 let correct_option = null;
                 for (let x in answers)
                     if (answers[x].isCorrect)
@@ -99,6 +113,7 @@ export default function LearningQuiz({route, navigation}) {
             }
             case "Điền - Nghe":
             case "Điền - Hình":{
+                log("Điền - Hình")
                 let correct_option = answers[0];
                 setIsDisabled(true);
                 if(text==correct_option.content){
@@ -111,42 +126,44 @@ export default function LearningQuiz({route, navigation}) {
     };
 
     //get flashcards
-    const getFlashcards = () => {
+    const getFlashcards = async () => {
+        let cards_id = [];
+        let cards_content = [];
         uri = 'https://englephant.vercel.app/api/card/node/'+nodeId+'/'+learnerId;
         console.log(uri)
-        axios.get(uri)
+        await axios.get(uri)
         .then(function (res) {
             let havingFlashcards = res.data.data;
-            console.log(1)
-            let cards_id = [];
-            let cards_content = [];
+            console.log(havingFlashcards)
             for (let i = 0; i < numofcard; i++){
                 if (score[i] >= cardThreshold){
-                    if (!havingFlashcards || (havingFlashcards!=[] && !havingFlashcards.includes(flashcards[i]._id))){
+                    if (havingFlashcards.length == 0 || (havingFlashcards!=[] && !(havingFlashcards.includes(flashcards[i]._id)))){
                         cards_id.push(flashcards[i]._id);
                         cards_content.push(flashcards[i]);
                     }
                 }
             }
-            console.log(1)
+            console.log(cards_id)
             if (score.reduce((s, i) => s + i, 0)/numofquiz >= 0.6 || cards_id.length >= (numofcard - 2)){
                 setPass(true);
                 unlockNewNode(nodeId);
             }
-            uri = 'https://englephant.vercel.app/api/card/learner/'+learnerId;
-            console.log(uri)
-            axios.post(uri,{
-                cards: cards_id,
-                nodeId: nodeId
-            })
-            .then(function (res) {
-                if (cards_id.length>0 && pass)
-                    navigation.navigate("Done", {cards: cards_content})
-                else setShowResultModal(true);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+        console.log(cards_id)
+        await axios.post('https://englephant.vercel.app/api/card/learner/'+learnerId,{
+            cards: cards_id,
+            nodeId: nodeId
+        })
+        .then(function (res) {
+            console.log('https://englephant.vercel.app/api/card/learner/'+learnerId)
+            const totalscore = score.reduce((s, i) => s + i, 0)/numofquiz;
+            let star = totalscore == 1 ? 3: totalscore >=0.8? 2 : 1;
+            if (pass)
+                navigation.navigate("Done", {cards: cards_id.length>0? cards_content: [], result:{star: star, time: time/1000}})
+            else setShowResultModal(true);
         })
         .catch(function (error) {
             console.log(error);
@@ -174,12 +191,12 @@ export default function LearningQuiz({route, navigation}) {
     //Send Node result to backend
     const sendResult = () => {
         uri = 'https://englephant.vercel.app/api/map/node-result/'+nodeId;
-        console.log(learnerId, score.reduce((s, i) => s + i, 0), numofquiz, timer)
+        console.log(learnerId, score.reduce((s, i) => s + i, 0), numofquiz, time)
         axios.put(uri,{
             learnerId: learnerId,
             point: score.reduce((s, i) => s + i, 0),
             totalnumofquiz: numofquiz,
-            time: timer
+            time: Math.round(time/1000)
         })
         .then(function (res) {
             console.log(res.data.message);
@@ -190,13 +207,16 @@ export default function LearningQuiz({route, navigation}) {
     }
     //Handle showing result
     const handleResult = () => {
-        setTimerIsActive(false);
+        log("handle result")
+        time = new Date()-starttime;
+        //setTimerIsActive(false);
         getFlashcards();
         sendResult();
     }
 
     //Handle pressing Next action
     const handleNext = () => {
+        log("handleNext")
         if (currentLessonIndex < numofcard){
             if (currentLessonIndex == numofcard -1)
                 getAnswers(0);
@@ -213,7 +233,6 @@ export default function LearningQuiz({route, navigation}) {
                 validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
                 handleResult();
             } else {
-                setAnswersAvailable(false);
                 validateAnswer(quizzes[currentQuestionIndex].type, currentOptionSelected);
                 if ((currentQuestionIndex+1) % quizzesPerCard == 0)
                     setCurrentCardIndex(currentCardIndex+1);
@@ -221,6 +240,7 @@ export default function LearningQuiz({route, navigation}) {
                 setCurrentQuestionIndex(currentQuestionIndex+1);
                 setCurrentOptionSelected(null);
                 setIsDisabled(false);
+                log(currentCardIndex, currentQuestionIndex, currentOptionSelected, isDisabled)
             }
         }
         Animated.timing(progress, {
@@ -231,6 +251,7 @@ export default function LearningQuiz({route, navigation}) {
     };
 
     const renderProgressBar = () => {
+        log("renderProgressBar")
         return (
             <View style={{height:"5%", flexDirection: "row"}}>
                 <Text style = {[styles.questionText, {marginRight: "4%"}]}>{currentQuestionIndex+currentLessonIndex}/{numofquiz+numoflesson}</Text>
@@ -253,6 +274,9 @@ export default function LearningQuiz({route, navigation}) {
         )
     };
     const renderLesson = () => {
+        log("renderLesson")
+        if (currentLessonIndex == numofcard)
+            return;
         let content_type = "none";
         let lesson = lessons[currentLessonIndex];
         if (lesson.image){
@@ -272,6 +296,9 @@ export default function LearningQuiz({route, navigation}) {
         )
     };
     const renderQuestion = () => {
+        log("renderQuestion")
+        if (currentLessonIndex < numofcard)
+            return;
         let content_type = "none";
         let question = quizzes[currentQuestionIndex];
         if (question.image){
@@ -301,6 +328,7 @@ export default function LearningQuiz({route, navigation}) {
     };
 
     const renderContent = (type, item) => {
+        log("renderContent")
         switch (type) {
             case "video":
                 return(
@@ -329,7 +357,7 @@ export default function LearningQuiz({route, navigation}) {
                     console.log('play error: ',error)
                 })
                 return (
-                    <View>
+                    <View style = {{alignSelf: "center"}}>
                         <TouchableOpacity 
                             style={{width: "100%", height: "50%", alignItems: "center", justifyContent: "center"}} 
                             onPress={()=>{sound.play()}}>
@@ -358,6 +386,9 @@ export default function LearningQuiz({route, navigation}) {
     }
       
     const renderOptions = () => {
+        log("renderOptions")
+        if (answers.length==0 || answers[0].quizId != quizzes[currentQuestionIndex]._id)
+            return;
         let type = "word";        console.log(answers)
         if (answers[0].image){
             type = "image";
@@ -427,6 +458,7 @@ export default function LearningQuiz({route, navigation}) {
 
     //Render Next Button
     const renderButton = () => {
+        log("renderButton")
         return (
                 <Buttons.GreenButton title={"Tiếp"} onPress={()=>handleNext()} />
             )
@@ -434,12 +466,9 @@ export default function LearningQuiz({route, navigation}) {
 
     //Render Result modal
     const renderModal = () => {
+        log("renderButton")
         let modalTitle = "Chưa hoàn thành";
-        let modalContent = "Bạn chưa đạt đủ flashcard để đi tiếp";
-        if (pass){
-            modalTitle = "Chúc mừng";
-            modalContent = "Chúc mừng bạn đã hoàn thành bài học";
-        }
+        let modalContent = "Bạn chưa đạt đúng đủ quiz để đi tiếp";
         return(
             <Modal 
                 transparent={true}
@@ -461,7 +490,7 @@ export default function LearningQuiz({route, navigation}) {
                     <Text style={styles.titleStyle}>{modalTitle}</Text>
                 </View>
                 <View style={{width: 90, height: 68, marginTop: "5%", marginBottom: "5%"}}>
-                    {pass? <MascotHappy height="100%" width="100%" viewBox='0 0 283 300'/> : <MascotCry viewBox='0 0 68 90'/>}
+                    <MascotCry viewBox='0 0 68 90'/>
                 </View>
                 <Text style={[styles.textStyle, {textAlign: 'center'}]}>{modalContent}</Text>
                 </View>
@@ -474,8 +503,9 @@ export default function LearningQuiz({route, navigation}) {
     return (
         <SafeAreaView style={styles.container}>
             {renderProgressBar()}
-            {currentLessonIndex < numofcard? renderLesson() : renderQuestion()}
-            {currentLessonIndex == numofcard && answers.length > 0 && currentQuestionIndex+1<numofquiz && answers[0].quizId == quizzes[currentQuestionIndex]._id && renderOptions()}
+            {renderLesson()}
+            {renderQuestion()}
+            {renderOptions()}
             {renderButton()}
             {renderModal()}
             

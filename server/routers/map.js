@@ -402,8 +402,12 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     const nodes = await node.find({mapId: mapId});
     const numaddheart = 5;
     //Add heart whenever learner finish map
-    const curLearner = await learner.findById(learnerId);
-    await learner.findByIdAndUpdate(learnerId, {heart: curLearner.heart+numaddheart});
+    const firstTimeFinish = await learnermap.exists({learnerId: learnerId, mapId: mapId, status: 0});
+    console.log(firstTimeFinish)
+    if (firstTimeFinish){
+      const curLearner = await learner.findById(learnerId);
+      await learner.findByIdAndUpdate(learnerId, {heart: curLearner.heart+numaddheart});
+    }
     
     let length = nodes.length;
     let learnernoderesults = [];
@@ -444,7 +448,7 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     let numofstars = (sumpoint/sumtotalnumofquiz >= 0.8)? ((totalgotcards == totalcards)? 3: 2) :1;
     //timer
     let minutes = Math.floor(totaltime / 60);
-    let seconds = totaltime % 60;
+    let seconds = Math.round(totaltime % 60);
 
     if (seconds < 10) {
         seconds = '0' + seconds;
@@ -458,5 +462,20 @@ router.get('/sum/:mapId/:learnerId', async (req,res) => {
     res.status(500).json({ message: JSON.stringify(err) });
   }
 })
+
+//Learner: Update Map status
+router.put('/update-status/:mapId/:learnerId', async (req, res) => {
+  try {
+    const { mapId, learnerId } = req.params;
+    const { status } = req.body;
+
+    // Save Node
+    await learnermap.findOneAndUpdate({mapId: mapId, learnerId: learnerId}, { status: status });
+
+    res.status(200).json({ message: "Update map status successfully!" })
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
 
 export default router;

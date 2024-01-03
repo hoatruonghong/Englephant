@@ -33,6 +33,10 @@ export default function PracticeQuiz({route, navigation}) {
     const [progress, setProgress] = useState(new Animated.Value(0));
     const [text, onChangeText] = useState('');
     const [pass, setPass] = useState(false);
+    
+    //timer
+    const [starttime, setStarttime] = useState(new Date());
+    let time;
 
     //create ref to interact with Pronunciation Assess component
     const recorder = createRef()
@@ -48,19 +52,10 @@ export default function PracticeQuiz({route, navigation}) {
             console.log(error);
         });
     }
-    
-    //timer
-    const [timer, count] = useState(0);
-    const [timerIsActive, setTimerIsActive ] = useState(true);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if(timerIsActive)
-                count(timer+1);
-            }, 1000);
         if (answers.length==0)
             getAnswers(0)
-        return () => clearInterval(interval);
         }
     );
 
@@ -121,7 +116,7 @@ export default function PracticeQuiz({route, navigation}) {
             learnerId: learnerId,
             point: score,
             totalnumofquiz: numofquiz,
-            time: timer
+            time: time/1000
         })
         .then(function (res) {
             console.log(res.data.message);
@@ -133,13 +128,14 @@ export default function PracticeQuiz({route, navigation}) {
     //Handle showing result
     const handleResult = async () => {
         console.log(score);
+        time = new Date()-starttime;
+        sendResult();
         if (score>=numofquiz*0.6){
             setPass(true);
+            let star = score/numofquiz == 1 ? 3: score/numofquiz >=0.8? 2 : 1;
+            navigation.navigate("Done", {cards: [], result: {star: star, time: time/1000}})
             unlockNewNode(nodeId);
-        }
-        setTimerIsActive(false);
-        setShowResultModal(true);
-        sendResult();
+        } else setShowResultModal(true);
     }
 
     //Handle pressing Next action
