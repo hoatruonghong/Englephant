@@ -43,7 +43,7 @@ class Room extends Component {
     }
 
     // DONT FORGET TO CHANGE TO YOUR URL
-    // this.serviceIP = 'http://localhost:5000/webrtcPeer'
+    this.serviceIP = 'https://englephant-server.adaptable.app/webrtcPeer'
 
     // this.localVideoref = React.createRef()
     // this.remoteVideoref = React.createRef()
@@ -57,6 +57,7 @@ class Room extends Component {
     // called when getUserMedia() successfully returns - see below
     // getUserMedia() returns a MediaStream object
     const success = (stream) => {
+      console.log('localStream...', stream);
       window.localStream = stream
       // this.localVideoref.current.srcObject = stream
       // this.pc.addStream(stream);
@@ -113,6 +114,7 @@ class Room extends Component {
 
       pc.onicecandidate = (e) => {
         if (e.candidate) {
+          console.log("onicecandidate", e.candidate);
           this.sendToPeer('candidate', e.candidate, {
             local: this.socket.id,
             remote: socketID
@@ -121,6 +123,7 @@ class Room extends Component {
       }
 
       pc.oniceconnectionstatechange = (e) => {
+        console.log("on ice connection", e, pc.iceConnectionState);
         // if (pc.iceConnectionState === 'disconnected') {
         //   const remoteStreams = this.state.remoteStreams.filter(stream => stream.id !== socketID)
 
@@ -219,10 +222,11 @@ class Room extends Component {
   }
 
   componentDidMount = () => {
-    if (this.state.rendered) {
+    // if (this.state.rendered) {
     
 
-    this.socket = connectIOSocket
+    if (this.socket === null)
+      this.socket = connectIOSocket
     // this.socket = io.connect(
     //   this.serviceIP,
     //   {
@@ -289,67 +293,67 @@ class Room extends Component {
 
       // create and send offer to the peer (data.socketID)
       // 1. Create new pc
-      this.createPeerConnection(socketID, pc => {
+      // this.createPeerConnection(socketID, pc => {
 
-        // 2. Create Offer
-        if (pc) {
+      //   // 2. Create Offer
+      //   if (pc) {
       
-          // Send Channel
-          const handleSendChannelStatusChange = (event) => {
-            console.log('send channel status: ' + this.state.sendChannels[0].readyState)
-          }
+      //     // Send Channel
+      //     const handleSendChannelStatusChange = (event) => {
+      //       console.log('send channel status: ' + this.state.sendChannels[0].readyState)
+      //     }
 
-          const sendChannel = pc.createDataChannel('sendChannel')
-          sendChannel.onopen = handleSendChannelStatusChange
-          sendChannel.onclose = handleSendChannelStatusChange
+      //     const sendChannel = pc.createDataChannel('sendChannel')
+      //     sendChannel.onopen = handleSendChannelStatusChange
+      //     sendChannel.onclose = handleSendChannelStatusChange
         
-          this.setState(prevState => {
-            return {
-              sendChannels: [...prevState.sendChannels, sendChannel]
-            }
-          })
+      //     this.setState(prevState => {
+      //       return {
+      //         sendChannels: [...prevState.sendChannels, sendChannel]
+      //       }
+      //     })
 
 
-          // Receive Channels
-          const handleReceiveMessage = (event) => {
-            const message = JSON.parse(event.data)
-            // console.log(message)
-            this.setState(prevState => {
-              return {
-                messages: [...prevState.messages, message]
-              }
-            })
-          }
+      //     // Receive Channels
+      //     const handleReceiveMessage = (event) => {
+      //       const message = JSON.parse(event.data)
+      //       // console.log(message)
+      //       this.setState(prevState => {
+      //         return {
+      //           messages: [...prevState.messages, message]
+      //         }
+      //       })
+      //     }
 
-          const handleReceiveChannelStatusChange = (event) => {
-            if (this.receiveChannel) {
-              console.log("receive channel's status has changed to " + this.receiveChannel.readyState);
-            }
-          }
+      //     const handleReceiveChannelStatusChange = (event) => {
+      //       if (this.receiveChannel) {
+      //         console.log("receive channel's status has changed to " + this.receiveChannel.readyState);
+      //       }
+      //     }
 
-          const receiveChannelCallback = (event) => {
-            const receiveChannel = event.channel
-            receiveChannel.onmessage = handleReceiveMessage
-            receiveChannel.onopen = handleReceiveChannelStatusChange
-            receiveChannel.onclose = handleReceiveChannelStatusChange
-          }
+      //     const receiveChannelCallback = (event) => {
+      //       const receiveChannel = event.channel
+      //       receiveChannel.onmessage = handleReceiveMessage
+      //       receiveChannel.onopen = handleReceiveChannelStatusChange
+      //       receiveChannel.onclose = handleReceiveChannelStatusChange
+      //     }
 
-          pc.ondatachannel = receiveChannelCallback
+      //     pc.ondatachannel = receiveChannelCallback
 
 
-          pc.createOffer(this.state.sdpConstraints)
-            .then(sdp => {
-              console.log("sdpp", sdp);
-              pc.setLocalDescription(sdp)
+      //     pc.createOffer(this.state.sdpConstraints)
+      //       .then(sdp => {
+      //         console.log("sdpp", sdp);
+      //         pc.setLocalDescription(sdp)
 
-              this.sendToPeer('offer', sdp, {
-                local: this.socket.id,
-                remote: socketID
-              })
-            })
-            .catch(e=>console.log("sdppp",e))
-        }
-      })
+      //         this.sendToPeer('offer', sdp, {
+      //           local: this.socket.id,
+      //           remote: socketID
+      //         })
+      //       })
+      //       .catch(e=>console.log("sdppp",e))
+      //   }
+      // })
     })
 
     this.socket.on('offer', data => {
@@ -424,13 +428,13 @@ class Room extends Component {
       })
     })
 
-    this.socket.on('answer', data => {
-      // get remote's peerConnection
-      const pc = this.state.peerConnections[data.socketID]
-      console.log("answer",data.sdp)
-      // if (pc.signalingState !== "stable")
-      pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(()=>{}).catch((e)=>{console.log("remote",e);})
-    })
+    // this.socket.on('answer', data => {
+    //   // get remote's peerConnection
+    //   const pc = this.state.peerConnections[data.socketID]
+    //   console.log("answer",data.sdp)
+    //   // if (pc.signalingState !== "stable")
+    //   pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(()=>{}).catch((e)=>{console.log("remote",e);})
+    // })
 
     this.socket.on('candidate', (data) => {
       // get remote's peerConnection
@@ -440,9 +444,28 @@ class Room extends Component {
 
       if (pc){
         pc.addIceCandidate(new RTCIceCandidate(data.candidate))
+        .then(()=>console.log("addCandidate", data.candidate))
+        .catch((e)=>console.log("fail", e))
+
+        pc.addEventListener("icegatheringstatechange", (ev) => {
+          switch (pc.iceGatheringState) {
+            case "new":
+              /* gathering is either just starting or has been reset */
+              console.log("new");
+              break;
+            case "gathering":
+              /* gathering has begun or is ongoing */
+              console.log("gathering");
+              break;
+            case "complete":
+              /* gathering has ended */
+              console.log('complete', pc.iceConnectionState);
+              break;
+          }
+        });
       }
     })
-  }
+  // }
 
   }
 
@@ -473,7 +496,7 @@ class Room extends Component {
    
     // if (this.socket !== null) {
       console.log("state", this.state, this.socket);
-    if (!this.state.rendered) this.setState({rendered: true})
+    // if (!this.state.rendered) this.setState({rendered: true})
 
     const {
       status,
@@ -498,7 +521,8 @@ class Room extends Component {
       // stop all remote peerconnections
       peerConnections && Object.values(peerConnections).forEach(pc => {
         
-        pc.close()})
+        pc.close()
+      })
 
       return (<div>You have successfully Disconnected</div>)
     }
@@ -538,6 +562,7 @@ class Room extends Component {
         </Video>
       </Draggable>
       <Video
+      videoType="remoteVideo"
           frameStyle={{
             zIndex: 1,
             position: 'fixed',
@@ -556,7 +581,7 @@ class Room extends Component {
         // ref={ this.remoteVideoref }
         // videoStream={localStream}
         videoStream={this.state.selectedVideo && this.state.selectedVideo.stream}
-        // autoPlay
+        autoPlay
       ></Video>
       <br />
         <div style={{

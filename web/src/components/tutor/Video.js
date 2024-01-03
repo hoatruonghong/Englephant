@@ -1,83 +1,3 @@
-// import React, { Component } from 'react';
-
-// class Video extends Component {
-//   constructor(props) {
-//     super(props)
-//     this.state = {
-//       mic: true,
-//       camera: true,
-//     }
-//   }
-//   /**
-//    * this.state = { mic, camera, srcObject(MediaStream) }
-//    */
-
-//   // //after getDerived
-//   // componentDidMount() {
-//   //   console.log("didmount", this.state, this.props);
-//   //   if (this.props.videoStream) {
-//   //     this.video.srcObject = this.props.videoStream
-//   //   }
-//   // }
-
-//   //after render
-//   //after mutemic or mutecam
-//   static getDerivedStateFromProps(nextProps, state) {
-//     if (nextProps.videoStream && nextProps.videoStream !== state.srcObject) {
-//       state.srcObject = nextProps.videoStream
-//     }
-//     else return state;
-//   }
-
-//   componentDidUpdate(prevProps, prevState) {
-//     if(prevProps.videoStream && prevProps.videoStream !== prevState.srcObject) {
-//       this.video.srcObject = prevProps.videoStream
-//     }
-//   }
-
-//   mutemic = (e) => {
-//     const stream = this.video.srcObject.getTracks().filter(track => track.kind === 'audio')
-//     this.setState(prevState => {
-//       if (stream) stream[0].enabled = !prevState.mic
-//       return {mic: !prevState.mic}
-//     })
-//   }
-
-//   mutecamera = (e) => {
-//     const stream = this.video.srcObject.getTracks().filter(track => track.kind === 'video')
-//     this.setState(prevState => {
-//       if (stream) stream[0].enabled = !prevState.camera
-//       return {camera: !prevState.camera}
-//     })
-//   }
-
-//   render() {
-//     const muteControls = this.props.showMuteControls && (
-//       <div>
-//         <i onClick={this.mutemic} style={{ cursor: 'pointer', padding: 5, fontSize: 20, color: this.state.mic ? 'white' : 'red' }} className='material-icons'>{this.state.mic ? 'mic' : 'mic_off'}</i>
-//         <i onClick={this.mutecamera} style={{ cursor: 'pointer', padding: 5, fontSize: 20, color: this.state.camera ? 'white' : 'red' }} className='material-icons'>{this.state.camera ? 'videocam' : 'videocam_off'}</i>
-//       </div>
-//     )
-//     return (
-//       <div
-//         style={{ ...this.props.frameStyle }}
-//       >
-//         {/* <audio id={this.props.id} muted={this.props.muted} ref={ (ref) => {this.video = ref }}></audio> */}
-//         <video
-//           id={this.props.id}
-//           muted={this.props.muted}
-//           autoPlay
-//           style={{ ...this.props.videoStyles }}
-//           ref={ (ref) => {this.video = ref }}
-//         ></video>
-//         {muteControls}
-//       </div>
-//     )
-//   }
-// }
-
-// export default Video
-
 import React, { Component } from 'react';
 
 class Video extends Component {
@@ -101,12 +21,12 @@ class Video extends Component {
   componentWillReceiveProps(nextProps) {
 
     // console.log('1. nextProps', this.props.showMuteControls, nextProps.videoStream && nextProps.videoStream.getTracks())
-    // console.log('1', this.props.videoType, nextProps.videoStream)
+    console.log('1', this.props.videoType, nextProps.videoStream)
 
     // This is done only once
     if (nextProps.videoStream && nextProps.videoStream !== this.props.videoStream) {
     // if (!this.props.videoStream) {
-      // console.log('2', this.props.videoType, nextProps.videoStream)
+      console.log('2', this.props.videoType, nextProps.videoStream)
       this.video.srcObject = nextProps.videoStream
     }
 
@@ -163,8 +83,8 @@ class Video extends Component {
   render() {
     const muteControls = this.props.showMuteControls && (
       <div>
-        <i onClick={this.mutemic} style={{ cursor: 'pointer', padding: 5, fontSize: 20, color: this.state.mic ? 'white' : 'red' }} className='material-icons'>{this.state.mic ? 'mic' : 'mic_off'}</i>
-        <i onClick={this.mutecamera} style={{ cursor: 'pointer', padding: 5, fontSize: 20, color: this.state.camera ? 'white' : 'red' }} className='material-icons'>{this.state.camera ? 'videocam' : 'videocam_off'}</i>
+        <i onClick={this.mutemic} style={{ cursor: 'pointer', padding: 5, fontSize: 20, color: this.state.mic && 'white' || 'red' }} className='material-icons'>{this.state.mic && 'mic' || 'mic_off'}</i>
+        <i onClick={this.mutecamera} style={{ cursor: 'pointer', padding: 5, fontSize: 20, color: this.state.camera && 'white' || 'red' }} className='material-icons'>{this.state.camera && 'videocam' || 'videocam_off'}</i>
       </div>
     )
 
@@ -178,7 +98,7 @@ class Video extends Component {
           muted={this.props.muted}
           autoPlay
           style={{
-            visibility: this.state.videoVisible ? 'visible' : 'hidden',
+            visibility: this.state.videoVisible && 'visible' || 'hidden',
             ...this.props.videoStyles,
           }}
           // ref={ this.props.videoRef }

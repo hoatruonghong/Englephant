@@ -26,6 +26,7 @@ import {
 import io from 'socket.io-client'
 
 import Video from '../../components/Video'
+import colors from '../../../assets/colors';
 
 const dimensions = Dimensions.get('window')
 
@@ -66,9 +67,11 @@ class Room extends React.Component {
       camera: true,
       mic: true,
     }
+    this.props.navigation;
 
     // DONT FORGET TO CHANGE TO YOUR URL
-    this.serviceIP = 'http://10.0.2.2:5000/webrtcPeer'
+    this.serviceIP = 'http://192.168.1.140:5000/webrtcPeer'
+    // this.serviceIP = 'https://englephant-server.adaptable.app/webrtcPeer'
 
     // this.sdp
     this.socket = null
@@ -384,71 +387,71 @@ class Room extends React.Component {
       })
     })
 
-    this.socket.on('offer', data => {
-      console.log("send offer");
-      this.createPeerConnection(data.socketID, pc => {
-          // pc.addStream(this.state.localStream)
-          if(pc === null) return 
+    // this.socket.on('offer', data => {
+    //   console.log("receive  offer");
+    //   this.createPeerConnection(data.socketID, pc => {
+    //       // pc.addStream(this.state.localStream)
+    //       if(pc === null) return 
   
-          // this.state.localStream.getTracks().forEach(track => {
-          //   pc.addTrack(track, this.state.localStream)
-          // })
+    //       // this.state.localStream.getTracks().forEach(track => {
+    //       //   pc.addTrack(track, this.state.localStream)
+    //       // })
 
-        // Send Channel
-        const handleSendChannelStatusChange = (event) => {
-          console.log('send channel status: ' + this.state.sendChannels[0].readyState)
-        }
+    //     // Send Channel
+    //     const handleSendChannelStatusChange = (event) => {
+    //       console.log('send channel status: ' + this.state.sendChannels[0].readyState)
+    //     }
 
-        const sendChannel = pc.createDataChannel('sendChannel')
-        sendChannel.onopen = handleSendChannelStatusChange
-        sendChannel.onclose = handleSendChannelStatusChange
+    //     const sendChannel = pc.createDataChannel('sendChannel')
+    //     sendChannel.onopen = handleSendChannelStatusChange
+    //     sendChannel.onclose = handleSendChannelStatusChange
         
-        this.setState(prevState => {
-          return {
-            sendChannels: [...prevState.sendChannels, sendChannel]
-          }
-        })
+    //     this.setState(prevState => {
+    //       return {
+    //         sendChannels: [...prevState.sendChannels, sendChannel]
+    //       }
+    //     })
 
-        // Receive Channels
-        const handleReceiveMessage = (event) => {
-          const message = JSON.parse(event.data)
-          console.log(message)
-          this.setState(prevState => {
-            return {
-              messages: [...prevState.messages, message]
-            }
-          })
-        }
+    //     // Receive Channels
+    //     const handleReceiveMessage = (event) => {
+    //       const message = JSON.parse(event.data)
+    //       console.log(message)
+    //       this.setState(prevState => {
+    //         return {
+    //           messages: [...prevState.messages, message]
+    //         }
+    //       })
+    //     }
 
-        const handleReceiveChannelStatusChange = (event) => {
-          if (this.receiveChannel) {
-            console.log("receive channel's status has changed to " + this.receiveChannel.readyState);
-          }
-        }
+    //     const handleReceiveChannelStatusChange = (event) => {
+    //       if (this.receiveChannel) {
+    //         console.log("receive channel's status has changed to " + this.receiveChannel.readyState);
+    //       }
+    //     }
 
-        const receiveChannelCallback = (event) => {
-          const receiveChannel = event.channel
-          receiveChannel.onmessage = handleReceiveMessage
-          receiveChannel.onopen = handleReceiveChannelStatusChange
-          receiveChannel.onclose = handleReceiveChannelStatusChange
-        }
+    //     const receiveChannelCallback = (event) => {
+    //       const receiveChannel = event.channel
+    //       receiveChannel.onmessage = handleReceiveMessage
+    //       receiveChannel.onopen = handleReceiveChannelStatusChange
+    //       receiveChannel.onclose = handleReceiveChannelStatusChange
+    //     }
 
-        pc.ondatachannel = receiveChannelCallback
-        pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
-          // 2. Create Answer
-          pc.createAnswer(this.state.sdpConstraints)
-            .then(sdp => {
-              console.log("offer sdp",sdp);
-              pc.setLocalDescription(sdp)
+    //     pc.ondatachannel = receiveChannelCallback
+    //     pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
+    //       // 2. Create Answer
+    //       pc.createAnswer(this.state.sdpConstraints)
+    //         .then(sdp => {
+    //           console.log("offer sdp",sdp);
+    //           pc.setLocalDescription(sdp)
 
-              this.sendToPeer('answer', sdp, {
-                local: this.socket.id,
-                remote: data.socketID
-              })
-            })
-        }).catch(e=>console.log("check remote", e))
-      })
-    })
+    //           this.sendToPeer('answer', sdp, {
+    //             local: this.socket.id,
+    //             remote: data.socketID
+    //           })
+    //         })
+    //     }).catch(e=>console.log("check remote", e))
+    //   })
+    // })
 
     this.socket.on('answer', data => {
       console.log("send answer", data.sdp);
@@ -493,6 +496,7 @@ class Room extends React.Component {
 
     // debugger
     const remoteVideos = remoteStreams.map(rStream => {
+      console.log("rStream", rStream.stream);
       return (
         <TouchableOpacity onPress={() => this.switchVideo(rStream)}>
           <View
@@ -514,22 +518,24 @@ class Room extends React.Component {
             />
           </View>
         </TouchableOpacity>
+        // <></>
       )
     })
 
-    const remoteVideo = this.state.selectedVideo ?
+    if (remoteStreams.length > 0) console.log("remoteVideos",  remoteStreams[0].stream);
+    const remoteVideo = remoteStreams.length > 0 ?
       (
         <Video
           keyValue={3}
           mirror={true}
-          style={{ width: dimensions.width, height: dimensions.height / 2, }}
-          objectFit='cover'
-          streamURL={this.state.selectedVideo && this.state.selectedVideo.stream}
+          style={{ width: dimensions.width, height: dimensions.height / 2, backgroundColor: colors.yellow }}
+          objectFit='contain'
+          streamURL={remoteStreams[0].stream}
           type='remote'
         />
       ) :
       (
-        <View style={{ padding: 15, }}>
+        <View style={{ padding: 15, backgroundColor: colors.red, width: dimensions.width, height: dimensions.height / 2,}}>
           <Text style={{ fontSize:22, textAlign: 'center', color: 'white' }}>{this.state.status}</Text>
         </View>
       )
@@ -619,12 +625,15 @@ class Room extends React.Component {
               console.log("closed", this.state);
               this.setState({
                 connect: false,
+                disconnected: true,
                 peerConnections: {},
                 remoteStreams: [],
                 localStream: null,
                 remoteStream: null,
                 selectedVideo: null,
               })
+
+              this.props.navigation.navigate('TalkRoom');
             }}
             title='X DISCONNECT'
             color='red'
@@ -674,7 +683,7 @@ class Room extends React.Component {
               style={{
                 flex: 1,
                 width: '100%',
-                backgroundColor: 'black',
+                backgroundColor: colors.blue,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}

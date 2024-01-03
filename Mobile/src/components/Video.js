@@ -20,10 +20,14 @@ import {
   mediaDevices,
   registerGlobals
 } from 'react-native-webrtc';
+import colors from '../../assets/colors';
 
 class Video extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      rendered : false,
+    }
   }
 
   render() {
@@ -32,13 +36,26 @@ class Video extends Component {
       zOrder,
       objectFit,
       style,
-      streamURL
+      streamURL,
+      type
     } = this.props
 
     const _streamURL = streamURL && streamURL.toURL()
+    console.log("logStreamURL ", streamURL, type); 
+    // let mediaStream = new MediaStream();
 
+    // // const video = document.querySelector("video");
+    // let tracks = streamURL._tracks;
+    
+    // for (const track of tracks) {
+    //   mediaStream.addTrack(track)
+    // }
+    
+    // video.srcObject = mediaStream;
+    
+    // if (!this.state.rendered) this.setState({rendered: true})
     return (
-      <View>
+      <View style={{backgroundColor: colors.blue}}>
         <RTCView
           key={keyValue}
           zOrder={zOrder}
