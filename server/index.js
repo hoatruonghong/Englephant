@@ -141,7 +141,7 @@ peers.on('connection', socket => {
 
   // connectedPeers.set(socket.id, socket)
 
-  console.log(socket.id)
+  console.log(socket.id, "room", room)
   socket.emit('connection-success', {
     success: socket.id,
     peerCount: rooms[room].size,
@@ -185,7 +185,7 @@ peers.on('connection', socket => {
   })
 
   socket.on('disconnect', () => {
-    console.log('disconnected')
+    console.log('disconnected', socket.id)
     // connectedPeers.delete(socket.id)
     rooms[room].delete(socket.id)
     messages[room] = rooms[room].size === 0 ? null : messages[room]

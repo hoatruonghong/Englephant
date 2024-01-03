@@ -39,15 +39,17 @@ class Room extends Component {
       messages: [],
       sendChannels: [],
       disconnected: false,
+      rendered : false,
     }
 
     // DONT FORGET TO CHANGE TO YOUR URL
-    this.serviceIP = 'http://localhost:5000/webrtcPeer'
+    // this.serviceIP = 'http://localhost:5000/webrtcPeer'
 
     // this.localVideoref = React.createRef()
     // this.remoteVideoref = React.createRef()
 
     this.socket = null
+    this.sender = null
     // this.candidates = []
   }
 
@@ -97,9 +99,11 @@ class Room extends Component {
   }
 
   createPeerConnection = (socketID, callback) => {
+    console.log("socketID", socketID);
 
     try {
       let pc = new RTCPeerConnection(this.state.pc_config)
+      console.log("check pc", pc);
 
       // add pc to peerConnections object
       const peerConnections = { ...this.state.peerConnections, [socketID]: pc }
@@ -128,6 +132,7 @@ class Room extends Component {
       }
 
       pc.ontrack = (e) => {
+        console.log("on track");
 
         let _remoteStream = null
         let remoteStreams = this.state.remoteStreams
@@ -191,16 +196,18 @@ class Room extends Component {
 
       pc.close = () => {
         // alert('GONE')
+        const senders = pc.getSenders();
+        senders.forEach((sender) => pc.removeTrack(sender));
         console.log("pc closed");
       }
-
-      if (this.state.localStream)
-        // pc.addStream(this.state.localStream)
-
+      
+      if (this.state.localStream){
         this.state.localStream.getTracks().forEach(track => {
           pc.addTrack(track, this.state.localStream)
         })
+        console.log("getTrack", this.state.localStream.getTracks());
 
+      }
       // return pc
       callback(pc)
 
@@ -212,6 +219,8 @@ class Room extends Component {
   }
 
   componentDidMount = () => {
+    if (this.state.rendered) {
+    
 
     this.socket = connectIOSocket
     // this.socket = io.connect(
@@ -228,7 +237,7 @@ class Room extends Component {
 
       this.getLocalStream()
 
-      // console.log(data.success)
+      console.log("connect success",data.success)
       const status = data.peerCount > 1 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}` : 'Waiting for other peers to connect'
 
       this.setState({
@@ -238,6 +247,7 @@ class Room extends Component {
     })
 
     this.socket.on('joined-peers', data => {
+      console.log("joined", data);
 
       this.setState({
         status: data.peerCount > 1 ? `Total Connected Peers to room ${window.location.pathname}: ${data.peerCount}` : 'Waiting for other peers to connect'
@@ -249,6 +259,8 @@ class Room extends Component {
     this.socket.on('peer-disconnected', data => {
 
       // close peer-connection with this peer
+      console.log("peer-disconnect", this.state.peerConnections[data.socketID]);
+      if (typeof this.state.peerConnections[data.socketID] == typeof undefined) return
       this.state.peerConnections[data.socketID].close()
 
       // get and stop remote audio and video tracks of the disconnected peer
@@ -272,20 +284,13 @@ class Room extends Component {
       )
     })
 
-    // this.socket.on('offerOrAnswer', (sdp) => {
-
-    //   this.textref.value = JSON.stringify(sdp)
-
-    //   // set sdp as remote description
-    //   this.pc.setRemoteDescription(new RTCSessionDescription(sdp))
-    // })
-
     this.socket.on('online-peer', socketID => {
-      // console.log('connected peers ...', socketID)
+      console.log('online-peer ...', socketID)
 
       // create and send offer to the peer (data.socketID)
       // 1. Create new pc
       this.createPeerConnection(socketID, pc => {
+
         // 2. Create Offer
         if (pc) {
       
@@ -334,6 +339,7 @@ class Room extends Component {
 
           pc.createOffer(this.state.sdpConstraints)
             .then(sdp => {
+              console.log("sdpp", sdp);
               pc.setLocalDescription(sdp)
 
               this.sendToPeer('offer', sdp, {
@@ -341,13 +347,23 @@ class Room extends Component {
                 remote: socketID
               })
             })
+            .catch(e=>console.log("sdppp",e))
         }
       })
     })
 
     this.socket.on('offer', data => {
       this.createPeerConnection(data.socketID, pc => {
-        pc.addStream(this.state.localStream)
+        console.log("in offer", this.state, pc, typeof pc, data);
+        if(pc === null) {
+          console.log("checkk");
+          return 
+        }
+        
+        // if (this.state.localStream)
+        // this.state.localStream.getTracks().forEach(track => {
+        //   pc.addTrack(track, this.state.localStream)
+        // })
 
         // Send Channel
         const handleSendChannelStatusChange = (event) => {
@@ -390,10 +406,12 @@ class Room extends Component {
 
         pc.ondatachannel = receiveChannelCallback
 
+        console.log("in offer set remote");
         pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
           // 2. Create Answer
           pc.createAnswer(this.state.sdpConstraints)
             .then(sdp => {
+              console.log("answer sdp",sdp);
               pc.setLocalDescription(sdp)
 
               this.sendToPeer('answer', sdp, {
@@ -401,25 +419,30 @@ class Room extends Component {
                 remote: data.socketID
               })
             })
-        })
+            .catch(e=>console.log("a",e))
+        }).catch(e=>{console.log("check remote", e);})
       })
     })
 
     this.socket.on('answer', data => {
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID]
-      console.log(data.sdp)
-      if (pc.signalingState !== "stable")
-        pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(()=>{}).catch((e)=>{console.log(e);})
+      console.log("answer",data.sdp)
+      // if (pc.signalingState !== "stable")
+      pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(()=>{}).catch((e)=>{console.log("remote",e);})
     })
 
     this.socket.on('candidate', (data) => {
       // get remote's peerConnection
+      console.log("candidate", data);
       const pc = this.state.peerConnections[data.socketID]
+      console.log("this pc", pc);
 
-      if (pc)
+      if (pc){
         pc.addIceCandidate(new RTCIceCandidate(data.candidate))
+      }
     })
+  }
 
   }
 
@@ -447,6 +470,11 @@ class Room extends Component {
   }
 
   render() {
+   
+    // if (this.socket !== null) {
+      console.log("state", this.state, this.socket);
+    if (!this.state.rendered) this.setState({rendered: true})
+
     const {
       status,
       messages,
@@ -461,17 +489,22 @@ class Room extends Component {
       this.socket.close()
       // stop local audio & video tracks
       this.stopTracks(localStream)
+      
 
       // stop all remote audio & video tracks
       remoteStreams.forEach(rVideo => this.stopTracks(rVideo.stream))
 
+      console.log("disconnect", peerConnections);
       // stop all remote peerconnections
-      peerConnections && Object.values(peerConnections).forEach(pc => pc.close())
+      peerConnections && Object.values(peerConnections).forEach(pc => {
+        
+        pc.close()})
 
       return (<div>You have successfully Disconnected</div>)
     }
 
     const statusText = <div style={{ color: 'yellow', padding: 5 }}>{status}</div>
+    
 
     return (
       <div>
@@ -484,7 +517,7 @@ class Room extends Component {
         <Video
           videoType='localVideo'
           videoStyles={{
-            // zIndex:2,
+            zIndex:2,
             // position: 'absolute',
             // right:0,
             width: 200,
@@ -504,6 +537,27 @@ class Room extends Component {
           autoPlay muted>
         </Video>
       </Draggable>
+      <Video
+          frameStyle={{
+            zIndex: 1,
+            position: 'fixed',
+            bottom: 0,
+            minWidth: '100%', minHeight: '100%',
+            backgroundColor: 'black'
+          }}
+        videoStyles={{
+          // zIndex: 1,
+          // position: 'fixed',
+          // bottom: 0,
+          minWidth: '100%',
+          minHeight: '100%',
+          // backgroundColor: 'black'
+        }}
+        // ref={ this.remoteVideoref }
+        // videoStream={localStream}
+        videoStream={this.state.selectedVideo && this.state.selectedVideo.stream}
+        // autoPlay
+      ></Video>
       <br />
         <div style={{
           zIndex: 3,
@@ -525,25 +579,11 @@ class Room extends Component {
           ></Videos>
         </div>
         <br />
-
-        <Chat
-            user={{
-              uid: this.socket ? this.socket.id : ''
-          }}
-          messages={messages}
-          sendMessage={(message) => {
-            this.setState(prevState => {
-              return {messages: [...prevState.messages, message]}
-            })
-            this.state.sendChannels.map(sendChannel => (
-              sendChannel.readyState === 'open' && sendChannel.send(JSON.stringify(message))
-            ))
-            this.sendToPeer('new-message', JSON.stringify(message), {local: this.socket.id})
-          }}
-        />
       </div>
     )
-  }
+  // }
+}
+
 }
 
 export default Room;

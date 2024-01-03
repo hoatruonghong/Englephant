@@ -104,7 +104,7 @@ class Room extends React.Component {
         audio: true,
         video: {
           mandatory: {
-            minWidth: 500, // Provide your own width, height and frame rate here
+            minWidth: 500,
             minHeight: 300,
             minFrameRate: 30
           },
@@ -161,9 +161,8 @@ class Room extends React.Component {
         // }
       }
 
-      pc.onaddstream = (e) => {
-        debugger
-
+      pc.ontrack = (e) => {
+        console.log("on track", this.state.remoteStreams);
         let _remoteStream = null
         let remoteStreams = this.state.remoteStreams
         let remoteVideo = {}
@@ -178,7 +177,7 @@ class Room extends React.Component {
         // console.log('2...', swappedStream)
 
         // 1. check if stream already exists in remoteStreams
-        // const rVideos = this.state.remoteStreams.filter(stream => stream.id === socketID)
+        const rVideos = this.state.remoteStreams.filter(stream => stream.id === socketID)
 
         remoteVideo = {
           id: socketID,
@@ -188,30 +187,28 @@ class Room extends React.Component {
         remoteStreams = [...this.state.remoteStreams, remoteVideo]
 
         // 2. if it does exist then add track
-        // if (rVideos.length) {
-        //   _remoteStream = rVideos[0].stream
-        //   _remoteStream.addTrack(e.track, _remoteStream)
-        //   remoteVideo = {
-        //     ...rVideos[0],
-        //     stream: _remoteStream,
-        //   }
-        //   remoteStreams = this.state.remoteStreams.map(_remoteVideo => {
-        //     return _remoteVideo.id === remoteVideo.id && remoteVideo || _remoteVideo
-        //   })
-        // } else {
-        //   // 3. if not, then create new stream and add track
-        //   _remoteStream = new MediaStream()
-        //   _remoteStream.addTrack(e.track, _remoteStream)
+        if (rVideos.length) {
+          _remoteStream = rVideos[0].stream
+          _remoteStream.addTrack(e.track, _remoteStream)
+          remoteVideo = {
+            ...rVideos[0],
+            stream: _remoteStream,
+          }
+          remoteStreams = this.state.remoteStreams.map(_remoteVideo => {
+            return _remoteVideo.id === remoteVideo.id && remoteVideo || _remoteVideo
+          })
+        } else {
+          // 3. if not, then create new stream and add track
+          _remoteStream = new MediaStream()
+          _remoteStream.addTrack(e.track, _remoteStream)
 
-        //   remoteVideo = {
-        //     id: socketID,
-        //     name: socketID,
-        //     stream: _remoteStream,
-        //   }
-        //   remoteStreams = [...this.state.remoteStreams, remoteVideo]
-        // }
-
-
+          remoteVideo = {
+            id: socketID,
+            name: socketID,
+            stream: _remoteStream,
+          }
+          remoteStreams = [...this.state.remoteStreams, remoteVideo]
+        }
 
         // const remoteVideo = {
         //   id: socketID,
@@ -242,14 +239,15 @@ class Room extends React.Component {
 
       pc.close = () => {
         // alert('GONE')
+        console.log("pc closed");
       }
 
       if (this.state.localStream) {
-        pc.addStream(this.state.localStream)
+        // pc.addStream(this.state.localStream)
 
-      //   // this.state.localStream.getTracks().forEach(track => {
-      //   //   pc.addTrack(track, this.state.localStream)
-      //   // })
+        this.state.localStream.getTracks().forEach(track => {
+          pc.addTrack(track, this.state.localStream)
+        })
       }
       // return pc
       callback(pc)
@@ -261,7 +259,7 @@ class Room extends React.Component {
     }
   }
 
-  componentDidMount = () => { }
+  // componentDidMount = () => { }
 
   joinRoom = () => {
 
@@ -276,13 +274,13 @@ class Room extends React.Component {
       {
         path: '/io/webrtc',
         query: {
-          room: `/${room}`,
+          room: `/tutor/talkroom/${room}`,
         }
       }
     )
 
     this.socket.on('connection-success', data => {
-        console.log(data.success)
+      console.log("connection-success",data.success)
 
       this.getLocalStream()
 
@@ -296,6 +294,7 @@ class Room extends React.Component {
 
     this.socket.on('joined-peers', data => {
 
+      console.log("joined", this.state.room, data.peerCount);
       this.setState({
         status: data.peerCount > 1 ? `Total Connected Peers to room ${this.state.room}: ${data.peerCount}` : 'Waiting for other peers to connect'
       })
@@ -305,10 +304,11 @@ class Room extends React.Component {
       console.log('peer-disconnected', data)
 
       const remoteStreams = this.state.remoteStreams.filter(stream => stream.id !== data.socketID)
+      console.log("remote stream", remoteStreams);
 
       this.setState(prevState => {
         // check if disconnected peer is the selected video and if there still connected peers, then select the first
-        const selectedVideo = prevState.selectedVideo.id === data.socketID && remoteStreams.length ? { selectedVideo: remoteStreams[0] } : null
+        const selectedVideo = remoteStreams.length && prevState.selectedVideo.id === data.socketID ? { selectedVideo: remoteStreams[0] } : null
 
         return {
           // remoteStream: remoteStreams.length > 0 && remoteStreams[0].stream || null,
@@ -321,7 +321,6 @@ class Room extends React.Component {
     })
 
     this.socket.on('online-peer', socketID => {
-      debugger
       console.log('connected peers ...', socketID)
 
       // create and send offer to the peer (data.socketID)
@@ -386,8 +385,14 @@ class Room extends React.Component {
     })
 
     this.socket.on('offer', data => {
+      console.log("send offer");
       this.createPeerConnection(data.socketID, pc => {
-        pc.addStream(this.state.localStream)
+          // pc.addStream(this.state.localStream)
+          if(pc === null) return 
+  
+          // this.state.localStream.getTracks().forEach(track => {
+          //   pc.addTrack(track, this.state.localStream)
+          // })
 
         // Send Channel
         const handleSendChannelStatusChange = (event) => {
@@ -433,6 +438,7 @@ class Room extends React.Component {
           // 2. Create Answer
           pc.createAnswer(this.state.sdpConstraints)
             .then(sdp => {
+              console.log("offer sdp",sdp);
               pc.setLocalDescription(sdp)
 
               this.sendToPeer('answer', sdp, {
@@ -440,28 +446,31 @@ class Room extends React.Component {
                 remote: data.socketID
               })
             })
-        })
+        }).catch(e=>console.log("check remote", e))
       })
     })
 
     this.socket.on('answer', data => {
+      console.log("send answer", data.sdp);
+
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID]
-      // console.log(data.sdp)
-      pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(()=>{})
+      console.log("statepc",pc.signalingState);
+      pc.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(()=>{console.log("in answer",data.sdp);}).catch(e=>console.log("set remote", e))
     })
 
     this.socket.on('candidate', (data) => {
+      console.log("candidate", data);
       // get remote's peerConnection
       const pc = this.state.peerConnections[data.socketID]
 
-      if (pc)
+      if (pc){
         pc.addIceCandidate(new RTCIceCandidate(data.candidate))
+      }
     })
   }
 
   switchVideo = (_video) => {
-    debugger
     // alert(_video)
     this.setState({
       selectedVideo: _video
@@ -480,6 +489,7 @@ class Room extends React.Component {
       room,
       connect,
     } = this.state
+    console.log("state", this.state);
 
     // debugger
     const remoteVideos = remoteStreams.map(rStream => {
@@ -520,7 +530,7 @@ class Room extends React.Component {
       ) :
       (
         <View style={{ padding: 15, }}>
-          <Text style={{ fontSize:22, textAlign: 'center', color: 'white' }}>Waiting for Peer connection ...</Text>
+          <Text style={{ fontSize:22, textAlign: 'center', color: 'white' }}>{this.state.status}</Text>
         </View>
       )
 
@@ -538,7 +548,7 @@ class Room extends React.Component {
               maxLength={10}
               slectionColor={'green'}
               placeholderTextColor = "lightgrey"
-              placeholder='e.g. room1'
+              placeholder=''
               style={{
                 width: 200,
                 color: 'black',
@@ -549,10 +559,12 @@ class Room extends React.Component {
                 paddingHorizontal: 10,
               }}
               value={room}
-              onChangeText={text => this.setState({room: text})}
+              onChangeText={text => {
+                this.setState({room: text});
+              }}
             />
             <Button
-              onPress={this.joinRoom}
+              onPress={() => this.joinRoom()}
               title="Join Room"
               color="black"
             />
@@ -568,7 +580,7 @@ class Room extends React.Component {
         }}>
           <Button
             onPress={() => {
-              debugger
+              // debugger
               const videoTrack = localStream.getTracks().filter(track => track.kind === 'video')
               videoTrack[0].enabled = !videoTrack[0].enabled
               this.setState({
@@ -580,7 +592,7 @@ class Room extends React.Component {
           />
           <Button
             onPress={() => {
-              debugger
+              // debugger
               const audioTrack = localStream.getTracks().filter(track => track.kind === 'audio')
               audioTrack[0].enabled = !audioTrack[0].enabled
               this.setState({
@@ -604,6 +616,7 @@ class Room extends React.Component {
               // stop all remote peerconnections
               peerConnections && Object.values(peerConnections).forEach(pc => pc.close())
 
+              console.log("closed", this.state);
               this.setState({
                 connect: false,
                 peerConnections: {},
@@ -625,7 +638,6 @@ class Room extends React.Component {
         <StatusBar backgroundColor="blue" barStyle={'dark-content'}/>
 
         { videoActionButtons }
-
 
         <View style={{ ...styles.videosContainer, }}>
           <View style={{

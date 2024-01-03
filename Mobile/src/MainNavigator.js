@@ -121,8 +121,8 @@ function MyTabs() {
 
 function LearningScreens() {
   const {profile, learnerId} = useLogin();
-  const [heart, setHeart] = useState(profile.heart);
-  const [peanut, setPeanut] = useState(profile.peanut);
+  const [heart, setHeart] = useState(0);
+  const [peanut, setPeanut] = useState(0);
 
   useEffect(() => {
     uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
@@ -167,8 +167,8 @@ function LearningScreens() {
 
 function ExerciseScreens() {
   const {profile, learnerId} = useLogin();
-  const [heart, setHeart] = useState(profile.heart);
-  const [peanut, setPeanut] = useState(profile.peanut);
+  const [heart, setHeart] = useState(0);
+  const [peanut, setPeanut] = useState(0);
 
   useEffect(() => {
     uri = 'https://englephant.vercel.app/api/learner/'+learnerId;
@@ -303,9 +303,10 @@ function StackNavigator(){
           headerTitle : () => {return (<TimeCounter time={1200} />)},
         }} />
       <Stack.Screen name="Room" component={Room}
-        options={{
-          headerTitle : () => {return (<TimeCounter time={1200} />)},
-        }} />
+        // options={{
+        //   headerTitle : () => {return (<TimeCounter time={1200} />)},
+        // }} 
+      />
       
       <Stack.Screen name="LRLesson" component={LRLesson}
         options={({ route }) => ({ title: route.params.name })}
