@@ -11,18 +11,20 @@ import Learner from './../../api/Learner';
 const image = require("./../../../assets/images/forest-landscape.png");
 
 export default function Login({navigation}) {
-  const { setIsLoggedIn, profile, learnerId, setProfile, setLearnerId } = useLogin();
+  const { setIsLoggedIn, profile, learnerId, setProfile, setLearnerId, isLoggedIn } = useLogin();
 
   const [username, onChangeUsername] = React.useState('');
   const [password, onChangePassword] = React.useState('');
   
   const handleLogin = async () => {
+    console.log("login", isLoggedIn);
     const res = await Auth.login({username, password});
     if (res.status == 200) {
-      setIsLoggedIn(true);
       const learnerData = await Learner.getInfo({id: res.data.data.user.id});
-      setLearnerId(res.data.data.user.id);
-      setProfile(learnerData.data.data);
+      await setLearnerId(res.data.data.user.id);
+      await setProfile(learnerData.data.data);
+
+      setIsLoggedIn(true);
     } else {
       console.log(res);
     }

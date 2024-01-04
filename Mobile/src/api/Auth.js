@@ -2,12 +2,15 @@ import axios from 'axios';
 
 const login = async (params) => {
     try {
+        console.log("params",params);
         const result = await axios.post('https://englephant.vercel.app/api/auth/login', {
             username: params.username,
             password: params.password
         });
+        console.log(result.data);
         return result;
     } catch (error) {
+        console.log(error);
         return error.response;        
     }
 }

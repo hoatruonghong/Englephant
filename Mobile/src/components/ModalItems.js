@@ -6,6 +6,7 @@ import PeanutIcon from './../../assets/svg/peanut.svg';
 import PeanutPurchase from './../../assets/svg/peanut_purchase.svg';
 import Learner from './../api/Learner';
 import { useLogin } from '../context/LoginProvider';
+import axios from 'axios';
 
 //Choose talkroom: timeItem
 function TimeItem(props) {
@@ -24,7 +25,15 @@ const handleChooseRoom = async (choosingTime, setModalVisible, navigation, learn
   const talkroomTime = res.data.data.talkroomTime;
   if (choosingTime != 0 && choosingTime <= talkroomTime) {
     setModalVisible("none");
-    navigation.navigate('Room');
+    axios.get('https://englephant.vercel.app/api/talkroom/choose-room/'+choosingTime)
+      .then(res => {
+        console.log("roomView", res.data.data);
+        navigation.navigate('Room', {room: res.data.data});
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    
     // navigation.navigate('TutorRoom');
   }
   else {

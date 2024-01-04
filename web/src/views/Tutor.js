@@ -39,6 +39,9 @@ const Tutor = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleSaveWorkTime = () => {
+    
+  }
 
   return (
     <div className="tutorContainer">
@@ -153,7 +156,7 @@ const Tutor = () => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleSaveWorkTime}>
             Save Changes
           </Button>
         </Modal.Footer>

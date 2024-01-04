@@ -161,6 +161,11 @@ class Room extends Component {
           // 3. if not, then create new stream and add track
           _remoteStream = new MediaStream()
           _remoteStream.addTrack(e.track, _remoteStream)
+          if (this.state.remoteStream === null) 
+          {
+            console.log("remoteee", _remoteStream);
+            this.setState({remoteStream: _remoteStream})
+          }
 
           remoteVideo = {
             id: socketID,
@@ -495,8 +500,7 @@ class Room extends Component {
   render() {
    
     // if (this.socket !== null) {
-      console.log("state", this.state, this.socket);
-    // if (!this.state.rendered) this.setState({rendered: true})
+    console.log("state", this.state, this.socket);
 
     const {
       status,
@@ -528,10 +532,39 @@ class Room extends Component {
     }
 
     const statusText = <div style={{ color: 'yellow', padding: 5 }}>{status}</div>
+    const width = window.innerWidth
+    const height = window.innerHeight
+    const remoteVideo = document.getElementById('remoteVideo');
     
-
     return (
       <div>
+      {/* {renderRemoteVideo()} */}
+      { remoteStreams && remoteStreams.length > 0
+      &&
+       <Video
+        videoType="remoteVideo"
+          frameStyle={{
+            zIndex: 2,
+            position: 'fixed',
+            bottom: 0,
+            width: width, height: height,
+            backgroundColor: 'yellow'
+          }}
+        videoStyles={{
+          zOrder: 0,
+          zIndex: 2,
+          // position: 'fixed',
+          // bottom: 0,
+          width: width,
+          height: height,
+          backgroundColor: 'red'
+        }}
+        // ref={ this.remoteVideoref }
+        videoStream={remoteStreams[0].stream}
+        // videoStream={this.state.selectedVideo && this.state.selectedVideo.stream}
+        autoPlay
+      ></Video>
+      }
       <Draggable style={{
         zIndex: 101,
         position: 'absolute',
@@ -561,28 +594,7 @@ class Room extends Component {
           autoPlay muted>
         </Video>
       </Draggable>
-      <Video
-      videoType="remoteVideo"
-          frameStyle={{
-            zIndex: 1,
-            position: 'fixed',
-            bottom: 0,
-            minWidth: '100%', minHeight: '100%',
-            backgroundColor: 'black'
-          }}
-        videoStyles={{
-          // zIndex: 1,
-          // position: 'fixed',
-          // bottom: 0,
-          minWidth: '100%',
-          minHeight: '100%',
-          // backgroundColor: 'black'
-        }}
-        // ref={ this.remoteVideoref }
-        // videoStream={localStream}
-        videoStream={this.state.selectedVideo && this.state.selectedVideo.stream}
-        autoPlay
-      ></Video>
+      
       <br />
         <div style={{
           zIndex: 3,
@@ -596,14 +608,14 @@ class Room extends Component {
             borderRadius: 5,
           }}>{ statusText }</div>
         </div>
-        <div>
+        {/* <div>
           <Videos
             switchVideo={this.switchVideo}
             remoteStreams={remoteStreams}
             // videoStream={this.state.selectedVideo && this.state.selectedVideo.stream}
           ></Videos>
         </div>
-        <br />
+        <br /> */}
       </div>
     )
   // }

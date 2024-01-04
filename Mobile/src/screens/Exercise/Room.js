@@ -27,6 +27,7 @@ import io from 'socket.io-client'
 
 import Video from '../../components/Video'
 import colors from '../../../assets/colors';
+import axios from 'axios';
 
 const dimensions = Dimensions.get('window')
 
@@ -68,10 +69,11 @@ class Room extends React.Component {
       mic: true,
     }
     this.props.navigation;
+    this.props.route;
 
     // DONT FORGET TO CHANGE TO YOUR URL
-    this.serviceIP = 'http://192.168.1.140:5000/webrtcPeer'
-    // this.serviceIP = 'https://englephant-server.adaptable.app/webrtcPeer'
+    // this.serviceIP = 'http://10.0.2.2:5000/webrtcPeer'
+    this.serviceIP = 'https://englephant-server.adaptable.app/webrtcPeer'
 
     // this.sdp
     this.socket = null
@@ -262,22 +264,28 @@ class Room extends React.Component {
     }
   }
 
-  // componentDidMount = () => { }
+  componentDidMount = () => {
+        
+    this.joinRoom()
+
+  }
 
   joinRoom = () => {
+    console.log("roommm", this.props);
 
     this.setState({
       connect: true,
+      room: this.props.route.params.room,
     })
-
-    const room = this.state.room || ''
+    
+    // const room = this.state.room
 
     this.socket = io.connect(
       this.serviceIP,
       {
         path: '/io/webrtc',
         query: {
-          room: `/tutor/talkroom/${room}`,
+          room: '/tutor/talkroom/' + this.props.route.params.room,
         }
       }
     )
@@ -285,9 +293,26 @@ class Room extends React.Component {
     this.socket.on('connection-success', data => {
       console.log("connection-success",data.success)
 
-      this.getLocalStream()
+      if (data.peerCount > 2) {
+        console.log("peerCount > 2");
+        this.socket.close()
 
+        this.setState({
+          connect: false,
+          disconnected: true,
+          peerConnections: {},
+          remoteStreams: [],
+          localStream: null,
+          remoteStream: null,
+          selectedVideo: null,
+        })
+
+        this.props.navigation.navigate('TalkRoom');
+
+      }
       const status = data.peerCount > 1 ? `Total Connected Peers to room ${this.state.room}: ${data.peerCount}` : this.state.status
+
+      this.getLocalStream()
 
       this.setState({
         status,
@@ -498,27 +523,28 @@ class Room extends React.Component {
     const remoteVideos = remoteStreams.map(rStream => {
       console.log("rStream", rStream.stream);
       return (
-        <TouchableOpacity onPress={() => this.switchVideo(rStream)}>
-          <View
-            style={{
-            flex: 1,
-            width: '100%',
-            backgroundColor: 'black',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 2,
-          }}>
-            <Video
-              keyValue={2}
-              mirror={true}
-              style={{ ...styles.rtcViewRemote }}
-              objectFit='contain'
-              streamURL={rStream.stream}
-              type='remote'
-            />
-          </View>
-        </TouchableOpacity>
-        // <></>
+        // <TouchableOpacity onPress={() => this.switchVideo(rStream)}>
+        //   <View
+        //     style={{
+        //     flex: 1,
+        //     width: '100%',
+        //     backgroundColor: 'black',
+        //     justifyContent: 'center',
+        //     alignItems: 'center',
+        //     padding: 2,
+        //   }}>
+        //     <Video
+        //       keyValue={2}
+        //       mirror={true}
+        //       zOrder={0}
+        //       style={{ ...styles.rtcViewRemote }}
+        //       objectFit='contain'
+        //       streamURL={rStream.stream}
+        //       type='remote'
+        //     />
+        //   </View>
+        // </TouchableOpacity>
+        <></>
       )
     })
 
@@ -540,43 +566,43 @@ class Room extends React.Component {
         </View>
       )
 
-    if (!connect) 
-      return (
-        <SafeAreaView style={{ flex: 1, }}>
-          <StatusBar backgroundColor="blue" barStyle={'dark-content'}/>
-          <View style={{
-            ...styles.buttonsContainer,
-            // backgroundColor: 'teal',
-            paddingHorizontal: 15
-          }}>
-            <TextInput
-              // editable
-              maxLength={10}
-              slectionColor={'green'}
-              placeholderTextColor = "lightgrey"
-              placeholder=''
-              style={{
-                width: 200,
-                color: 'black',
-                fontSize: 18,
-                backgroundColor: 'white',
-                borderColor: '#000000',
-                borderWidth: 1,
-                paddingHorizontal: 10,
-              }}
-              value={room}
-              onChangeText={text => {
-                this.setState({room: text});
-              }}
-            />
-            <Button
-              onPress={() => this.joinRoom()}
-              title="Join Room"
-              color="black"
-            />
-          </View>
-        </SafeAreaView>
-      )
+    if (connect) {
+      // return (
+      //   <SafeAreaView style={{ flex: 1, }}>
+      //     <StatusBar backgroundColor="blue" barStyle={'dark-content'}/>
+      //     <View style={{
+      //       ...styles.buttonsContainer,
+      //       // backgroundColor: 'teal',
+      //       paddingHorizontal: 15
+      //     }}>
+      //       <TextInput
+      //         // editable
+      //         maxLength={10}
+      //         slectionColor={'green'}
+      //         placeholderTextColor = "lightgrey"
+      //         placeholder=''
+      //         style={{
+      //           width: 200,
+      //           color: 'black',
+      //           fontSize: 18,
+      //           backgroundColor: 'white',
+      //           borderColor: '#000000',
+      //           borderWidth: 1,
+      //           paddingHorizontal: 10,
+      //         }}
+      //         value={room}
+      //         onChangeText={text => {
+      //           this.setState({room: text});
+      //         }}
+      //       />
+      //       <Button
+      //         onPress={() => this.joinRoom()}
+      //         title="Join Room"
+      //         color="black"
+      //       />
+      //     </View>
+      //   </SafeAreaView>
+      // )
 
       const videoActionButtons = (
         <View style={{
@@ -663,7 +689,7 @@ class Room extends React.Component {
                   <View>
                     <Video
                       keyValue={1}
-                      zOrder={0}
+                      zOrder={1}
                       objectFit='cover'
                       style={{ ...styles.rtcView }}
                       streamURL={localStream}
@@ -697,6 +723,7 @@ class Room extends React.Component {
           </View>
         </SafeAreaView>
       );
+    }
   }
 };
 

@@ -60,7 +60,7 @@ class Video extends Component {
           key={keyValue}
           zOrder={zOrder}
           objectFit={objectFit}
-          style={{ ...style }}
+          style={{ ...style, flex:1, }}
           streamURL={_streamURL}
         />
       </View>

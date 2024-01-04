@@ -22,8 +22,9 @@ talkroomRouter.get('/available', async (req, res) => {
                 "endTime": { $gte: currentTime },
             },
         );
-        console.log(rooms[0].endTime-rooms[0].startTime, );
-        if (rooms) return sendSuccess(res, "Get rooms successfully", rooms);
+        if (rooms.length > 0) {
+            console.log(rooms[0].endTime-rooms[0].startTime, );
+            return sendSuccess(res, "Get rooms successfully", rooms);}
         return sendError(res, "No room available");        
     } catch (error) {
         console.log(error);

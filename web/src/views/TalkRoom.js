@@ -20,8 +20,8 @@ class TalkRoom extends Component {
   componentDidMount = () => {
 
     this.socket = io.connect(
-      'http://localhost:5000/webrtcPeer',
-      // 'https://englephant-server.adaptable.app/webrtcPeer',
+      // 'http://localhost:5000/webrtcPeer',
+      'https://englephant-server.adaptable.app/webrtcPeer',
       // 'https://englephant.vercel.app:5000/webrtcPeer',
       {
         path: '/io/webrtc',
