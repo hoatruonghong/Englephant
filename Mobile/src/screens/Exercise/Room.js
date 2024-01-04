@@ -554,15 +554,15 @@ class Room extends React.Component {
         <Video
           keyValue={3}
           mirror={true}
-          style={{ width: dimensions.width, height: dimensions.height / 2, backgroundColor: colors.yellow }}
+          style={{ width: dimensions.width, height: dimensions.height / 2, backgroundColor: colors.black }}
           objectFit='contain'
           streamURL={remoteStreams[0].stream}
           type='remote'
         />
       ) :
       (
-        <View style={{ padding: 15, backgroundColor: colors.red, width: dimensions.width, height: dimensions.height / 2,}}>
-          <Text style={{ fontSize:22, textAlign: 'center', color: 'white' }}>{this.state.status}</Text>
+        <View style={{ padding: 15, backgroundColor: colors.black, width: dimensions.width, height: dimensions.height / 2,}}>
+          <Text style={{ fontSize:22, textAlign: 'center', color: 'white' }}>Vui lòng đợi Englephant xíu nha</Text>
         </View>
       )
 
