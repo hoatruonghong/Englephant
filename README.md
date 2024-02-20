@@ -8,6 +8,6 @@ There are 3 main sub-folders:
 - **Mobile**: ReactNative Mobile App to build mobile app for user
 - **server**: ExpressJS + MongoDB to build server side
 - **web**: ReactJS to build web app for admin and other roles
-## Contact
+## Contributors
 - [Dinh Le Tran](https://letran.dinh2001@gmail.com)
 - [Truong Hong Hoa]()
